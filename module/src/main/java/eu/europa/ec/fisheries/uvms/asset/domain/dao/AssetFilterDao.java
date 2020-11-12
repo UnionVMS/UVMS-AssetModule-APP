@@ -1,23 +1,13 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_FIND_ALL;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_USER;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_GUID;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_GUID_LIST;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
+
+import javax.ejb.Stateless;
+import javax.persistence.*;
+import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class AssetFilterDao {
@@ -31,13 +21,7 @@ public class AssetFilterDao {
     }
 
     public AssetFilter getAssetFilterByGuid(UUID filterId) {
-        try {
-            TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_BY_GUID, AssetFilter.class);
-            query.setParameter("guid", filterId);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return em.find(AssetFilter.class, filterId);
     }
     
     public AssetFilter updateAssetFilter(AssetFilter filter) {

@@ -29,7 +29,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.*;
 @NamedQueries({
 	@NamedQuery(name=ASSETFILTER_FIND_ALL, query="SELECT a FROM AssetFilter a"),
 	@NamedQuery(name=ASSETFILTER_BY_USER, query="SELECT a FROM AssetFilter a WHERE a.owner = :owner"),
-	@NamedQuery(name=ASSETFILTER_BY_GUID, query="SELECT a FROM AssetFilter a WHERE a.id = :guid"),
 	@NamedQuery(name=ASSETFILTER_GUID_LIST, query="SELECT a FROM AssetFilter a WHERE a.id IN :guidList"),
 	@NamedQuery(name=ASSETFILTER_BY_ASSET_GUID, query="SELECT af FROM AssetFilter af JOIN af.queries afq JOIN afq.values afv WHERE afq.type = 'GUID' AND afv.valueString = :assetId"),
 })
@@ -39,7 +38,6 @@ public class AssetFilter implements Serializable {
     
     public static final String ASSETFILTER_FIND_ALL = "AssetFilter.findAll";
     public static final String ASSETFILTER_BY_USER = "AssetFilter.findByUser";
-    public static final String ASSETFILTER_BY_GUID = "AssetFilter.findByGuid";
     public static final String ASSETFILTER_GUID_LIST = "AssetFilter.findByGuidList";
     public static final String ASSETFILTER_BY_ASSET_GUID = "AssetFilter.findByAssetGuid";
     

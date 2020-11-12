@@ -4,23 +4,12 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_FIND_ALL;
@@ -56,9 +45,10 @@ public class AssetFilterQuery  implements Serializable{
     
     @Column(name = "inverse")
     private boolean inverse;
-    
-    @Column(name = "isnumber")
-    private boolean isNumber;
+
+	@Enumerated(EnumType.STRING)
+    @Column(name = "value_type")
+    private AssetFilterValueType valueType;
     
     @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
@@ -94,12 +84,12 @@ public class AssetFilterQuery  implements Serializable{
 		this.inverse = inverse;
 	}
 
-	public boolean getIsNumber() {
-		return isNumber;
+	public AssetFilterValueType getValueType() {
+		return valueType;
 	}
 
-	public void setIsNumber(boolean isNumber) {
-		this.isNumber = isNumber;
+	public void setValueType(AssetFilterValueType valueType) {
+		this.valueType = valueType;
 	}
 
 	public Set<AssetFilterValue> getValues() {

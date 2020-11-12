@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterListRestResourceAdapter;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -40,7 +40,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	
    @Before
     public void setup() {
-	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
        jsonb = JsonbBuilder.create(config);
 	   assetFilter = AssetHelper.createBasicAssetFilter("Test name");
 	   assetFilter = createAssetFilter(assetFilter);
@@ -59,7 +59,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void createAssetFilterFromJsonTest() {
 		
-		String afjson = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		String afjson = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"valueType\": \"NUMBER\"}] }";
 		
         String assetFilterCreateResp = getWebTargetExternal()
             .path("filter")
@@ -80,6 +80,33 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
         
         assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
     }
+
+	@Test
+	@OperateOnDeployment("normal")
+	public void createAssetFilterFromJsonMoreComplexQuery() {
+
+		String afjson = "{\"name\":\"VMS båtar\",\"filter\":[{\"type\":\"flagstate\",\"values\":[\"SWE\"],\"inverse\":false,\"valueType\":\"STRING\"},{\"type\":\"vesselType\",\"values\":[\"Fishing\"],\"inverse\":false,\"valueType\":\"STRING\"},{\"type\":\"lengthOverAll\",\"values\":[{\"operator\":\"greater than or equal\",\"value\":12}],\"inverse\":false,\"valueType\":\"NUMBER\"},{\"type\":\"hasLicence\",\"values\":[true],\"inverse\":false,\"valueType\":\"BOOLEAN\"}]}";
+
+		String assetFilterCreateResp = getWebTargetExternal()
+				.path("filter")
+				.request(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+				.post(Entity.json(afjson), String.class);
+
+		AssetFilter assetFilter2 = jsonb.fromJson(assetFilterCreateResp, AssetFilter.class);
+
+		assertNotNull(assetFilter2.getId().toString());
+
+		Response deleteresp = getWebTargetExternal()
+				.path("filter")
+				.path(assetFilter2.getId().toString())
+				.request(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+				.delete();
+
+		assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
+	}
+
 	
 	@Test
     @OperateOnDeployment("normal")
@@ -153,7 +180,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
        
         AssetFilterQuery assetQuery = new AssetFilterQuery();
         assetQuery.setType("GUID");
-        assetQuery.setIsNumber(false);
+        assetQuery.setValueType(AssetFilterValueType.STRING);
         assetQuery.setAssetFilter(assetFilter);
         
         assetQuery = getWebTargetExternal()
@@ -197,7 +224,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     public void updateAssetFilterFromJson() {
 		
 		String afId = assetFilter.getId().toString(); 
-		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Update Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"Not an Operator\"}, {\"value\":10100, \"operator\":\"bla bla bla\"}],\"type\": \"lapad\", \"inverse\": false,\"isNumber\": true}] }";
+		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Update Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"Not an Operator\"}, {\"value\":10100, \"operator\":\"bla bla bla\"}],\"type\": \"lapad\", \"inverse\": false,\"valueType\": \"NUMBER\"}] }";
 		
 		String assetFilterResp = getWebTargetExternal()
             .path("filter")
@@ -232,7 +259,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	
 	
 	 private AssetFilter createAssetFilter(AssetFilter assetFilterToCreate) {
-		 String assetFilterString = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		 String assetFilterString = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"valueType\": \"NUMBER\"}] }";
 		 assetFilterToCreate = jsonb.fromJson(assetFilterString, AssetFilter.class);
 		 String assetFilterJson =  getWebTargetExternal()
 		            .path("filter")

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
@@ -186,7 +187,7 @@ public class AssetTestsHelper {
     	AssetFilterQuery afq = new AssetFilterQuery();
     	afq.setAssetFilter(assetFilterEntity);
     	afq.setType("GUID");
-    	afq.setIsNumber(true);
+    	afq.setValueType(AssetFilterValueType.NUMBER);
     	afq.setInverse(true);
         return afq;
     }

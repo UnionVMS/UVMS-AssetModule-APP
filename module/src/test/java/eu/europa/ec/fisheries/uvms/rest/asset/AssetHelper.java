@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
@@ -140,7 +141,7 @@ public abstract class AssetHelper {
     
     public static AssetFilterQuery createBasicAssetFilterQuery(AssetFilter assetFilter) {
     	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
-    	assetFilterQuery.setIsNumber(true);
+    	assetFilterQuery.setValueType(AssetFilterValueType.NUMBER);
     	assetFilterQuery.setType("TEST_TYPE");
     	assetFilterQuery.setAssetFilter(assetFilter);
         return assetFilterQuery;

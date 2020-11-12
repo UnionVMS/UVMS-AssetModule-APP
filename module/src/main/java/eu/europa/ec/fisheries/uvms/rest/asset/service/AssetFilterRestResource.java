@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
-import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterListRestResourceAdapter;
 import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -38,7 +37,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Path("/filter")
 @Stateless
@@ -59,7 +61,7 @@ public class AssetFilterRestResource {
 
     @PostConstruct
     public void init() {
-    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
         jsonb = JsonbBuilder.create(config);
     }
     
@@ -249,7 +251,7 @@ public class AssetFilterRestResource {
             String response = jsonb.toJson(fetchedAssetFilterValue);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating AssetFilterValue. ", e);
+            LOG.error("Error when getting AssetFilterValue. ", e);
             throw e;
         }
     }
@@ -335,7 +337,8 @@ public class AssetFilterRestResource {
         	String user = servletRequest.getRemoteUser();
         	List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
         	AssetFilterList assetFilterListresp = new AssetFilterList();
-        	assetFilterListresp.setAssetFilterList(assetFilterList);
+            Map<UUID, AssetFilter> filterMap = assetFilterList.stream().collect(Collectors.toMap(AssetFilter::getId, Function.identity()));
+            assetFilterListresp.setSavedFilters(filterMap);
             String response =  jsonb.toJson(assetFilterListresp);
             
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
