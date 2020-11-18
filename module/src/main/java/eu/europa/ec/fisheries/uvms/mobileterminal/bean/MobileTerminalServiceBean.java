@@ -30,10 +30,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDnidHistoryMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -468,27 +470,27 @@ public class MobileTerminalServiceBean {
                         .collect(Collectors.toList()));
     }
 
-    public Map<String, MobileTerminal> getLatestRevisionOnAssetDnidMembernumber() {
+    public Collection<MobileTerminalDnidHistoryDto> getLatestRevisionOnAssetDnidMembernumber() {
         List<MobileTerminal> revisions = terminalDao.getAllMobileTerminalRevisions();
 
-        Map<String, MobileTerminal> resultMap = new HashMap<>();
+        Map<String, MobileTerminalDnidHistoryDto> resultMap = new HashMap<>();
 
         for (MobileTerminal mobileTerminal : revisions) {
             if (mobileTerminal.getAsset() != null) {
                 for (Channel channel : mobileTerminal.getChannels()) {
                     String key = mobileTerminal.getAsset().getNationalId() + ":" + channel.getDnid() + ":" + channel.getMemberNumber();
-                    MobileTerminal mapEntry = resultMap.get(key);
+                    MobileTerminalDnidHistoryDto mapEntry = resultMap.get(key);
                     if (mapEntry == null) {
-                        resultMap.put(key, mobileTerminal);
+                        resultMap.put(key, MobileTerminalDnidHistoryMapper.mapToMobileTerminalDnidHistory(mobileTerminal, channel));
                     } else {
-                        if (mobileTerminal.getUpdatetime().isAfter(mapEntry.getUpdatetime())) {
-                            resultMap.put(key, mobileTerminal);
+                        if (mobileTerminal.getUpdatetime().isAfter(mapEntry.getUpdateTime())) {
+                            resultMap.put(key, MobileTerminalDnidHistoryMapper.mapToMobileTerminalDnidHistory(mobileTerminal, channel));
                         }
                     }
                 }
             }
         }
-        return resultMap;
+        return resultMap.values();
     }
 
     private void sortChannels(MobileTerminal mt) {

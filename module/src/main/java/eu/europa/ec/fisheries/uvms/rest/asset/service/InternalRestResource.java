@@ -31,6 +31,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
@@ -52,6 +53,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -426,8 +428,12 @@ public class InternalRestResource {
     @GET
     @Path("/mobileterminals")
     public Response getMobileTerminalHistory() {
-        List<MobileTerminal> revisions = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
-        List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(revisions);
-        return Response.ok(dtos).build();
+        try {
+            Collection<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
+            return Response.ok(dnidHistories).build();
+        } catch (Exception ex) {
+            LOG.error("Error when getting mobileterminal histories", ex);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
     }
 }
