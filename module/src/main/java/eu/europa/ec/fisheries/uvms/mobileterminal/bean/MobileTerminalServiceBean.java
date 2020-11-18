@@ -468,6 +468,29 @@ public class MobileTerminalServiceBean {
                         .collect(Collectors.toList()));
     }
 
+    public Map<String, MobileTerminal> getLatestRevisionOnAssetDnidMembernumber() {
+        List<MobileTerminal> revisions = terminalDao.getAllMobileTerminalRevisions();
+
+        Map<String, MobileTerminal> resultMap = new HashMap<>();
+
+        for (MobileTerminal mobileTerminal : revisions) {
+            if (mobileTerminal.getAsset() != null) {
+                for (Channel channel : mobileTerminal.getChannels()) {
+                    String key = mobileTerminal.getAsset().getNationalId() + ":" + channel.getDnid() + ":" + channel.getMemberNumber();
+                    MobileTerminal mapEntry = resultMap.get(key);
+                    if (mapEntry == null) {
+                        resultMap.put(key, mobileTerminal);
+                    } else {
+                        if (mobileTerminal.getUpdatetime().isAfter(mapEntry.getUpdatetime())) {
+                            resultMap.put(key, mobileTerminal);
+                        }
+                    }
+                }
+            }
+        }
+        return resultMap;
+    }
+
     private void sortChannels(MobileTerminal mt) {
         if (mt.getChannels() != null && !mt.getChannels().isEmpty()) {
             List<Channel> asList = new ArrayList<>(mt.getChannels());

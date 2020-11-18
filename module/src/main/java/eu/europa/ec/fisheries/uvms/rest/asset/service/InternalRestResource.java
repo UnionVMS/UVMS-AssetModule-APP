@@ -21,14 +21,17 @@ import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -78,6 +81,9 @@ public class InternalRestResource {
 
     @Inject
     TerminalDaoBean terminalDaoBean;
+    
+    @Inject
+    MobileTerminalServiceBean mobileTerminalService;
 
     private Jsonb jsonb;
     private Jsonb customJsonb;
@@ -415,5 +421,13 @@ public class InternalRestResource {
             LOG.error("[ Error when getting MT {} at date {}] {}", mtId, date, ex.getStackTrace());
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
+    }
+    
+    @GET
+    @Path("/mobileterminals")
+    public Response getMobileTerminalHistory() {
+        List<MobileTerminal> revisions = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
+        List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(revisions);
+        return Response.ok(dtos).build();
     }
 }

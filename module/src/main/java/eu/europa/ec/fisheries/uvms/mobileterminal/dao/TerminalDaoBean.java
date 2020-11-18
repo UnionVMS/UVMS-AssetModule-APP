@@ -142,6 +142,14 @@ public class TerminalDaoBean {
         return  query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<MobileTerminal> getAllMobileTerminalRevisions() {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        AuditQuery query = auditReader.createQuery()
+                .forRevisionsOfEntity(MobileTerminal.class, true, true);
+        return  query.getResultList();
+    }
+
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
         try {
             Integer dnid = null;
