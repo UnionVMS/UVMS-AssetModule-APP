@@ -470,27 +470,101 @@ public class MobileTerminalServiceBean {
                         .collect(Collectors.toList()));
     }
 
-    public Collection<MobileTerminalDnidHistoryDto> getLatestRevisionOnAssetDnidMembernumber() {
+    
+    /*
+     * 
+STARTAD DATE
+SIGNAL  VARCHAR2 (8 Char)
+SATNR   NUMBER (12)
+MEDLNR  NUMBER (5)
+KUNDNR  NUMBER (12)
+ID  NUMBER (12)
+DNID    VARCHAR2 (44 Char)
+DEMONT  DATE
+
+     */
+    
+    
+    public List<MobileTerminalDnidHistoryDto> getListOfMobileTerminalDnidHistoryDto() {
         List<MobileTerminal> revisions = terminalDao.getAllMobileTerminalRevisions();
-
-        Map<String, MobileTerminalDnidHistoryDto> resultMap = new HashMap<>();
-
+        Map<UUID, List<MobileTerminal>> mobileterminalRevisionsMap = new HashMap<>();
         for (MobileTerminal mobileTerminal : revisions) {
-            if (mobileTerminal.getAsset() != null) {
-                for (Channel channel : mobileTerminal.getChannels()) {
-                    String key = mobileTerminal.getAsset().getNationalId() + ":" + channel.getDnid() + ":" + channel.getMemberNumber();
-                    MobileTerminalDnidHistoryDto mapEntry = resultMap.get(key);
-                    if (mapEntry == null) {
-                        resultMap.put(key, MobileTerminalDnidHistoryMapper.mapToMobileTerminalDnidHistory(mobileTerminal, channel));
-                    } else {
-                        if (mobileTerminal.getUpdatetime().isAfter(mapEntry.getUpdateTime())) {
-                            resultMap.put(key, MobileTerminalDnidHistoryMapper.mapToMobileTerminalDnidHistory(mobileTerminal, channel));
-                        }
-                    }
+            if(mobileTerminal.getAsset() != null) {
+                if(!mobileterminalRevisionsMap.containsKey(mobileTerminal.getId())) {
+                mobileterminalRevisionsMap.put(mobileTerminal.getId(), new ArrayList<>());
                 }
+                List<MobileTerminal> listOfMobileTerminals = mobileterminalRevisionsMap.get(mobileTerminal.getId());
+                listOfMobileTerminals.add(mobileTerminal);
+                listOfMobileTerminals.sort(Comparator.comparing(MobileTerminal::getUpdatetime).reversed()); 
+            }
+            
+        }
+        MobileTerminalDnidHistoryDto mobileTerminalDnidHistory = new MobileTerminalDnidHistoryDto();
+        List<MobileTerminalDnidHistoryDto> returnList = new ArrayList<>();
+        for (Map.Entry<UUID, List<MobileTerminal>> mobiteterminals : mobileterminalRevisionsMap.entrySet() ) {
+            List<MobileTerminal> listOfMobileTerminals = mobiteterminals.getValue();
+
+            MobileTerminal mostRecentMT = listOfMobileTerminals.get(0);
+            for (Channel channel : mostRecentMT.getChannels()) {
+                if(channel.isDefaultChannel()){
+                        mobileTerminalDnidHistory.setId(mostRecentMT.getId());
+                        mobileTerminalDnidHistory.setHistoryId(mostRecentMT.getHistoryId());
+                        mobileTerminalDnidHistory.setMobileTerminalType(mostRecentMT.getMobileTerminalType());
+                        mobileTerminalDnidHistory.setSerialNo(mostRecentMT.getSerialNo());
+                        mobileTerminalDnidHistory.setSatelliteNumber(mostRecentMT.getSatelliteNumber());
+                        mobileTerminalDnidHistory.setAssetId(mostRecentMT.getAsset().getId().toString());
+                        mobileTerminalDnidHistory.setNationalId(mostRecentMT.getAsset().getNationalId());
+                        mobileTerminalDnidHistory.setChannelName(channel.getName());
+                        mobileTerminalDnidHistory.setDefaultChannel(channel.isDefaultChannel());
+                        mobileTerminalDnidHistory.setConfigChannel(channel.isConfigChannel());
+                        mobileTerminalDnidHistory.setPollChannel(channel.isPollChannel());
+                        mobileTerminalDnidHistory.setDnid(channel.getDnid());
+                        mobileTerminalDnidHistory.setMemberNumber(channel.getMemberNumber());
+                        mobileTerminalDnidHistory.setStartDate(getStartDate(listOfMobileTerminals));
+                        mobileTerminalDnidHistory.setEndDate(getEndDate(listOfMobileTerminals));
+                        
+                        returnList.add(mobileTerminalDnidHistory);
+                } 
+            } 
+        }     
+
+        return returnList;
+    }
+
+    private Instant getEndDate(List<MobileTerminal> listOfMobileTerminals) {
+        Instant endDate = null;
+        for (MobileTerminal mobileTerminal: listOfMobileTerminals) {
+            if(mobileTerminal.getUninstallDate() != null) {
+                return mobileTerminal.getUninstallDate();
+            }else if(mobileTerminal.getActive() == false) {
+                return mobileTerminal.getUpdatetime();
             }
         }
-        return resultMap.values();
+        return endDate;
+    }
+
+    private Instant getStartDate(List<MobileTerminal> listOfMobileTerminals) {
+        Instant startDate = null;
+        MobileTerminal prevMt = null;
+        if(listOfMobileTerminals.size() < 2 ) {
+            MobileTerminal theOnlyMtInList =listOfMobileTerminals.get(0);
+            if(theOnlyMtInList.getInstallDate() != null) {
+                return theOnlyMtInList.getInstallDate();
+            }
+            if(theOnlyMtInList.getActive()) {
+                return theOnlyMtInList.getUpdatetime();
+            } 
+        }
+        for (MobileTerminal mobileTerminal: listOfMobileTerminals) {
+            if(mobileTerminal.getInstallDate() != null) {
+                return mobileTerminal.getInstallDate();
+            }
+            if(mobileTerminal.getActive() == false && prevMt.getActive() == true) {
+                return prevMt.getUpdatetime();
+            }
+        }
+        return startDate;
+        
     }
 
     private void sortChannels(MobileTerminal mt) {

@@ -429,11 +429,23 @@ public class InternalRestResource {
     @Path("/mobileterminals")
     public Response getMobileTerminalHistory() {
         try {
-            Collection<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
-            return Response.ok(dnidHistories).build();
+            List<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getListOfMobileTerminalDnidHistoryDto();
+            return Response.ok(jsonb.toJson(dnidHistories)).build();
         } catch (Exception ex) {
             LOG.error("Error when getting mobileterminal histories", ex);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
+    
+//    @GET
+//    @Path("/mobileterminals")
+//    public Response getMobileTerminalHistory() {
+//        try {
+//            Collection<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
+//            return Response.ok(dnidHistories).build();
+//        } catch (Exception ex) {
+//            LOG.error("Error when getting mobileterminal histories", ex);
+//            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+//        }
+//    }
 }

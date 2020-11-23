@@ -25,6 +25,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -595,6 +597,34 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
 
         return  created;
     }
+    
+    
+//    private Channel createChannelToMobileTerminal(MobileTerminal mt){
+//        Channel created = getWebTargetExternal()
+//                .path("channel")
+//                .request(MediaType.APPLICATION_JSON)
+//                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+//                .post(Entity.json(mt), Channel.class);
+//        assertNotNull(created);
+//
+//        return  created;
+//    }
+//    public Channel createChannel(String name, boolean defaultChannel, boolean configChannel, boolean pollChannel) {
+//        Channel channel = new Channel();
+//        channel.setArchived(false);
+//        channel.setMemberNumber(Integer.parseInt(generateARandomStringWithMaxLength(3)));
+//        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+//        channel.setExpectedFrequency(Duration.ofSeconds(60));
+//        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+//        channel.setLesDescription("Thrane&Thrane");
+//
+//        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(3)));
+//        channel.setName(name);
+//        channel.setDefaultChannel(defaultChannel);
+//        channel.setConfigChannel(configChannel);
+//        channel.setPollChannel(pollChannel);
+//        return channel;
+//    }
 
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
