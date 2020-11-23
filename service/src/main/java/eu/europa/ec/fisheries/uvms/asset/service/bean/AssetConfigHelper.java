@@ -11,19 +11,24 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
-
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
+
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
     private final static String ASSET_MODULE_NAME = "asset";
+    public static final String MODULE_VERSION_PROPERTIES_KEY = "uvms.module.version";
+
+    @Inject
+    private PropertiesBean propertiesBean;
 
     @PersistenceContext
     protected EntityManager em;
@@ -42,9 +47,14 @@ public class AssetConfigHelper implements ConfigHelper {
         return ASSET_MODULE_NAME;
     }
 
-	@Override
-	public EntityManager getEntityManager() {
-		return em;
-	}
+    @Override
+    public String getModuleVersion() {
+        return propertiesBean.getProperty(MODULE_VERSION_PROPERTIES_KEY);
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
 
 }

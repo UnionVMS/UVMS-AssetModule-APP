@@ -13,6 +13,7 @@ import java.util.List;
 public class AssetConfigHelperTest implements ConfigHelper {
 
     private final static String ASSET_PU = "asset";
+    private final static String ASSET_VERSION = "asset-version";
 
     @PersistenceContext
     protected EntityManager em;
@@ -30,6 +31,11 @@ public class AssetConfigHelperTest implements ConfigHelper {
     @Override
     public String getModuleName() {
         return ASSET_PU;
+    }
+
+    @Override
+    public String getModuleVersion() {
+        return ASSET_VERSION;
     }
 
     @Override
