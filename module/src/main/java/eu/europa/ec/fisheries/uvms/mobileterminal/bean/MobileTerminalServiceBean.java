@@ -483,8 +483,6 @@ DNID    VARCHAR2 (44 Char)
 DEMONT  DATE
 
      */
-    
-    
     public List<MobileTerminalDnidHistoryDto> getListOfMobileTerminalDnidHistoryDto() {
         List<MobileTerminal> revisions = terminalDao.getAllMobileTerminalRevisions();
         Map<UUID, List<MobileTerminal>> mobileterminalRevisionsMap = new HashMap<>();
@@ -545,7 +543,6 @@ DEMONT  DATE
 
     private Instant getStartDate(List<MobileTerminal> listOfMobileTerminals) {
         Instant startDate = null;
-        MobileTerminal prevMt = null;
         if(listOfMobileTerminals.size() < 2 ) {
             MobileTerminal theOnlyMtInList =listOfMobileTerminals.get(0);
             if(theOnlyMtInList.getInstallDate() != null) {
@@ -555,6 +552,7 @@ DEMONT  DATE
                 return theOnlyMtInList.getUpdatetime();
             } 
         }
+        MobileTerminal prevMt = null;
         for (MobileTerminal mobileTerminal: listOfMobileTerminals) {
             if(mobileTerminal.getInstallDate() != null) {
                 return mobileTerminal.getInstallDate();
@@ -562,9 +560,9 @@ DEMONT  DATE
             if(mobileTerminal.getActive() == false && prevMt.getActive() == true) {
                 return prevMt.getUpdatetime();
             }
+            prevMt = mobileTerminal;
         }
         return startDate;
-        
     }
 
     private void sortChannels(MobileTerminal mt) {
