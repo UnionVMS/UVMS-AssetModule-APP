@@ -26,7 +26,7 @@ public class MobileTerminalDnidHistoryMapper {
         dnidHistoryDto.setMobileTerminalType(mobileTerminal.getMobileTerminalType());
         dnidHistoryDto.setSerialNo(mobileTerminal.getSerialNo());
         dnidHistoryDto.setSatelliteNumber(mobileTerminal.getSatelliteNumber());
-        dnidHistoryDto.setAssetId(mobileTerminal.getAssetUUID());
+        dnidHistoryDto.setAssetId(mobileTerminal.getAsset().getId());
         dnidHistoryDto.setNationalId(mobileTerminal.getAsset().getNationalId());
         dnidHistoryDto.setInstallDate(mobileTerminal.getInstallDate());
         dnidHistoryDto.setUninstallDate(mobileTerminal.getUninstallDate());

@@ -22,7 +22,7 @@ public class MobileTerminalDnidHistoryDto {
     private MobileTerminalTypeEnum mobileTerminalType;
     private String serialNo;
     private String satelliteNumber;
-    private String assetId;
+    private UUID assetId;
     private Long nationalId;
     private Instant installDate;
     private Instant uninstallDate;
@@ -67,10 +67,10 @@ public class MobileTerminalDnidHistoryDto {
     public void setSatelliteNumber(String satelliteNumber) {
         this.satelliteNumber = satelliteNumber;
     }
-    public String getAssetId() {
+    public UUID getAssetId() {
         return assetId;
     }
-    public void setAssetId(String assetId) {
+    public void setAssetId(UUID assetId) {
         this.assetId = assetId;
     }
     public Long getNationalId() {

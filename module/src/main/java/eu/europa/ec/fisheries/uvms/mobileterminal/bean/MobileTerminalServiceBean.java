@@ -34,6 +34,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDnidHisto
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
@@ -71,8 +72,17 @@ public class MobileTerminalServiceBean {
         if (mobileTerminal.getChannels().isEmpty()) {
             throw new IllegalArgumentException("A mobile Terminal needs to have at least one channel attached to it.");
         }
+//        Set<Channel> channels = mobileTerminal.getChannels();
+//        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        
         Set<Channel> channels = mobileTerminal.getChannels();
-        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        channels.forEach(channel -> {
+                    if (channel.getStartDate() == null) {
+                        channel.setStartDate(Instant.now());
+                    }
+                    channel.setMobileTerminal(mobileTerminal);
+                    });
+        
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         sortChannels(createdMobileTerminal);
@@ -117,8 +127,29 @@ public class MobileTerminalServiceBean {
         mobileTerminal.setComment(comment);
         mobileTerminal.setPlugin(updatedPlugin);
 
+        Set<Channel> channels = mobileTerminal.getChannels();
+        Set<Channel> oldChannels = oldTerminal.getChannels();
+        
+        for(Channel oldChannel : oldChannels) {
+            if(!channels.contains(oldChannel)) {
+                if (oldChannel.getEndDate() == null) {
+                    oldChannel.setEndDate(Instant.now());
+                }
+            }
+        } 
+        
+        for(Channel channel : channels) {
+            if(!oldChannels.contains(channel)) {
+                if (channel.getStartDate() == null) {
+                    channel.setStartDate(Instant.now());
+                }
+            }
+        }
+        
+      //  oldTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(oldTerminal));
         mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mobileTerminal));     //this is here to take care of the back reference since jsonb does not do that automatically
 
+        
         //TODO check type
         MobileTerminal updatedTerminal;
         if (mobileTerminal.getMobileTerminalType() != null) {
@@ -510,7 +541,7 @@ DEMONT  DATE
                         mobileTerminalDnidHistory.setMobileTerminalType(mostRecentMT.getMobileTerminalType());
                         mobileTerminalDnidHistory.setSerialNo(mostRecentMT.getSerialNo());
                         mobileTerminalDnidHistory.setSatelliteNumber(mostRecentMT.getSatelliteNumber());
-                        mobileTerminalDnidHistory.setAssetId(mostRecentMT.getAsset().getId().toString());
+                        mobileTerminalDnidHistory.setAssetId(mostRecentMT.getAsset().getId());
                         mobileTerminalDnidHistory.setNationalId(mostRecentMT.getAsset().getNationalId());
                         mobileTerminalDnidHistory.setChannelName(channel.getName());
                         mobileTerminalDnidHistory.setDefaultChannel(channel.isDefaultChannel());
