@@ -11,13 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model.mt;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class MobileTerminal implements Serializable {
+public class MobileTerminal {
 
 	private UUID id;
 
@@ -66,9 +65,6 @@ public class MobileTerminal implements Serializable {
     private Instant uninstallDate;
 
 	private String installedBy;
-
-	public MobileTerminal() {
-	}
 
 	public UUID getId() {
 		return id;

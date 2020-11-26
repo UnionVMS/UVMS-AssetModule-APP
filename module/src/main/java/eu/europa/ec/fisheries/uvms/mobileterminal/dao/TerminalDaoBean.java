@@ -163,13 +163,18 @@ public class TerminalDaoBean {
         }
     }
 
+    public List<MobileTerminal> getMTListSearch(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived) {
+        return getMTListSearchPaginated(null, null, searchFields, isDynamic, includeArchived);
+    }
 
     public List<MobileTerminal> getMTListSearchPaginated(Integer pageNumber, Integer pageSize, List<MTSearchKeyValue> searchFields,
                                                    boolean isDynamic, boolean includeArchived) {
         try {
             AuditQuery query = createAuditQuery(searchFields, isDynamic, includeArchived);
-            query.setFirstResult(pageSize * (pageNumber - 1));
-            query.setMaxResults(pageSize);
+            if (pageSize != null && pageNumber != null) {
+                query.setFirstResult(pageSize * (pageNumber - 1));
+                query.setMaxResults(pageSize);
+            }
 
             //searching for a MT involves searching for values that reside in channel, thus we need to search the db for channels and extract the MT from there
             List<Channel> channelList = query.getResultList();

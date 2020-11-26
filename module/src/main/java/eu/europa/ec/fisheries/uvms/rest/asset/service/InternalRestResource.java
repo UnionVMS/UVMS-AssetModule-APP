@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
@@ -49,6 +50,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -396,6 +398,18 @@ public class InternalRestResource {
         }
     }
 
+    @GET
+    @Path("mobileterminals")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
+        try {
+            List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, includeArchived);
+            return Response.ok(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminals)).build();
+        } catch (Exception e) {
+            LOG.error("Could not get mobile terminals", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
 
     @GET
     @Path("/mobileTerminalAtDate/{mtId}")

@@ -570,6 +570,13 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getMobileTerminalsTest(){
+        List<MobileTerminal> mobileTerminals = assetClient.getMobileTerminals(false);
+        assertNull(mobileTerminals);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getMtAtDateRandomId(){
 
         MobileTerminal output = assetClient.getMtAtDate(UUID.randomUUID(), Instant.now());
