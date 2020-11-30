@@ -572,7 +572,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getMobileTerminalsTest(){
         List<MobileTerminal> mobileTerminals = assetClient.getMobileTerminals(false);
-        assertNull(mobileTerminals);
+        assertNotNull(mobileTerminals);
     }
 
     @Test
