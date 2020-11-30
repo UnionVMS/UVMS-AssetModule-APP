@@ -366,6 +366,19 @@ public class AssetClient {
         return response.readEntity(SanePollDto.class);
     }
 
+    public List<MobileTerminal> getMobileTerminals(boolean includeArchived) {
+        Response response = webTarget
+                .path("mobileterminals")
+                .queryParam("includeArchived", includeArchived)
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<MobileTerminal>>() {});
+    }
+
     public MobileTerminal getMtAtDate(UUID mtId, Instant date){
         Response response = webTarget
                 .path("mobileTerminalAtDate")
