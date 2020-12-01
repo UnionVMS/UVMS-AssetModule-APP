@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.mapper.AssetDtoMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
@@ -67,21 +68,16 @@ public class MobileTerminalServiceBean {
 
     @Inject
     private AssetDao assetDao;
+    
+    @Inject
+    private ChannelDaoBean channelDao;
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
         if (mobileTerminal.getChannels().isEmpty()) {
             throw new IllegalArgumentException("A mobile Terminal needs to have at least one channel attached to it.");
         }
-//        Set<Channel> channels = mobileTerminal.getChannels();
-//        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
-        
         Set<Channel> channels = mobileTerminal.getChannels();
-        channels.forEach(channel -> {
-                    if (channel.getStartDate() == null) {
-                        channel.setStartDate(Instant.now());
-                    }
-                    channel.setMobileTerminal(mobileTerminal);
-                    });
+        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
@@ -130,26 +126,16 @@ public class MobileTerminalServiceBean {
         Set<Channel> channels = mobileTerminal.getChannels();
         Set<Channel> oldChannels = oldTerminal.getChannels();
         
-        for(Channel oldChannel : oldChannels) {
-            if(!channels.contains(oldChannel)) {
-                if (oldChannel.getEndDate() == null) {
-                    oldChannel.setEndDate(Instant.now());
-                }
-            }
-        } 
+        oldChannels.stream()
+                .filter(oldChannel -> !channels.contains(oldChannel))
+                .forEach( filteredOldChannel -> {
+                    if (filteredOldChannel.getEndDate() == null) {
+                        filteredOldChannel.setEndDate(Instant.now());
+                    }
+                });
         
-        for(Channel channel : channels) {
-            if(!oldChannels.contains(channel)) {
-                if (channel.getStartDate() == null) {
-                    channel.setStartDate(Instant.now());
-                }
-            }
-        }
-        
-      //  oldTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(oldTerminal));
         mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mobileTerminal));     //this is here to take care of the back reference since jsonb does not do that automatically
 
-        
         //TODO check type
         MobileTerminal updatedTerminal;
         if (mobileTerminal.getMobileTerminalType() != null) {
@@ -162,7 +148,7 @@ public class MobileTerminalServiceBean {
         } else {
             throw new UnsupportedOperationException("Update - Not supported mobile terminal type");
         }
-
+        
         //send to audit
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUpdated(updatedTerminal.getId().toString(), comment, username);

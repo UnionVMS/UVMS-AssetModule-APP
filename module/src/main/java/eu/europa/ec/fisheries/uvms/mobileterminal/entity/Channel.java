@@ -142,6 +142,9 @@ public class Channel implements Serializable {
 		if(this.mobileTerminal != null){
 			this.updateUser = mobileTerminal.getUpdateuser();
 		}
+		if(this.startDate == null){
+            this.startDate = Instant.now();
+        }
 	}
 
 	public UUID getId() {

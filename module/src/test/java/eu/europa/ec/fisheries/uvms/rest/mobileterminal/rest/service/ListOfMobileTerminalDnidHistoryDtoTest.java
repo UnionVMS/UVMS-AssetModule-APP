@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSource
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -146,11 +147,27 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         channel3.setMobileTerminal(mobileTerminal);
         mobileTerminal.setChannels(channelSet);
         mobileTerminal.setAsset(createAndRestBasicAsset());
-
+        mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mobileTerminal = createMobileTerminal(mobileTerminal);
+
         System.out.println("mobileTerminal id: "+ mobileTerminal.getId());
-        MobileTerminal fetchedMT = getMobileTerminal(mobileTerminal);
-        System.out.println("fetchedMT id: "+ fetchedMT.getId());
+        System.out.println("channelSet size: "+ mobileTerminal.getChannels().size());
+        
+        Channel channelVmsDefault2 = createBasicChannel(true, true, channelname);
+        Set<Channel> channelSet2 = new HashSet<>();
+        channelSet2.add(channelVmsDefault2);
+        channelVmsDefault2.setMobileTerminal(mobileTerminal);
+        mobileTerminal.getChannels().clear();
+        mobileTerminal.setChannels(channelSet2);
+        mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
+        
+        MobileTerminal mobileTerminal2 = updateMobileTerminal(mobileTerminal);
+        System.out.println("mobileTerminal2 id: "+ mobileTerminal2.getId());
+        System.out.println("channelSet2 size: "+ mobileTerminal2.getChannels().size());
+        
+        MobileTerminal newMobileTerminal = getMobileTerminal(mobileTerminal2);
+        System.out.println("newMobileTerminal size: "+ newMobileTerminal.getChannels().size());
+        
         Response response = getWebTargetExternal()
                 .path("/internal")
                 .path("/mobileterminals")
@@ -164,71 +181,7 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
 
     }
-//    @Test
-//    @OperateOnDeployment("normal")
-//    public void getListOfMobileTerminalDnidHistoryDtoEndDateSetAutomagicChannelTest() throws InterruptedException {
-//        String channelname = "VMS-ENDDATE-TEST-NOENDDATE";
-//        MobileTerminal mobileTerminal = createBasicMobileTerminal();
-//        Channel channelVmsDefault = createBasicChannel(true, true, channelname);
-//        Set<Channel> channelSet = new HashSet<>();
-//        channelSet.add(channelVmsDefault);
-//        channelVmsDefault.setMobileTerminal(mobileTerminal);
-//        mobileTerminal.setChannels(channelSet);
-//        mobileTerminal.setAsset(createAndRestBasicAsset());
-//
-//        mobileTerminal = createMobileTerminal(mobileTerminal);
-//        
-//        Channel channel = mobileTerminal.getChannels().stream()
-//                .filter(c -> c.getName().equals(channelname))
-//                .findFirst()
-//                .orElse(null);
-//        
-//        System.out.println("channel id: "+ channel.getId());
-//        System.out.println("mobileTerminal id: "+ mobileTerminal.getId());
-//        
-//        MobileTerminal fetchedMT = getMobileTerminal(mobileTerminal);
-//        Thread.sleep(100);
-//        Channel anotherChannel = createBasicChannel(false, true, "sdaad");
-//        Set<Channel> channelSet2 = new HashSet<>();
-//        channelSet2.add(anotherChannel);
-//        fetchedMT.setChannels(channelSet2);
-//        System.out.println("fetchedMT id: "+ fetchedMT.getId());
-//        Thread.sleep(100);
-//        mobileTerminal = fetchedMT;
-//        MobileTerminal updated = getWebTargetExternal()
-//                .path("mobileterminal")
-//                .request(MediaType.APPLICATION_JSON)
-//                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-//                .put(Entity.json(mobileTerminal), MobileTerminal.class);
-//        Thread.sleep(100);
-//        System.out.println("updated mt id: "+ updated.getId());
-//        
-//        Channel channel2 = updated.getChannels().stream()
-//                .filter(c -> c.getName().equals("sdaad"))
-//                .findFirst()
-//                .orElse(null);
-//        System.out.println("channel2 id: "+ channel2.getId());
-//        
-//        channelVmsDefault.setMobileTerminal(mobileTerminal);
-//        Response response = getWebTargetExternal()
-//                .path("/internal")
-//                .path("/mobileterminals")
-//                .request(MediaType.APPLICATION_JSON)
-//                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-//                .get(Response.class);
-//        
-//        assertEquals(200, response.getStatus());
-//        assertNotNull(response);
-//        
-//        List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
-////        for(MobileTerminalDnidHistoryDto mth : listOfMobileTerminalDnidHistoryDto) {
-////            if( mth.getChannelName().equals(channel.getName()) ){
-////                assertNotNull(mth.getEndDate());
-////            }
-////        }
-//    }
-    
-    
+
     
     /*
      * Helper methods below
@@ -253,6 +206,17 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(MobileTerminal.class);
+        assertNotNull(fetched);
+
+        return  fetched;
+    }
+    
+    private MobileTerminal updateMobileTerminal(MobileTerminal mt){
+        MobileTerminal fetched = getWebTargetExternal()
+                .path("/mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(mt), MobileTerminal.class);
         assertNotNull(fetched);
 
         return  fetched;
