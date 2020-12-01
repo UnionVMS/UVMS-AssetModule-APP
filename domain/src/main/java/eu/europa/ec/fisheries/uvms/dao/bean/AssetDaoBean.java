@@ -217,7 +217,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         List<AssetHistory> resultList = new ArrayList<>();
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
-            query.setParameter("EXTERNAL_MARKING",null);
+            query.setParameter("EXTERNAL_MARKING", extMark);
             query.setParameter("CFR", cfr);
             query.setParameter("IRCS", ircs);
             query.setParameter("GFCM", null);
