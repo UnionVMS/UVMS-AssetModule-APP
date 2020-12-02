@@ -263,7 +263,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
         assertFalse(found);
-        assertTrue(pollPrograms.isEmpty());
+      //  assertTrue(pollPrograms.isEmpty());
     }
 
     @Test
@@ -288,7 +288,8 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
         assertFalse(found);
-        assertTrue(pollPrograms.isEmpty());
+        // pollPrograms is NOT empty. Other polls are there
+      //  assertTrue(pollPrograms.isEmpty());
     }
 
     @Test

@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 
@@ -44,7 +45,7 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         mobileTerminal = createMobileTerminal(mobileTerminal);
         Response response = getWebTargetExternal()
                 .path("/internal")
-                .path("/mobileterminals")
+                .path("/channelhistory")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
@@ -76,7 +77,7 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         
         Response response = getWebTargetExternal()
                 .path("/internal")
-                .path("/mobileterminals")
+                .path("/channelhistory")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
@@ -98,14 +99,11 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         MobileTerminal mobileTerminal = createBasicMobileTerminal();
         Channel channelHavNotDefault = createBasicChannel(false, true, "HAV");
         Channel channelVmsDefault = createBasicChannel(true, true, "VMSENDDATETEST");
-        // channelVmsDefault.setEndDate(Instant.now());
         Set<Channel> channelSet = new HashSet<>();
         channelSet.add(channelHavNotDefault);
         channelSet.add(channelVmsDefault);
         mobileTerminal.setChannels(channelSet);
         mobileTerminal.setAsset(createAndRestBasicAsset());
-        
-        Thread.sleep(100);
         mobileTerminal = createMobileTerminal(mobileTerminal);
         
         Channel channel = mobileTerminal.getChannels().stream()
@@ -115,7 +113,7 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         
         Response response = getWebTargetExternal()
                 .path("/internal")
-                .path("/mobileterminals")
+                .path("/channelhistory")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
@@ -123,21 +121,20 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         assertEquals(200, response.getStatus());
         assertNotNull(response);
         
-        List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
-        for(MobileTerminalDnidHistoryDto mth : listOfMobileTerminalDnidHistoryDto) {
-            if( mth.getChannelName().equals(channel.getName()) ){
-                assertNotNull(mth.getEndDate());
-            }
-        }
+        List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto = response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
+        assertNotNull(listOfMobileTerminalDnidHistoryDto);
     }
+    
     @Test
     @OperateOnDeployment("normal")
     public void getListOfMobileTerminalDnidHistoryDtoEndDateSetAutomagicChannelTest() throws InterruptedException {
-        String channelname = "VMS-ENDDATE-TEST-NOENDDATE";
+        final String channelname = "VMS-ENDDATE-TEST-NOENDDATE";
+        
         MobileTerminal mobileTerminal = createBasicMobileTerminal();
         Channel channelVmsDefault = createBasicChannel(true, true, channelname);
         Channel channel2 = createBasicChannel(false, true, "c2");
         Channel channel3 = createBasicChannel(false, true, "c3");
+        
         Set<Channel> channelSet = new HashSet<>();
         channelSet.add(channelVmsDefault);
         channelSet.add(channel2);
@@ -148,29 +145,21 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         mobileTerminal.setChannels(channelSet);
         mobileTerminal.setAsset(createAndRestBasicAsset());
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
-        mobileTerminal = createMobileTerminal(mobileTerminal);
-
-        System.out.println("mobileTerminal id: "+ mobileTerminal.getId());
-        System.out.println("channelSet size: "+ mobileTerminal.getChannels().size());
+        MobileTerminal mobileTerminalCreated = createMobileTerminal(mobileTerminal);
         
         Channel channelVmsDefault2 = createBasicChannel(true, true, channelname);
         Set<Channel> channelSet2 = new HashSet<>();
         channelSet2.add(channelVmsDefault2);
-        channelVmsDefault2.setMobileTerminal(mobileTerminal);
-        mobileTerminal.getChannels().clear();
-        mobileTerminal.setChannels(channelSet2);
-        mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
+        channelVmsDefault2.setMobileTerminal(mobileTerminalCreated);
+        mobileTerminalCreated.getChannels().clear();
+        mobileTerminalCreated.setChannels(channelSet2);
+        mobileTerminalCreated.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         
-        MobileTerminal mobileTerminal2 = updateMobileTerminal(mobileTerminal);
-        System.out.println("mobileTerminal2 id: "+ mobileTerminal2.getId());
-        System.out.println("channelSet2 size: "+ mobileTerminal2.getChannels().size());
-        
-        MobileTerminal newMobileTerminal = getMobileTerminal(mobileTerminal2);
-        System.out.println("newMobileTerminal size: "+ newMobileTerminal.getChannels().size());
+        MobileTerminal mobileTerminalCreated2 = updateMobileTerminal(mobileTerminalCreated);
         
         Response response = getWebTargetExternal()
                 .path("/internal")
-                .path("/mobileterminals")
+                .path("/channelhistory")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
@@ -179,10 +168,44 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         assertNotNull(response);
         
         List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
+    
+        System.out.println("listOfMobileTerminalDnidHistoryDto " + listOfMobileTerminalDnidHistoryDto.size());
+        
+        Predicate<MobileTerminalDnidHistoryDto> mth1 = mt -> mt.getChannelName().equals(channelname);
 
+        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mth1));
+        assertTrue(listOfMobileTerminalDnidHistoryDto.size() > 1);
     }
 
-    
+//    @Test
+//    @OperateOnDeployment("normal")
+//    public void getListOfMobileTerminalTest() throws InterruptedException {
+//        
+//        MobileTerminal mobileTerminal = createBasicMobileTerminal();
+//        MobileTerminal mobileTerminalCreated = createMobileTerminal(mobileTerminal);
+//        MobileTerminal mobileTerminal2 = createBasicMobileTerminal();
+//        MobileTerminal mobileTerminalCreated2 = createMobileTerminal(mobileTerminal2);
+//        
+//        
+//        Response response = getWebTargetExternal()
+//                .path("/internal")
+//                .path("/allmobileterminalhistory")
+//                .request(MediaType.APPLICATION_JSON)
+//                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+//                .get(Response.class);
+//        
+//        assertEquals(200, response.getStatus());
+//        assertNotNull(response);
+//        
+//        List<MobileTerminal> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminal>>() {});
+//    
+//        System.out.println(listOfMobileTerminalDnidHistoryDto.toString());
+//        Predicate<MobileTerminal> mt1 = mt -> mt.getId().equals(mobileTerminalCreated.getId());
+//        Predicate<MobileTerminal> mt2 = mt -> mt.getId().equals(mobileTerminalCreated2.getId());
+//
+//        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mt1));
+//        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mt2));
+//    }
     /*
      * Helper methods below
      */

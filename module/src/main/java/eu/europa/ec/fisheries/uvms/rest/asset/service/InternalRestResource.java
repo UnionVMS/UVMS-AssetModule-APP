@@ -426,7 +426,7 @@ public class InternalRestResource {
     }
     
     @GET
-    @Path("/mobileterminals")
+    @Path("/channelhistory")
     public Response getMobileTerminalHistory() {
         try {
             List<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getListOfMobileTerminalDnidHistoryDto();
@@ -436,6 +436,19 @@ public class InternalRestResource {
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
+    
+    @GET
+    @Path("/allmobileterminalhistory")
+    public Response getAllMobileTerminalRevisions() {
+        try {
+            List<MobileTerminal> mtList = mobileTerminalService.getAllMobileTerminalRevisions();
+            return Response.ok(jsonb.toJson(mtList)).build();
+        } catch (Exception ex) {
+            LOG.error("Error when getting mobileterminal histories", ex);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+    
     
 //    @GET
 //    @Path("/mobileterminals")
