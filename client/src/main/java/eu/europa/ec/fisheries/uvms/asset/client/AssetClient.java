@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -378,6 +379,30 @@ public class AssetClient {
 
         checkForErrorResponse(response);
         return response.readEntity(MobileTerminal.class);
+    }
+    
+    public List<MobileTerminalDnidHistoryDto> getMobileTerminalDnidHistoryDto(){
+        Response response = webTarget
+                .path("channelhistory")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
+    }
+    
+    public List<MobileTerminal> getListOfMts(){
+        Response response = webTarget
+                .path("allmobileterminalhistory")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<MobileTerminal>>(){});
     }
 
     private void checkForErrorResponse(Response response){

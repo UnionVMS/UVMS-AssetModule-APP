@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSource
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -168,44 +167,38 @@ public class ListOfMobileTerminalDnidHistoryDtoTest extends AbstractAssetRestTes
         assertNotNull(response);
         
         List<MobileTerminalDnidHistoryDto> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminalDnidHistoryDto>>() {});
-    
-        System.out.println("listOfMobileTerminalDnidHistoryDto " + listOfMobileTerminalDnidHistoryDto.size());
-        
         Predicate<MobileTerminalDnidHistoryDto> mth1 = mt -> mt.getChannelName().equals(channelname);
 
         assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mth1));
         assertTrue(listOfMobileTerminalDnidHistoryDto.size() > 1);
     }
 
-//    @Test
-//    @OperateOnDeployment("normal")
-//    public void getListOfMobileTerminalTest() throws InterruptedException {
-//        
-//        MobileTerminal mobileTerminal = createBasicMobileTerminal();
-//        MobileTerminal mobileTerminalCreated = createMobileTerminal(mobileTerminal);
-//        MobileTerminal mobileTerminal2 = createBasicMobileTerminal();
-//        MobileTerminal mobileTerminalCreated2 = createMobileTerminal(mobileTerminal2);
-//        
-//        
-//        Response response = getWebTargetExternal()
-//                .path("/internal")
-//                .path("/allmobileterminalhistory")
-//                .request(MediaType.APPLICATION_JSON)
-//                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-//                .get(Response.class);
-//        
-//        assertEquals(200, response.getStatus());
-//        assertNotNull(response);
-//        
-//        List<MobileTerminal> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminal>>() {});
-//    
-//        System.out.println(listOfMobileTerminalDnidHistoryDto.toString());
-//        Predicate<MobileTerminal> mt1 = mt -> mt.getId().equals(mobileTerminalCreated.getId());
-//        Predicate<MobileTerminal> mt2 = mt -> mt.getId().equals(mobileTerminalCreated2.getId());
-//
-//        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mt1));
-//        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mt2));
-//    }
+    @Test
+    @OperateOnDeployment("normal")
+    public void getListOfMobileTerminalTest() throws InterruptedException {
+        
+        MobileTerminal mobileTerminal = createBasicMobileTerminal();
+        Channel channelVmsDefault = createBasicChannel(true, true, "test name");
+        Set<Channel> channelSet = new HashSet<>();
+        channelSet.add(channelVmsDefault);
+        mobileTerminal.setChannels(channelSet);
+        MobileTerminal mobileTerminalCreated = createMobileTerminal(mobileTerminal);
+
+        Response response = getWebTargetExternal()
+                .path("/internal")
+                .path("/allmobileterminalhistory")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+        
+        assertEquals(200, response.getStatus());
+        assertNotNull(response);
+        
+        List<MobileTerminal> listOfMobileTerminalDnidHistoryDto= response.readEntity(new GenericType<List<MobileTerminal>>() {});
+        Predicate<MobileTerminal> mt1 = mtp1 -> mtp1.getId().equals(mobileTerminalCreated.getId());
+
+        assertTrue(listOfMobileTerminalDnidHistoryDto.stream().anyMatch(mt1));
+    }
     /*
      * Helper methods below
      */

@@ -53,6 +53,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -430,6 +431,9 @@ public class InternalRestResource {
     public Response getMobileTerminalHistory() {
         try {
             List<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getListOfMobileTerminalDnidHistoryDto();
+            if(dnidHistories == null) {
+                dnidHistories = new ArrayList<>();
+            }
             return Response.ok(jsonb.toJson(dnidHistories)).build();
         } catch (Exception ex) {
             LOG.error("Error when getting mobileterminal histories", ex);
@@ -442,6 +446,12 @@ public class InternalRestResource {
     public Response getAllMobileTerminalRevisions() {
         try {
             List<MobileTerminal> mtList = mobileTerminalService.getAllMobileTerminalRevisions();
+            mtList.stream()
+            .filter(mt -> mt != null)
+            .forEach(mt -> {
+                mt.getChannels().size();  //to force load
+                mt.setPlugin(null); 
+            });
             return Response.ok(jsonb.toJson(mtList)).build();
         } catch (Exception ex) {
             LOG.error("Error when getting mobileterminal histories", ex);

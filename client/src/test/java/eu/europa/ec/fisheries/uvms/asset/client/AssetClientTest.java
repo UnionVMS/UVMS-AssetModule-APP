@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminalDnidHistoryDto;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -578,6 +579,25 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalDnidHistoryDtoTest(){
+
+        List<MobileTerminalDnidHistoryDto> output = assetClient.getMobileTerminalDnidHistoryDto();
+        assertNotNull(output);
+        assertTrue(output.size() >= 0);
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getListOfMtsTest(){
+
+        List<MobileTerminal> output = assetClient.getListOfMts();
+        assertNotNull(output);
+    }
+    
+    
+    
     private String createAsset(){
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
