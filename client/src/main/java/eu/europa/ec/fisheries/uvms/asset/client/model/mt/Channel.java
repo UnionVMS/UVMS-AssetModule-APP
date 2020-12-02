@@ -24,7 +24,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.client.model.mt;
 
 import javax.json.bind.annotation.JsonbTransient;
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
@@ -33,7 +32,7 @@ import java.util.UUID;
  * The persistent class for the channel database table.
  * 
  */
-public class Channel implements Serializable {
+public class Channel {
 
 	private UUID id;
 
@@ -73,10 +72,6 @@ public class Channel implements Serializable {
 	private Instant startDate;
 
 	private Instant endDate;
-
-	public Channel(){
-
-	}
 
 	public UUID getId() {
 		return id;

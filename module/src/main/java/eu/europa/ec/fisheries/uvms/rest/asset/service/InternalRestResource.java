@@ -405,6 +405,18 @@ public class InternalRestResource {
         }
     }
 
+    @GET
+    @Path("mobileterminals")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
+        try {
+            List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, includeArchived);
+            return Response.ok(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminals)).build();
+        } catch (Exception e) {
+            LOG.error("Could not get mobile terminals", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
 
     @GET
     @Path("/mobileTerminalAtDate/{mtId}")
@@ -458,17 +470,4 @@ public class InternalRestResource {
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
-    
-    
-//    @GET
-//    @Path("/mobileterminals")
-//    public Response getMobileTerminalHistory() {
-//        try {
-//            Collection<MobileTerminalDnidHistoryDto> dnidHistories = mobileTerminalService.getLatestRevisionOnAssetDnidMembernumber();
-//            return Response.ok(dnidHistories).build();
-//        } catch (Exception ex) {
-//            LOG.error("Error when getting mobileterminal histories", ex);
-//            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
-//        }
-//    }
 }

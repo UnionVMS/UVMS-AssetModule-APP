@@ -44,10 +44,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -58,13 +55,16 @@ import java.util.UUID;
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class MobileTerminalRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResource.class);
 
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
 
     @Inject
     private MobileTerminalPluginDaoBean pluginDao;
+
+    @Inject
+    ChannelDaoBean channelDao;
 
     @Context
     private HttpServletRequest request;
@@ -330,9 +330,6 @@ public class MobileTerminalRestResource {
             throw ex;
         }
     }
-
-    @Inject
-    ChannelDaoBean channelDao;
 
     @GET
     @Path("/lowestFreeMemberNumberForDnid/{dnid}/")
