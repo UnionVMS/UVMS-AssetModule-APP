@@ -12,14 +12,23 @@ package eu.europa.ec.fisheries.uvms.asset.domain.constant;
 
 public enum AssetIdentifier {
 
-    GUID,
-    CFR,
-    IRCS,
-    IMO,
-    MMSI,
-    ICCAT,
-    UVI,
-    GFCM,
-    NATIONAL;
+    GUID("id"),
+    CFR("cfr"),
+    IRCS("ircs"),
+    IMO("imo"),
+    MMSI("mmsi"),
+    ICCAT("iccat"),
+    UVI("uvi"),
+    GFCM("gfcm"),
+    NATIONAL("nationalId");
 
+    private String column;
+
+    private AssetIdentifier(String column) {
+        this.column = column;
+    }
+
+    public String getColumn() {
+        return column;
+    }
 }

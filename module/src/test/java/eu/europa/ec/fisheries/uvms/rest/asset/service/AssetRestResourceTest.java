@@ -698,7 +698,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
 
-        assertNull(assetByCfrAndTimestamp1);
+        assertThat(assetByCfrAndTimestamp1, is(AssetMatcher.assetEquals(createdAsset)));
     }
 
     @Test

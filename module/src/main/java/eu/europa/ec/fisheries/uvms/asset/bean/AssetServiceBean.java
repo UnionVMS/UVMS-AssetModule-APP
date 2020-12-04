@@ -262,6 +262,9 @@ public class AssetServiceBean {
             }
         }
         Asset asset = assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
+        if (asset == null) {
+            asset = assetDao.getFirstRevisionByAssetIdentifier(idType, idValue);
+        }
         if (asset != null && asset.getMobileTerminals() != null)
             asset.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
         return asset;

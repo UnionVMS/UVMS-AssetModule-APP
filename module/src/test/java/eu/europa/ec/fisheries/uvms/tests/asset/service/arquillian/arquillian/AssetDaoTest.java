@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
@@ -452,6 +453,52 @@ public class AssetDaoTest extends TransactionalTests {
 
         assetDao.deleteAsset(asset1);
         assetDao.deleteAsset(asset2);
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getFirstRevisionByIdTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        commit();
+
+        Asset firstRevisionAsset = assetDao.getFirstRevisionByAssetIdentifier(AssetIdentifier.IRCS, asset.getIrcs());
+
+        assertThat(firstRevisionAsset.getId(), is(notNullValue()));
+
+        assertThat(firstRevisionAsset.getName(), is(asset.getName()));
+        assertThat(firstRevisionAsset.getCfr(), is(asset.getCfr()));
+        assertThat(firstRevisionAsset.getActive(), is(asset.getActive()));
+        assetDao.deleteAsset(asset);
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getFirstRevisionByIdTwoRevisionTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        String firstIrcs = asset.getIrcs();
+        String firstCfr = asset.getCfr();
+        asset = assetDao.createAsset(asset);
+        commit();
+
+        asset.setCfr("CRF" + AssetTestsHelper.getRandomIntegers(9));
+        asset.setImo(AssetTestsHelper.getRandomIntegers(7));
+        asset.setMmsi("M" + AssetTestsHelper.getRandomIntegers(8));
+        asset.setIccat("ICCAT" + AssetTestsHelper.getRandomIntegers(20));
+        asset.setUvi("UVI" + AssetTestsHelper.getRandomIntegers(20));
+        asset.setGfcm("GFCM" + AssetTestsHelper.getRandomIntegers(20));
+        assetDao.updateAsset(asset);
+        commit();
+
+        Asset firstRevisionAsset = assetDao.getFirstRevisionByAssetIdentifier(AssetIdentifier.IRCS, firstIrcs);
+
+        assertThat(firstRevisionAsset.getId(), is(notNullValue()));
+
+        assertThat(firstRevisionAsset.getIrcs(), is(firstIrcs));
+        assertThat(firstRevisionAsset.getCfr(), is(firstCfr));
+        assetDao.deleteAsset(asset);
         commit();
     }
 

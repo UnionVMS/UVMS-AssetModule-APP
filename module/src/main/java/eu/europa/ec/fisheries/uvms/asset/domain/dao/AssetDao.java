@@ -526,10 +526,19 @@ public class AssetDao {
     }
 
     public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, Instant date) {
-        Asset asset = getAssetFromAssetId(assetId, value);
-        if (asset != null) {
-            return getAssetAtDate(asset.getId(), date);
-        } else {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        Number revision;
+        try {
+            revision = auditReader.getRevisionNumberForDate(Date.from(date));
+        } catch (RevisionDoesNotExistException ex) {
+            revision = 1;
+        }
+        try {
+            return (Asset) auditReader.createQuery()
+                .forEntitiesAtRevision(Asset.class, revision)
+                .add(AuditEntity.property(assetId.getColumn()).eq(value))
+                .getSingleResult();
+        } catch (NoResultException e) {
             return null;
         }
     }
@@ -566,6 +575,19 @@ public class AssetDao {
             return auditReader.find(Asset.class, assetId, revisions.get(0));
         }
         return null;
+    }
+
+    public Asset getFirstRevisionByAssetIdentifier(AssetIdentifier assetId, String value) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        try {
+            return (Asset) auditReader.createQuery()
+                .forRevisionsOfEntity(Asset.class, true, true)
+                .add(AuditEntity.property(assetId.getColumn()).eq(value))
+                .add(AuditEntity.revisionNumber().minimize().computeAggregationInInstanceContext())
+                .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Asset getAssetRevisionForHistoryId(UUID historyId) {
