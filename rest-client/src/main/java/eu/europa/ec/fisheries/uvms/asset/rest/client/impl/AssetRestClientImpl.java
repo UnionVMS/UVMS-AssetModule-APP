@@ -525,9 +525,8 @@ public class AssetRestClientImpl implements AssetClient {
     }
 
     private void handleNotOKStatusCode(Response response) throws AssetRestClientException {
-        if (response.getStatus() != 200) {
-            AssetErrorResponseDto assetErrorResponseDto = response.readEntity(new GenericType<AssetErrorResponseDto>() {
-            });
+        if (response.getStatus() < 200 && response.getStatus() >= 300) {
+            AssetErrorResponseDto assetErrorResponseDto = response.readEntity(new GenericType<AssetErrorResponseDto>() {});
             log.debug("Asset Service responded with error code {} - {}", assetErrorResponseDto.getCode(), assetErrorResponseDto.getMessage());
             throw new AssetRestClientException("Asset service response: " + assetErrorResponseDto.getMessage());
         }
