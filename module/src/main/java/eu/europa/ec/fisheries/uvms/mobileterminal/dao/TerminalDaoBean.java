@@ -394,4 +394,7 @@ public class TerminalDaoBean {
         return channel.getMobileTerminal();
     }
 
+    public void flushEm() {
+        em.flush();
+    }
 }

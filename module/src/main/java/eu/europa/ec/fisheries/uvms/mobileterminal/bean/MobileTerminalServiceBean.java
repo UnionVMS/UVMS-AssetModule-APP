@@ -71,7 +71,13 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("A mobile Terminal needs to have at least one channel attached to it.");
         }
         Set<Channel> channels = mobileTerminal.getChannels();
-        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        channels.forEach(channel -> {
+            if(channel.getStartDate() == null) {
+                channel.setStartDate(Instant.now());
+            }
+            channel.setMobileTerminal(mobileTerminal);  
+        });
+        
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         sortChannels(createdMobileTerminal);
@@ -111,6 +117,18 @@ public class MobileTerminalServiceBean {
         if (updatedPlugin == null) {
             updatedPlugin = oldTerminal.getPlugin();
         }
+        
+        Set<Channel> channels = mobileTerminal.getChannels();
+        Set<Channel> oldChannels = oldTerminal.getChannels();
+        
+        oldChannels.stream()
+                .filter(oldChannel -> !channels.contains(oldChannel))
+                .forEach( filteredOldChannel -> {
+                    if (filteredOldChannel.getEndDate() == null) {
+                        filteredOldChannel.setEndDate(Instant.now());
+                        terminalDao.flushEm();
+                    }
+                });
 
         mobileTerminal.setUpdateuser(username);
         mobileTerminal.setComment(comment);
@@ -469,9 +487,6 @@ public class MobileTerminalServiceBean {
                         .collect(Collectors.toList()));
     }
     
-//    public MobileTerminalDto getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
-//        return MobileTerminalDtoMapper.mapToMobileTerminalDto(terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date));
-//    }
     public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
         return terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date);
     }

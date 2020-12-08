@@ -593,6 +593,7 @@ public class AssetClientTest extends AbstractClientTest {
 
         assertNull(output);
     }
+    
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalAtDateWithMemberNumberAndDnidTest(){
@@ -601,23 +602,6 @@ public class AssetClientTest extends AbstractClientTest {
         MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, Instant.now());
         assertNull(mobileTerminal);
     }
-    
-//    @Test
-//    @OperateOnDeployment("normal")
-//    public void getMobileTerminalAtDateWithMemberNumberAndDnidTest() throws InterruptedException {
-// //  795 | 15891
-//        Integer memberNr = 795 ;  //(int) (10000 + (Math.random() * (100000 - 10000)));
-//        Integer dnid = 15891;// 
-//        MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, Instant.now());
-//        assertNotNull(mobileTerminal);
-//        System.out.println("mobileTerminal size tryy " + mobileTerminal.toString());
-//        Set<Channel> channelss = mobileTerminal.getChannels();
-//        Channel ch = mobileTerminal.getChannels().iterator().next();
-//        System.out.println("mobileTerminal channel size tryy " + channelss.size());
-//        assertEquals(memberNr, ch.getMemberNumber());
-//        assertEquals(dnid, ch.getDnid());
-//    }
-
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();
