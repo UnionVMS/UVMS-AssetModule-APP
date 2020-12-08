@@ -5,6 +5,11 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.*;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
+
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -13,13 +18,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.tocea.easycoverage.annotations.SkipAutomaticTests;
+
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -583,6 +593,30 @@ public class AssetClientTest extends AbstractClientTest {
 
         assertNull(output);
     }
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalAtDateWithMemberNumberAndDnidTest(){
+        Integer memberNr = 795 ; 
+        Integer dnid = 15891;
+        MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, Instant.now());
+        assertNull(mobileTerminal);
+    }
+    
+//    @Test
+//    @OperateOnDeployment("normal")
+//    public void getMobileTerminalAtDateWithMemberNumberAndDnidTest() throws InterruptedException {
+// //  795 | 15891
+//        Integer memberNr = 795 ;  //(int) (10000 + (Math.random() * (100000 - 10000)));
+//        Integer dnid = 15891;// 
+//        MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, Instant.now());
+//        assertNotNull(mobileTerminal);
+//        System.out.println("mobileTerminal size tryy " + mobileTerminal.toString());
+//        Set<Channel> channelss = mobileTerminal.getChannels();
+//        Channel ch = mobileTerminal.getChannels().iterator().next();
+//        System.out.println("mobileTerminal channel size tryy " + channelss.size());
+//        assertEquals(memberNr, ch.getMemberNumber());
+//        assertEquals(dnid, ch.getDnid());
+//    }
 
 
     private String createAsset(){

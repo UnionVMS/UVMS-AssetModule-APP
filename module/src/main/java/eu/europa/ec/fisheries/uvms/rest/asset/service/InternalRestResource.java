@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
@@ -30,6 +31,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -71,6 +74,9 @@ public class InternalRestResource {
 
     @Inject
     private PollServiceBean pollServiceBean;
+    
+    @Inject
+    private MobileTerminalServiceBean mobileTerminalService;
 
     @Inject
     AssetDao assetDao;
@@ -427,6 +433,21 @@ public class InternalRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting MT {} at date {}] {}", mtId, date, ex.getStackTrace());
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+    
+    @GET
+    @Path("mobileTerminal")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getMobileTerminalAtDateWithMemberNumberAndDnid(@QueryParam("memberNumber") Integer memberNumber, @QueryParam("dnid") Integer dnid, @QueryParam("date") String date){
+        try {
+            Instant instant = DateUtils.stringToDate(date);
+            MobileTerminal mt = terminalDaoBean.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, instant);
+            MobileTerminalDto mtDto =  MobileTerminalDtoMapper.mapToMobileTerminalDto(mt);
+            return Response.ok(jsonb.toJson(mtDto)).header("MDC", MDC.get("requestId")).build();
+        }catch (Exception ex) {
+            LOG.error("[ Error when getting MT from memberNumber {} and dnid {} at date {}] {}", memberNumber, dnid, date, ex.getStackTrace());
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }

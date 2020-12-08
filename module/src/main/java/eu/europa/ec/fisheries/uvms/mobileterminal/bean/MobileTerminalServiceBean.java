@@ -34,6 +34,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -466,6 +467,13 @@ public class MobileTerminalServiceBean {
                         .filter(mt -> mt.getAsset() != null)
                         .map(MobileTerminal::getAsset)
                         .collect(Collectors.toList()));
+    }
+    
+//    public MobileTerminalDto getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
+//        return MobileTerminalDtoMapper.mapToMobileTerminalDto(terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date));
+//    }
+    public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
+        return terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date);
     }
 
     private void sortChannels(MobileTerminal mt) {

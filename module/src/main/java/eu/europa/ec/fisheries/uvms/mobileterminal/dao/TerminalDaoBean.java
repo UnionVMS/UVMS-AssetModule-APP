@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -370,5 +369,29 @@ public class TerminalDaoBean {
         return null;
     }
 
+    public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        Number revision;
+        Channel channel;
+        
+        try {
+            revision = auditReader.getRevisionNumberForDate(Date.from(date));
+        } catch (RevisionDoesNotExistException ex) {
+            return null;
+        }
+        
+        try {
+            channel = (Channel) auditReader.createQuery()
+                    .forEntitiesAtRevision(Channel.class, revision)
+                    .add(AuditEntity.property("memberNumber").eq(memberNumber) )
+                    .add(AuditEntity.property("dnid").eq(dnid) )
+                    .setMaxResults( 1 )
+                    .getSingleResult();
+        } catch (NoResultException ex){
+            return null;
+        }
+        
+        return channel.getMobileTerminal();
+    }
 
 }

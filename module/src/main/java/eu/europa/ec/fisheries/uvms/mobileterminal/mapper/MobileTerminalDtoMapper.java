@@ -27,6 +27,9 @@ public class MobileTerminalDtoMapper {
     }
 
     public static MobileTerminalDto mapToMobileTerminalDto(MobileTerminal mt){
+        if(mt == null) {
+            return null;
+        }
         MobileTerminalDto dto = new MobileTerminalDto();
         dto.setId(mt.getId());
         dto.setActive(mt.getActive());
