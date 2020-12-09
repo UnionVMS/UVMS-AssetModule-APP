@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.service.sync;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetSyncException;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreData;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreDataResponse;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselExtendedData;
@@ -46,8 +47,7 @@ public class AssetWsClient {
         try {
             vesselCoreDataResponse = vesselDataServiceClientProducer.getVesselDataService().getVesselCoreData(getVesselCoreData, "clientId", "partialFailure");
         } catch (FleetDataServiceExceptionFault e) {
-            log.warn("Error getting page {} with page size {} from fleet server", pageNumber, pageSize, e);
-            return null;
+            throw new AssetSyncException("Error getting page " + pageNumber + " with page size " + pageSize + " from fleet server", e);
         }
         return vesselCoreDataResponse;
     }

@@ -14,8 +14,10 @@ package eu.europa.ec.fisheries.uvms.asset.service.sync;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetSyncException;
 import eu.europa.ec.fisheries.uvms.asset.service.sync.message.AssetHistorySyncRetrievalMessage;
 import eu.europa.ec.fisheries.uvms.asset.service.sync.message.AssetSyncProducerBean;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
@@ -40,7 +42,7 @@ public class AssetSyncService {
 
     @Transactional
     public void syncAssetPage(Integer pageNumber, Integer pageSize) {
-        List<AssetHistory> assetHistoryFromPage = assetSyncClient.getAssetsPage(pageNumber, pageSize);
+        List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
         assetHistoryFromPage.forEach(assetHistoryRecord -> {
             try {
                 enrichAssetHistoryRecord(assetHistoryRecord, assetSyncClient.getAssetExtendedData(assetHistoryRecord.getCfr()));
@@ -51,6 +53,15 @@ public class AssetSyncService {
             }
         });
         addMessageToQueueForNextPage(pageNumber, pageSize, assetHistoryFromPage.size());
+    }
+
+    private List<AssetHistory> getAssetsPageSafe(Integer pageNumber, Integer pageSize) {
+        try {
+            return assetSyncClient.getAssetsPage(pageNumber, pageSize);
+        } catch (AssetSyncException ase) {
+            log.error("Error syncing assets page " + pageNumber + " with page size " + pageSize, ase);
+            return Collections.emptyList();
+        }
     }
 
     private void enrichAssetHistoryRecord(AssetHistory assetHistoryRecord, AssetHistory iccatAndGfcm) {
