@@ -395,7 +395,7 @@ public class AssetClient {
     
     public MobileTerminal getMtFromMemberNumberAndDnidAtDate(Integer membernumber,Integer dnid, Instant date){
         Response response = webTarget
-                .path("mobileTerminal")
+                .path("revision")
                 .queryParam("memberNumber", "" + membernumber)
                 .queryParam("dnid", "" + dnid)
                 .queryParam("date", "" + date.toEpochMilli())

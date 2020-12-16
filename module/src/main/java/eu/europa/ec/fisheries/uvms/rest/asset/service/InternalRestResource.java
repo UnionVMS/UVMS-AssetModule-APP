@@ -438,7 +438,7 @@ public class InternalRestResource {
     }
     
     @GET
-    @Path("mobileTerminal")
+    @Path("revision")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getMobileTerminalAtDateWithMemberNumberAndDnid(@QueryParam("memberNumber") Integer memberNumber, @QueryParam("dnid") Integer dnid, @QueryParam("date") String date){
         try {

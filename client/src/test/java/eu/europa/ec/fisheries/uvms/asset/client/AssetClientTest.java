@@ -24,6 +24,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.validation.constraints.AssertTrue;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -597,10 +598,15 @@ public class AssetClientTest extends AbstractClientTest {
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalAtDateWithMemberNumberAndDnidTest(){
-        Integer memberNr = 795 ; 
-        Integer dnid = 15891;
-        MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, Instant.now());
-        assertNull(mobileTerminal);
+        Integer memberNr = 564; 
+        Integer dnid = 15365;
+        Instant instant = Instant.now().plusSeconds(1);// Instant.parse("2020-12-10T12:56:50Z");
+        MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, instant);
+
+        
+        assertEquals(mobileTerminal.getId().toString(), "952a2efd-da9e-4932-808e-c37f3eda3aea");
+        
+       // assertNull(mobileTerminal);
     }
 
     private String createAsset(){
