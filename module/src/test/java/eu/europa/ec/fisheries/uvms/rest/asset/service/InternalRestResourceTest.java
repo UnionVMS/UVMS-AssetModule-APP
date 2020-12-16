@@ -673,7 +673,7 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
               .put(Entity.json(updated), MobileTerminal.class);
       
       response = getWebTargetInternal()
-            //  .path("internal")
+              .path("internal")
               .path("revision")
               .queryParam("memberNumber", ""+memberNr)
               .queryParam("dnid", ""+dnid)

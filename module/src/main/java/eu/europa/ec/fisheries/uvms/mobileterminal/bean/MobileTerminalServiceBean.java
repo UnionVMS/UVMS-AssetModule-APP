@@ -488,6 +488,10 @@ public class MobileTerminalServiceBean {
     }
     
     public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
+        if(memberNumber == null || dnid == null || date == null ) {
+            LOG.error("Null value in getTerminalAtDateWithMemberNumberAndDnid  \n memberNumber: " + memberNumber + " dnid: " + dnid+ " date: " + date);
+            return null;
+        }
         return terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date);
     }
 

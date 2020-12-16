@@ -603,10 +603,8 @@ public class AssetClientTest extends AbstractClientTest {
         Instant instant = Instant.now().plusSeconds(1);// Instant.parse("2020-12-10T12:56:50Z");
         MobileTerminal mobileTerminal = assetClient.getMtFromMemberNumberAndDnidAtDate(memberNr, dnid, instant);
 
-        
-        assertEquals(mobileTerminal.getId().toString(), "952a2efd-da9e-4932-808e-c37f3eda3aea");
-        
-       // assertNull(mobileTerminal);
+       // assertEquals(mobileTerminal.getId().toString(), "952a2efd-da9e-4932-808e-c37f3eda3aea");
+        assertNull(mobileTerminal);
     }
 
     private String createAsset(){
