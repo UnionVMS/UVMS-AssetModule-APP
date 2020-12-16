@@ -444,13 +444,9 @@ public class InternalRestResource {
         try {
             Instant instant = DateUtils.stringToDate(date);
             MobileTerminal mt = terminalDaoBean.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, instant);
-           // MobileTerminalDto mtDto =  MobileTerminalDtoMapper.mapToMobileTerminalDto(mt);
+            MobileTerminalDto mtDto =  MobileTerminalDtoMapper.mapToMobileTerminalDto(mt);
             
-            if(mt != null) {
-                mt.getChannels().size();  //to force load
-                mt.setPlugin(null);       //since the plugin for some reason does not want to be serialized
-            }
-            String returnString = jsonb.toJson(mt);
+            String returnString = jsonb.toJson(mtDto);
             
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         }catch (Exception ex) {

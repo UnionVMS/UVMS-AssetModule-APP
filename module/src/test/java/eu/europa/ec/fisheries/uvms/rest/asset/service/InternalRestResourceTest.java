@@ -584,7 +584,8 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        created.getChannels().iterator().next().setDnid(54321);
+        Integer newdnid = 54321;
+        created.getChannels().iterator().next().setDnid(newdnid);
         Instant createdTimestamp = Instant.now();
         
         MobileTerminal updated = getWebTargetInternal()
@@ -663,19 +664,10 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
       MobileTerminal mt = response.readEntity(MobileTerminal.class);
       assertNull(mt);
       
-      updated.getChannels().iterator().next().setMemberNumber(memberNr);
-      
-      updated = getWebTargetInternal()
-              .path("mobileterminal")
-              .queryParam("comment", "NEW_TEST_COMMENT")
-              .request(MediaType.APPLICATION_JSON)
-              .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-              .put(Entity.json(updated), MobileTerminal.class);
-      
       response = getWebTargetInternal()
               .path("internal")
               .path("revision")
-              .queryParam("memberNumber", ""+memberNr)
+              .queryParam("memberNumber", ""+newMemberNumber)
               .queryParam("dnid", ""+dnid)
               .queryParam("date", ""+Instant.now().toEpochMilli())
               .request(MediaType.APPLICATION_JSON)
@@ -686,7 +678,7 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
       MobileTerminal mt2 = response.readEntity(MobileTerminal.class);
       assertNotNull(mt2);
       Channel respChannel = mt2.getChannels().iterator().next();
-      assertEquals(memberNr, respChannel.getMemberNumber());
+      assertEquals(newMemberNumber, respChannel.getMemberNumber());
       assertEquals(dnid, respChannel.getDnid());
     }
 

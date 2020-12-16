@@ -1324,11 +1324,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mtChanges.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
 
         assertEquals(2, mtChanges.size());
-        assertEquals(1, mtChanges.get(1).getChannelChanges().size());
+        assertEquals(2, mtChanges.get(1).getChannelChanges().size());
 
-        //one subclass should have 8 changes
+        //one subclass should have 8 changes 9 if count deleted
         Optional<ChannelChangeHistory> eightChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
-                .filter(list -> list.getChanges().size() == 8).findAny();
+                .filter(list -> list.getChanges().size() == 9).findAny();
+        
+        mtChanges.get(1).getChannelChanges().values().stream().forEach(list -> System.out.println("list: "+list+"  size: " + list.getChanges().size()));
         assertTrue(eightChangesChannel.isPresent());
         assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
