@@ -19,10 +19,12 @@ import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreData;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreDataResponse;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselExtendedData;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselExtendedDataResponse;
+import eu.europa.ec.mare.fisheries.vessel.common.v1.OrderByType;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.PagingType;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.PredicateType;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.PredicateTypeOperator;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.SelectorType;
+import eu.europa.ec.mare.fisheries.vessel.common.v1.SortOrderType;
 import eu.europa.ec.mare.fisheries.vessel.common.v1_0.FleetDataServiceExceptionFault;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,8 +39,24 @@ public class AssetWsClient {
         SelectorType selectorType = new SelectorType();
         PagingType pagingType = new PagingType();
         pagingType.setMaxResults(pageSize);
-        pagingType.setOffset(pageNumber);
+        pagingType.setOffset(pageNumber * pageSize);
         selectorType.setPaging(pagingType);
+
+        // Start of setting of special fields - required to pass validations on the fleet server side
+        OrderByType ordering = new OrderByType();
+        ordering.setField(""); // default in spec doc : eventKey
+        SortOrderType sortOrder = null; // default in spec doc: SortOrderType.DESC;
+        ordering.setSortOrder(sortOrder);
+        selectorType.setOrdering(ordering);
+
+        selectorType.getProjectionFields().add("");
+
+        PredicateType predicate = new PredicateType();
+        predicate.setField("");
+        predicate.getValues().add("");
+        predicate.setOperator(null);
+        selectorType.getPredicates().add(predicate);
+        // end of setting of special fields
 
         GetVesselCoreData getVesselCoreData = new GetVesselCoreData();
         getVesselCoreData.setSelector(selectorType);
