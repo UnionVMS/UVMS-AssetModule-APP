@@ -38,7 +38,7 @@ public enum SearchFields {
 
     // maybe in history instead history should be renamed to version
     ICCAT("iccat", SearchTables.ASSET, "iccat"),
-    UVI("uvi", SearchTables.ASSET, "uvi"),
+    UVI("uvi", SearchTables.ASSET_HIST, "uvi"),
     GFCM("gfcm", SearchTables.ASSET, "gfcm");
 
 
