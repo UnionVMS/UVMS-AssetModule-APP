@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
@@ -17,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,9 +32,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -553,6 +558,128 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal historicalTerminal = historicalResponse.readEntity(MobileTerminal.class);
         assertEquals(createdTerminal.getId(), historicalTerminal.getId());
         assertEquals(mt.getAntenna(), historicalTerminal.getAntenna());
+    }
+    
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalAtDateWithMemberNumberAndDnidTest() throws InterruptedException {
+ 
+        Integer memberNr = (int) (10000 + (Math.random() * (100000 - 10000))) ;
+        Integer dnid = (int) (100 + (Math.random() * (1000 - 100))) ;; 
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        Channel channel = MobileTerminalTestHelper.createBasicChannel();
+        channel.setDnid(dnid);
+        channel.setMemberNumber(memberNr);
+        channel.setMobileTerminal(mobileTerminal);
+        Set<Channel> channels = new HashSet<>();
+        channels.add(channel);
+        mobileTerminal.getChannels().clear();
+        mobileTerminal.setChannels(channels);
+        
+        MobileTerminal created = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Integer newdnid = 54321;
+        created.getChannels().iterator().next().setDnid(newdnid);
+        Instant createdTimestamp = Instant.now();
+        
+        MobileTerminal updated = getWebTargetInternal()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .put(Entity.json(created), MobileTerminal.class);       
+
+        Response response = getWebTargetInternal()
+                .path("internal")
+                .path("revision")
+                .queryParam("memberNumber", ""+memberNr)
+                .queryParam("dnid", ""+dnid)
+                .queryParam("date", ""+createdTimestamp.toEpochMilli())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get();
+
+        assertEquals(200, response.getStatus());
+        MobileTerminal mt = response.readEntity(MobileTerminal.class);
+        assertNotNull(mt);
+        Channel respChannel = mt.getChannels().iterator().next();
+        assertEquals(memberNr, respChannel.getMemberNumber());
+        assertEquals(dnid, respChannel.getDnid());
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalWithMemberNumberAndDnidAtDateTest() throws InterruptedException {
+ 
+        Integer memberNr = (int) (10000 + (Math.random() * (100000 - 10000))) ;
+        Integer dnid = (int) (100 + (Math.random() * (1000 - 100))) ;; 
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        Channel channel = MobileTerminalTestHelper.createBasicChannel();
+        channel.setDnid(dnid);
+        channel.setMemberNumber(memberNr);
+        channel.setMobileTerminal(mobileTerminal);
+        Set<Channel> channels = new HashSet<>();
+        channels.add(channel);
+        mobileTerminal.getChannels().clear();
+        mobileTerminal.setChannels(channels);
+        
+        MobileTerminal created = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);      
+
+        Integer newMemberNumber = 11111 != memberNr? 11111 : 11112;
+        created.getChannels().iterator().next().setMemberNumber(newMemberNumber);
+        
+        Instant createdTimestamp = Instant.now().minusSeconds(20);
+        
+        MobileTerminal updated = getWebTargetInternal()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), MobileTerminal.class);
+        
+        Response response = getWebTargetInternal()
+                .path("internal")
+                .path("revision")
+                .queryParam("memberNumber", ""+newMemberNumber)
+                .queryParam("dnid", ""+dnid)
+                .queryParam("date", ""+createdTimestamp.toEpochMilli())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get();
+
+      assertEquals(200, response.getStatus());
+      assertNotNull(response);
+      // Should not find Updated mt with new MemberNumber
+      MobileTerminal mt = response.readEntity(MobileTerminal.class);
+      assertNull(mt);
+      
+      response = getWebTargetInternal()
+              .path("internal")
+              .path("revision")
+              .queryParam("memberNumber", ""+newMemberNumber)
+              .queryParam("dnid", ""+dnid)
+              .queryParam("date", ""+Instant.now().toEpochMilli())
+              .request(MediaType.APPLICATION_JSON)
+              .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+              .get();
+      
+      // Should find Updated mt with new MemberNumber
+      MobileTerminal mt2 = response.readEntity(MobileTerminal.class);
+      assertNotNull(mt2);
+      Channel respChannel = mt2.getChannels().iterator().next();
+      assertEquals(newMemberNumber, respChannel.getMemberNumber());
+      assertEquals(dnid, respChannel.getDnid());
     }
 
     private Asset createAsset(Asset asset){

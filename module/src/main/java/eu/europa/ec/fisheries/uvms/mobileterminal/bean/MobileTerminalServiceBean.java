@@ -34,6 +34,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,7 @@ public class MobileTerminalServiceBean {
         }
         Set<Channel> channels = mobileTerminal.getChannels();
         channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         sortChannels(createdMobileTerminal);
@@ -110,6 +112,18 @@ public class MobileTerminalServiceBean {
         if (updatedPlugin == null) {
             updatedPlugin = oldTerminal.getPlugin();
         }
+        
+        Set<Channel> channels = mobileTerminal.getChannels();
+        Set<Channel> oldChannels = oldTerminal.getChannels();
+        
+        oldChannels.stream()
+                .filter(oldChannel -> !channels.contains(oldChannel))
+                .forEach( filteredOldChannel -> {
+                    if (filteredOldChannel.getEndDate() == null) {
+                        filteredOldChannel.setEndDate(Instant.now());
+                        terminalDao.flushEm();
+                    }
+                });
 
         mobileTerminal.setUpdateuser(username);
         mobileTerminal.setComment(comment);
@@ -466,6 +480,14 @@ public class MobileTerminalServiceBean {
                         .filter(mt -> mt.getAsset() != null)
                         .map(MobileTerminal::getAsset)
                         .collect(Collectors.toList()));
+    }
+    
+    public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
+        if(memberNumber == null || dnid == null || date == null ) {
+            LOG.error("Null value in getTerminalAtDateWithMemberNumberAndDnid  \n memberNumber: " + memberNumber + " dnid: " + dnid+ " date: " + date);
+            return null;
+        }
+        return terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date);
     }
 
     private void sortChannels(MobileTerminal mt) {
