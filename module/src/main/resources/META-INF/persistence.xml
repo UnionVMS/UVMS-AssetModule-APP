@@ -13,6 +13,7 @@
             <!--<property name="hibernate.show_sql" value="true" />-->
             <!--<property name="hibernate.format_sql" value="true" />-->
             <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+            <property name="org.hibernate.envers.store_data_at_delete" value="true" />
         </properties>
     </persistence-unit>
 </persistence>

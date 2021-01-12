@@ -1434,6 +1434,34 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(1, lowestMemberNumber.intValue());
 
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalCreateChannelAndDeleteChannel() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+        
+        assertNotNull(created);
+
+        assertEquals(1, created.getChannels().size());
+        
+        created.getChannels().clear();
+        
+        MobileTerminal updated = getWebTargetExternal()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), MobileTerminal.class);
+        
+        assertEquals(0, updated.getChannels().size());
+
+    }
 
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();

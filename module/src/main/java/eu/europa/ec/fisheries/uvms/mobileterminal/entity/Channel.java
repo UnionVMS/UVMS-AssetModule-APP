@@ -139,6 +139,9 @@ public class Channel implements Serializable {
 	private void generateNewHistoryId() {
 		this.historyId = UUID.randomUUID();
 		this.updateTime = Instant.now();
+		if(this.startDate == null){
+            this.startDate = Instant.now();
+        }
 		if(this.mobileTerminal != null){
 			this.updateUser = mobileTerminal.getUpdateuser();
 		}

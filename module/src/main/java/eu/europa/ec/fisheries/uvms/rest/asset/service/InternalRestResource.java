@@ -450,7 +450,7 @@ public class InternalRestResource {
             
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         }catch (Exception ex) {
-            LOG.error("[ Error when getting MT from memberNumber {} and dnid {} at date {}] {}", memberNumber, dnid, date, ex.getStackTrace());
+            LOG.error("[ Error when getting MT from memberNumber {} and dnid {} at date {}] {}", memberNumber, dnid, date, ex);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }

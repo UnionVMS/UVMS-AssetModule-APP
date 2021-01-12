@@ -71,12 +71,7 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("A mobile Terminal needs to have at least one channel attached to it.");
         }
         Set<Channel> channels = mobileTerminal.getChannels();
-        channels.forEach(channel -> {
-            if(channel.getStartDate() == null) {
-                channel.setStartDate(Instant.now());
-            }
-            channel.setMobileTerminal(mobileTerminal);  
-        });
+        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
