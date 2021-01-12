@@ -78,6 +78,9 @@ public class MapperUtil {
             if (!equals(newAsset.getImo(), originalAsset.getImo())) {
                 return false;
             }
+            if (!equals(newAsset.getUvi(), originalAsset.getUvi())) {
+                return false;
+            }
             if (!equals(newAsset.getIrcs(), originalAsset.getIrcs())) {
                 return false;
             }
