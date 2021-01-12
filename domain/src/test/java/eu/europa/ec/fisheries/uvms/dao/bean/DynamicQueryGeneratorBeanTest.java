@@ -69,7 +69,7 @@ public class DynamicQueryGeneratorBeanTest {
         assertEquals(searchFieldsStringMap.get(SearchFields.IMO),asset.getIMO());
         assertEquals(searchFieldsStringMap.get(SearchFields.GUID),asset.getGuid());
         assertEquals(searchFieldsStringMap.get(SearchFields.ICCAT),asset.getIccat());
-        assertEquals(searchFieldsStringMap.get(SearchFields.UVI),asset.getUvi());
+        assertEquals(searchFieldsStringMap.get(SearchFields.UVI),assetHistory.getUvi());
         assertEquals(searchFieldsStringMap.get(SearchFields.GFCM),asset.getGfcm());
 
         assertEquals(searchFieldsStringMap.get(SearchFields.FLAG_STATE),assetHistory.getCountryOfRegistration());

@@ -136,6 +136,9 @@ public class DynamicQueryGeneratorBean  implements DynamicQueryGenerator {
                     case HIST_GUID:
                         searchTables.put(HIST_GUID, assetHistory.getGuid());
                         break;
+                    case UVI:
+                        searchTables.put(UVI, assetHistory.getUvi());
+                        break;
                     case GEAR_TYPE:
                         searchTables.put(GEAR_TYPE, String.valueOf(assetHistory.getType()));
                         break;
