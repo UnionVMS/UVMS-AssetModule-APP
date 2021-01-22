@@ -47,10 +47,11 @@ public class AssetSyncDataConverter {
         assetHistory.setDateOfEvent(vesselEventType.getOccurrenceDateTime());
 //        assetHistory.setUpdateTime();
         assetHistory.setUpdatedBy(FLEETSYNC);
-
+        /*
+        Ignore the values of these fields for now as they are not used in FluxFMC and the enum has not all the incoming values.
         assetHistory.setSegment(SegmentFUP.valueOf(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getSegment()));
-//        assetHistory.setSegmentOfAdministrativeDecision(SegmentFUP.valueOf(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getSegment()));
-
+        assetHistory.setSegmentOfAdministrativeDecision(SegmentFUP.valueOf(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getSegment()));
+        */
         mapVesselIdentifiers(vesselEventType, assetHistory);
         mapRegistrationInfo(relatedVesselTransportMeans, assetHistory);
         mapFishingGear(relatedVesselTransportMeans, assetHistory);
