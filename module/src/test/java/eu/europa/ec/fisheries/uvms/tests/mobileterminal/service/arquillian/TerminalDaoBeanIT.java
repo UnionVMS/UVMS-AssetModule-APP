@@ -1,10 +1,12 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.Capability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
@@ -23,9 +25,12 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.transaction.*;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -293,14 +298,86 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         terminalDaoBean.updateMobileTerminal(mobileTerminal);
         em.flush();
     }
+    
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMTListBasedOnChannelRevisionsForIntervalTest() throws Exception {
+        Instant fromDate = Instant.now().minusSeconds(10);
+        Instant toDate;
+        
+        String serialNo = createSerialNumber();
+        MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
+        
+        mobileTerminal =setChannelOnMobileTerminalHelper(mobileTerminal);
+        mobileTerminal = terminalDaoBean.createMobileTerminal(mobileTerminal);
+
+        Channel oldChannel = mobileTerminal.getChannels().iterator().next();
+        userTransaction.commit();
+        userTransaction.begin();
+        
+        mobileTerminal.getChannels().clear();
+        
+        MobileTerminal updatedMt = terminalDaoBean.updateMobileTerminal(mobileTerminal);
+        userTransaction.commit();
+        userTransaction.begin();
+        toDate = Instant.now();
+        
+        MobileTerminal updatedMt2 = setChannelOnMobileTerminalHelper(updatedMt);
+        updatedMt2 = terminalDaoBean.updateMobileTerminal(updatedMt2);
+        userTransaction.commit();
+        userTransaction.begin();
+        
+        Channel updatedMtChannel = updatedMt2.getChannels().iterator().next();
+        assertNotEquals(oldChannel.getId(), updatedMtChannel.getId());
+        
+        List<MobileTerminal> listOfMts= terminalDaoBean.getMTListBasedOnChannelRevisionsForInterval(fromDate, toDate );
+        
+        assertTrue(listOfMts.size() > 0);
+        assertTrue(listOfMts.get(0).getChannels().size() > 0);
+    }
+    
+    private MobileTerminal setChannelOnMobileTerminalHelper(MobileTerminal mobileTerminal) {
+        
+        Channel channel = new Channel();
+        channel.setMobileTerminal(mobileTerminal);
+        channel.setConfigChannel(true);
+        channel.setPollChannel(true);
+        channel.setDefaultChannel(true);
+        channel.setDnid(getRandomDnid());
+        channel.setLesDescription("description");
+        channel.setArchived(false);
+        channel.setMemberNumber(getRandomMemberNumber());
+        channel.setUpdateUser("tester");
+        channel.setExpectedFrequency(Duration.ZERO);
+        channel.setFrequencyGracePeriod(Duration.ZERO);
+        channel.setExpectedFrequencyInPort(Duration.ZERO);
+        channel.setStartDate(Instant.now().minusSeconds(8));
+        channel.setEndDate(Instant.now());
+        channel.setName("sdfajkl");
+
+        mobileTerminal.getChannels().add(channel);
+        
+        return mobileTerminal;
+    }
+    
 
     private MobileTerminal createMobileTerminalHelper(String serialNo) {
 
         MobileTerminal mt = new MobileTerminal();
         MobileTerminalPlugin mtp;
-        List<MobileTerminalPlugin> plugs;
+        List<MobileTerminalPlugin> plugs = new ArrayList<>();
 
-            plugs = testDaoBean.getPluginList();
+        if(testDaoBean.getPluginList().isEmpty()) {
+            MobileTerminalPlugin mobileTerminalPlugin = new MobileTerminalPlugin();
+            MobileTerminalPluginCapability capability = new MobileTerminalPluginCapability();
+            Set<MobileTerminalPluginCapability> capabilities = new HashSet<>();
+            capabilities.add(capability);
+            mobileTerminalPlugin.setCapabilities(capabilities);
+            plugs.add(testDaoBean.createMobileTerminalPlugin(mobileTerminalPlugin));
+        }else {
+            plugs = testDaoBean.getPluginList(); 
+        } 
             mtp = plugs.get(0);
             mt.setSerialNo(serialNo);
             mt.setUpdatetime(Instant.now());
@@ -312,7 +389,19 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             mt.setActive(true);
         return mt;
     }
-
+    
+    private int getRandomMemberNumber() {
+        int max = 255;
+        int min = 1;
+        return (int)(Math.random() * ((max - min) + 1)) + min;
+    }
+    
+    private int getRandomDnid() {
+        int max = 99999;
+        int min = 10000;
+        return (int)(Math.random() * ((max - min) + 1)) + min;
+    }
+    
     private String createSerialNumber() {
         return "SNU" + rnd.nextInt();
     }

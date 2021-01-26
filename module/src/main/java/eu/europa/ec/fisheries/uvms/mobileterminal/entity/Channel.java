@@ -124,9 +124,11 @@ public class Channel implements Serializable {
 	@Column(name="member_number")
 	private Integer memberNumber;
 
+	@Audited(withModifiedFlag=true)
 	@Column(name="start_date")
 	private Instant startDate;
 
+	@Audited(withModifiedFlag=true)
 	@Column(name="end_date")
 	private Instant endDate;
 

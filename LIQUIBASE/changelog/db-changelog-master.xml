@@ -49,5 +49,6 @@
     <include file="v6.7.26/db-changelog-refactor-pollbase-terminalConnect.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.28/db-changelog-rename-updatetime-pollbase.xml" relativeToChangelogFile="true"/>
     <include file="v6.8.3/db-changelog-introduce-value-type-in-asset-filter.xml" relativeToChangelogFile="true"/>
+    <include file="v6.8.6/db-changelog-channel_aud-startdate_mod-and-enddate_mod.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

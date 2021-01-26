@@ -397,4 +397,37 @@ public class TerminalDaoBean {
     public void flushEm() {
         em.flush();
     }
+    
+    public List<MobileTerminal> getMTListBasedOnChannelRevisionsForInterval(Instant fromDate, Instant toDate ) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        try {
+//            AuditDisjunction endOrStartDate  = AuditEntity.disjunction()
+//                    .add(AuditEntity.property( "endDate" ).hasChanged())
+//                    .add(AuditEntity.property( "startDate" ).hasChanged());
+            AuditDisjunction endOrStartDate  = AuditEntity.disjunction()
+                    .add( AuditEntity.conjunction()
+                            .add(AuditEntity.property( "endDate" ).hasChanged())
+                            .add(AuditEntity.property( "updateTime" ).gt(fromDate))
+                            .add(AuditEntity.property( "updateTime" ).lt(toDate))
+                    )
+                    .add( AuditEntity.conjunction()
+                            .add(AuditEntity.property( "startDate" ).hasChanged())
+                            .add(AuditEntity.property( "updateTime" ).gt(fromDate))
+                            .add(AuditEntity.property( "updateTime" ).lt(toDate))
+                    );
+            List<Channel> channelList = (List<Channel>) auditReader.createQuery().forRevisionsOfEntity(
+                    Channel.class, true, true)
+                    .add( endOrStartDate )
+                    .getResultList();
+            
+            List<MobileTerminal> retListOfMT = new ArrayList<>();
+            
+            for (Channel channel : channelList) {
+                retListOfMT.add(channel.getMobileTerminal());
+            }
+            return retListOfMT;
+        } catch (AuditException e) {
+            return Collections.emptyList();
+        }
+    }
 }
