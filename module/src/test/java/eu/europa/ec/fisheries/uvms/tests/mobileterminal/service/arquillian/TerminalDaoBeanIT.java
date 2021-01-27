@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.Capability;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.inject.Inject;
 import javax.transaction.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -47,6 +49,9 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @EJB
     private TerminalDaoBean terminalDaoBean;
+    
+    @Inject
+    MobileTerminalServiceBean mobileTerminalServiceBean;
 
     @EJB
     private MobileTerminalPluginDaoBean testDaoBean;
@@ -317,8 +322,8 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         userTransaction.begin();
         
         mobileTerminal.getChannels().clear();
-        
-        MobileTerminal updatedMt = terminalDaoBean.updateMobileTerminal(mobileTerminal);
+        MobileTerminal updatedMt = mobileTerminalServiceBean.updateMobileTerminal(mobileTerminal, null, "TestUser");
+       // MobileTerminal updatedMt = terminalDaoBean.updateMobileTerminal(mobileTerminal);
         userTransaction.commit();
         userTransaction.begin();
         toDate = Instant.now();
@@ -337,6 +342,36 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         assertTrue(listOfMts.get(0).getChannels().size() > 0);
     }
     
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMTListBasedOnChannelRevisionsForIntervalNoHitTest() throws Exception {
+        Instant fromDate = Instant.now().minusSeconds(10000);
+        Instant toDate = Instant.now().minusSeconds(9999);
+        
+        String serialNo = createSerialNumber();
+        MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
+        
+        mobileTerminal =setChannelOnMobileTerminalHelper(mobileTerminal);
+        mobileTerminal = terminalDaoBean.createMobileTerminal(mobileTerminal);
+
+        userTransaction.commit();
+        userTransaction.begin();
+        
+        assertTrue(mobileTerminal.getChannels().iterator().hasNext());
+        
+        mobileTerminal.getChannels().clear();
+        
+        MobileTerminal updatedMt = mobileTerminalServiceBean.updateMobileTerminal(mobileTerminal, null, "TestUser2");
+        userTransaction.commit();
+        userTransaction.begin();
+        
+        assertNotNull(updatedMt);
+        
+        List<MobileTerminal> listOfMts= terminalDaoBean.getMTListBasedOnChannelRevisionsForInterval(fromDate, toDate );
+        
+        assertTrue(listOfMts.isEmpty());
+    }
+    
     private MobileTerminal setChannelOnMobileTerminalHelper(MobileTerminal mobileTerminal) {
         
         Channel channel = new Channel();
@@ -352,8 +387,6 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         channel.setExpectedFrequency(Duration.ZERO);
         channel.setFrequencyGracePeriod(Duration.ZERO);
         channel.setExpectedFrequencyInPort(Duration.ZERO);
-        channel.setStartDate(Instant.now().minusSeconds(8));
-        channel.setEndDate(Instant.now());
         channel.setName("sdfajkl");
 
         mobileTerminal.getChannels().add(channel);
