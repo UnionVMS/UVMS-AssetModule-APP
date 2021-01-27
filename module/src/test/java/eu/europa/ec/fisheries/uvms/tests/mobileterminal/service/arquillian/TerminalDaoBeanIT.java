@@ -323,7 +323,6 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         
         mobileTerminal.getChannels().clear();
         MobileTerminal updatedMt = mobileTerminalServiceBean.updateMobileTerminal(mobileTerminal, null, "TestUser");
-       // MobileTerminal updatedMt = terminalDaoBean.updateMobileTerminal(mobileTerminal);
         userTransaction.commit();
         userTransaction.begin();
         toDate = Instant.now();

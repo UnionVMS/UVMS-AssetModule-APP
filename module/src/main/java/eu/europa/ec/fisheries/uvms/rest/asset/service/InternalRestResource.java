@@ -53,6 +53,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -410,6 +411,24 @@ public class InternalRestResource {
     public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
         try {
             List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, includeArchived);
+            return Response.ok(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminals)).build();
+        } catch (Exception e) {
+            LOG.error("Could not get mobile terminals", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+    
+    @GET
+    @Path("mobileterminalsWithHistory")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getMobileterminalList(@QueryParam("fromdate") String fromDate, @QueryParam("todate") String toDate) {
+        try {
+            Instant fromInstant = Instant.parse(fromDate)!= null? Instant.parse(toDate) : Instant.now().minus(12, ChronoUnit.MONTHS);
+            Instant toInstant = Instant.parse(toDate) != null? Instant.parse(toDate) : Instant.now();
+            
+            List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, false);
+            List<MobileTerminal> mobileTerminalsHistory = terminalDaoBean.getMTListBasedOnChannelRevisionsForInterval(fromInstant, toInstant);
+            mobileTerminals.addAll(mobileTerminalsHistory);
             return Response.ok(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminals)).build();
         } catch (Exception e) {
             LOG.error("Could not get mobile terminals", e);

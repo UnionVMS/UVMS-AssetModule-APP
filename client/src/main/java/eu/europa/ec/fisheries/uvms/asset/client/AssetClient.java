@@ -407,6 +407,20 @@ public class AssetClient {
         checkForErrorResponse(response);
         return response.readEntity(MobileTerminal.class);
     }
+    
+    public List<MobileTerminal> getMobileTerminalsWithHistory(Instant fromDate, Instant toDate) {
+        Response response = webTarget
+                .path("mobileterminalsWithHistory")
+                .queryParam("fromdate", fromDate.toString())
+                .queryParam("todate", toDate.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<MobileTerminal>>() {});
+    }
 
     private void checkForErrorResponse(Response response){
         if(response.getStatus() != 200){
