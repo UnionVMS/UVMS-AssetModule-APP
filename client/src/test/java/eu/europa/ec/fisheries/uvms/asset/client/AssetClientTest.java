@@ -606,6 +606,15 @@ public class AssetClientTest extends AbstractClientTest {
        // assertEquals(mobileTerminal.getId().toString(), "952a2efd-da9e-4932-808e-c37f3eda3aea");
         assertNull(mobileTerminal);
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalsWithHistoryTest(){
+        Instant fromDate = Instant.now().minus(365, ChronoUnit.DAYS);
+        Instant toDate = Instant.now();
+        List<MobileTerminal> mobileTerminals = assetClient.getMobileTerminalsWithHistory(fromDate, toDate);
+        assertNotNull(mobileTerminals);
+    }
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();

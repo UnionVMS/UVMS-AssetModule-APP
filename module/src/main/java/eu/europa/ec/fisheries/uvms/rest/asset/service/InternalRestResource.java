@@ -421,9 +421,9 @@ public class InternalRestResource {
     @GET
     @Path("mobileterminalsWithHistory")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMobileterminalList(@QueryParam("fromdate") String fromDate, @QueryParam("todate") String toDate) {
+    public Response getMobileterminalListWithHistory(@QueryParam("fromdate") String fromDate, @QueryParam("todate") String toDate) {
         try {
-            Instant fromInstant = Instant.parse(fromDate)!= null? Instant.parse(toDate) : Instant.now().minus(12, ChronoUnit.MONTHS);
+            Instant fromInstant = Instant.parse(fromDate)!= null? Instant.parse(fromDate) : Instant.now().minus(365, ChronoUnit.DAYS);
             Instant toInstant = Instant.parse(toDate) != null? Instant.parse(toDate) : Instant.now();
             
             List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, false);
