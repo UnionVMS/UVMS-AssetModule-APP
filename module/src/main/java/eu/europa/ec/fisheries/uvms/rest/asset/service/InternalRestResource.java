@@ -407,9 +407,10 @@ public class InternalRestResource {
     @GET
     @Path("mobileterminals")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
+    public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived,
+                                          @DefaultValue("false") @QueryParam("includeHistory") boolean includeHistory) {
         try {
-            List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, includeArchived);
+            List<MobileTerminal> mobileTerminals = terminalDaoBean.getMTListSearch(new ArrayList<>(), true, includeArchived, includeHistory);
             return Response.ok(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminals)).build();
         } catch (Exception e) {
             LOG.error("Could not get mobile terminals", e);

@@ -162,14 +162,14 @@ public class TerminalDaoBean {
         }
     }
 
-    public List<MobileTerminal> getMTListSearch(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived) {
-        return getMTListSearchPaginated(null, null, searchFields, isDynamic, includeArchived);
+    public List<MobileTerminal> getMTListSearch(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived, boolean includeHistory) {
+        return getMTListSearchPaginated(null, null, searchFields, isDynamic, includeArchived, includeHistory);
     }
 
     public List<MobileTerminal> getMTListSearchPaginated(Integer pageNumber, Integer pageSize, List<MTSearchKeyValue> searchFields,
-                                                   boolean isDynamic, boolean includeArchived) {
+                                                   boolean isDynamic, boolean includeArchived, boolean includeHistory) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeArchived);
+            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeArchived, includeHistory);
             if (pageSize != null && pageNumber != null) {
                 query.setFirstResult(pageSize * (pageNumber - 1));
                 query.setMaxResults(pageSize);
@@ -179,12 +179,11 @@ public class TerminalDaoBean {
             List<Channel> channelList = query.getResultList();
             Map<UUID, MobileTerminal> returnMap = new HashMap<>();
             for (Channel channel : channelList) {
-                // loaderTest(channel.getMobileTerminal());
                 forceLoad(channel.getMobileTerminal().getPlugin());
                 for (MobileTerminalPluginCapability capability : channel.getMobileTerminal().getPlugin().getCapabilities()) {
                     forceLoad(capability);
                 }
-                returnMap.put(channel.getMobileTerminal().getId(), channel.getMobileTerminal());
+                returnMap.put(channel.getMobileTerminal().getHistoryId(), channel.getMobileTerminal());
             }
             return new ArrayList<>(returnMap.values());
         } catch (AuditException e) {
@@ -197,7 +196,7 @@ public class TerminalDaoBean {
         s = s.concat(s);
     }
 
-    private AuditQuery createAuditQuery(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived) {
+    private AuditQuery createAuditQuery(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived, boolean includeHistory) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         //separate search fields for channel and for MT
@@ -217,10 +216,9 @@ public class TerminalDaoBean {
             Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
             aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
         } else {
-            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(new Date());
-            aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
+            aaQuery = auditReader.createQuery().forRevisionsOfEntity(Channel.class, true, true).traverseRelation("mobileTerminal", JoinType.INNER);
 
-            if (!searchRevisions(searchFields)) {
+            if (!includeHistory || !searchRevisions(searchFields)) {
                 aaQuery.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
             if(!includeArchived) {

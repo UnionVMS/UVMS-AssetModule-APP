@@ -409,7 +409,7 @@ public class MobileTerminalServiceBean {
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
 
-        List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived);
+        List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived, false);
 
         terminals.sort(Comparator.comparing(MobileTerminal::getId));
         terminals.forEach(this::sortChannels);
