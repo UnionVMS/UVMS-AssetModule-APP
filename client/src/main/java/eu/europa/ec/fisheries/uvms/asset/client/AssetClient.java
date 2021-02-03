@@ -366,10 +366,11 @@ public class AssetClient {
         return response.readEntity(SanePollDto.class);
     }
 
-    public List<MobileTerminal> getMobileTerminals(boolean includeArchived) {
+    public List<MobileTerminal> getMobileTerminals(boolean includeArchived, boolean includeHistory) {
         Response response = webTarget
                 .path("mobileterminals")
                 .queryParam("includeArchived", includeArchived)
+                .queryParam("includeHistory", includeHistory)
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
