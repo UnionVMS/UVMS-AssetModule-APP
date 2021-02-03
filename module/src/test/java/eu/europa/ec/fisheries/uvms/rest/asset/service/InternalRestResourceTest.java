@@ -519,6 +519,58 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getMobileterminalListTest() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal createdMobileTerminal = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        List<MobileTerminal> mobileTerminals = getWebTargetInternal()
+                .path("/internal")
+                .path("mobileterminals")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get(new GenericType<List<MobileTerminal>>() {});
+
+        assertTrue(mobileTerminals.stream().anyMatch(m -> m.getId().equals(createdMobileTerminal.getId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileterminalListWithHistoryTest() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal createdMobileTerminal = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        createdMobileTerminal.setAntenna("Different antenna");
+
+        MobileTerminal updatedMobileTerminal = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .put(Entity.json(createdMobileTerminal), MobileTerminal.class);
+
+        List<MobileTerminal> mobileTerminals = getWebTargetInternal()
+                .path("/internal")
+                .path("mobileterminals")
+                .queryParam("includeHistory", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get(new GenericType<List<MobileTerminal>>() {});
+
+        assertTrue(mobileTerminals.stream().anyMatch(m -> m.getHistoryId().equals(createdMobileTerminal.getHistoryId())));
+        assertTrue(mobileTerminals.stream().anyMatch(m -> m.getHistoryId().equals(updatedMobileTerminal.getHistoryId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getMtAtDate() {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
 
