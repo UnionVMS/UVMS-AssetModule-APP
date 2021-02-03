@@ -350,6 +350,22 @@ public class TerminalDaoBean {
         return null;
     }
 
+    public List<MobileTerminal> getMobileTerminalHistory() {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<Channel> channelList = (List<Channel>) auditReader.createQuery()
+                .forRevisionsOfEntity(Channel.class, true, true)
+                .getResultList();
+
+        Map<UUID, MobileTerminal> retListOfMT = new HashMap<>();
+
+        for (Channel channel : channelList) {
+            if (channel.getMobileTerminal() != null) {
+                retListOfMT.put(channel.getMobileTerminal().getHistoryId(), channel.getMobileTerminal());
+            }
+        }
+        return new ArrayList<>(retListOfMT.values());
+    }
+
     public MobileTerminal getMtAtDate(UUID mtId, Instant instant) {
         Date date = Date.from(instant);
         AuditReader auditReader = AuditReaderFactory.get(em);
