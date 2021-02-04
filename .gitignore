@@ -6,6 +6,7 @@ logging.properties
 
 model/pom.xml.rej
 
+.project
 .settings/
 client/.classpath
 client/.project
