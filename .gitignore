@@ -5,17 +5,3 @@ logging.properties
 /module/src/main/webapp/apidocs
 
 model/pom.xml.rej
-
-.project
-.settings/
-client/.classpath
-client/.project
-client/.settings/
-model/.classpath
-model/.project
-model/.settings/
-module/.classpath
-module/.project
-module/.settings/
-
-
