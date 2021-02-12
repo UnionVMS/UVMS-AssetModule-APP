@@ -21,7 +21,7 @@
     <docker.dev.version>3.25.0</docker.dev.version>
     <javaee.version>8.0</javaee.version>
 
-    <hibernate.version>5.1.9.Final</hibernate.version>
+    <hibernate.version>5.3.17.Final</hibernate.version>
 
     <audit.model.version>${uvms.audit.module.version}</audit.model.version>
 
@@ -41,22 +41,22 @@
   </dependencies>
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>fish.focus.uvms.maven</groupId>
-        <artifactId>uvms-pom-gis-deps</artifactId>
-        <version>1.21</version>
-        <type>pom</type>
-        <exclusions>
-          <exclusion>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
+      <!--<dependency>-->
+        <!--<groupId>fish.focus.uvms.maven</groupId>-->
+        <!--<artifactId>uvms-pom-gis-deps</artifactId>-->
+        <!--<version>1.21</version>-->
+        <!--<type>pom</type>-->
+        <!--<exclusions>-->
+          <!--<exclusion>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-core</artifactId>-->
+          <!--</exclusion>-->
+          <!--<exclusion>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-entitymanager</artifactId>-->
+          <!--</exclusion>-->
+        <!--</exclusions>-->
+      <!--</dependency>-->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
@@ -65,6 +65,11 @@
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
+        <version>${hibernate.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-spatial</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
