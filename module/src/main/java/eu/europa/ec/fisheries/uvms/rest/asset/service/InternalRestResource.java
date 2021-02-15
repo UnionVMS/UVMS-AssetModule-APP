@@ -406,7 +406,7 @@ public class InternalRestResource {
 
     @GET
     @Path("mobileterminals")
-//    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getMobileterminalList(@DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived,
                                           @DefaultValue("false") @QueryParam("includeHistory") boolean includeHistory) {
         try {
