@@ -42,21 +42,11 @@ public class AssetWsClient {
         pagingType.setOffset(pageNumber * pageSize);
         selectorType.setPaging(pagingType);
 
-        // Start of setting of special fields - required to pass validations on the fleet server side
-        OrderByType ordering = new OrderByType();
-        ordering.setField(""); // default in spec doc : eventKey
-        SortOrderType sortOrder = null; // default in spec doc: SortOrderType.DESC;
-        ordering.setSortOrder(sortOrder);
-        selectorType.setOrdering(ordering);
 
-        selectorType.getProjectionFields().add("");
-
-        PredicateType predicate = new PredicateType();
-        predicate.setField("");
-        predicate.getValues().add("");
-        predicate.setOperator(null);
-        selectorType.getPredicates().add(predicate);
-        // end of setting of special fields
+        OrderByType order = new OrderByType();
+        order.setField("eventDate");
+        order.setSortOrder(SortOrderType.ASC);
+        selectorType.setOrdering(order);
 
         GetVesselCoreData getVesselCoreData = new GetVesselCoreData();
         getVesselCoreData.setSelector(selectorType);
@@ -78,8 +68,13 @@ public class AssetWsClient {
         pagingType.setOffset(0);
         selectorType.setPaging(pagingType);
 
+        OrderByType order = new OrderByType();
+        order.setField("eventDate");
+        order.setSortOrder(SortOrderType.DESC); // Get the last event for that CFR
+        selectorType.setOrdering(order);
+
         PredicateType cfrPredicate = new PredicateType();
-        cfrPredicate.setField("cfr");
+        cfrPredicate.setField("CFR");
         cfrPredicate.setOperator(PredicateTypeOperator.EQUALS);
         cfrPredicate.getValues().add(cfr);
         selectorType.getPredicates().add(cfrPredicate);
