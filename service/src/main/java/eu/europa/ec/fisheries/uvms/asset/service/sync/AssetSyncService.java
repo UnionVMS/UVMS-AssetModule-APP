@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AssetSyncService {
 
     private static final int FIRST_PAGE = 0;
-    private static final int PAGE_SIZE = 100;
+    private static final int PAGE_SIZE = 1000;
 
     @Inject
     private AssetSyncClient assetSyncClient;
@@ -45,7 +45,7 @@ public class AssetSyncService {
         List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
         assetHistoryFromPage.forEach(assetHistoryRecord -> {
             try {
-                enrichAssetHistoryRecord(assetHistoryRecord, assetSyncClient.getAssetExtendedData(assetHistoryRecord.getCfr()));
+                enrichAssetHistoryRecord(assetHistoryRecord, assetSyncClient.getAssetExtendedDataCached(assetHistoryRecord.getCfr()));
                 assetHistoryRecordHandler.handleRecord(assetHistoryRecord);
             } catch (Exception e) {
                 // add to a dead letter queue ??
