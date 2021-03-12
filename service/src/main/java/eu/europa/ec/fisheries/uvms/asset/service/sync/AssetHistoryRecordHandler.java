@@ -6,11 +6,18 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.ReportingProducerBean;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
@@ -20,6 +27,10 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -37,6 +48,9 @@ public class AssetHistoryRecordHandler {
     private AssetDao assetDao;
 
     @EJB
+    private ReportingProducerBean reportingProducer;
+
+    @EJB
     private FishingGearTypeDao fishingGearTypeDao;
 
     @EJB
@@ -44,25 +58,41 @@ public class AssetHistoryRecordHandler {
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void handleRecord(AssetHistory assetHistoryRecord) {
+        String assetGuid = null, assetHistoryGuid = null;
         AssetHistory assetHistory = getAssetHistoryByHashKey(assetHistoryRecord);
         if (assetHistory != null) {
             // asset history found
             updateExistingAssetHistoryEntry(assetHistory, assetHistoryRecord);
+            //get info for reporting msg
+            if (assetHistory.getAsset() != null) {
+                assetGuid = assetHistory.getAsset().getGuid();
+            }
+            assetHistoryGuid = assetHistory.getGuid();
         } else {
             AssetEntity assetByCfr = getAssetByCfr(assetHistoryRecord);
             if (assetByCfr != null) {
                 // asset with CFR exists attach new history to it
                 addNewAssetHistoryEntry(assetHistoryRecord, assetByCfr);
+                //get info for reporting msg
+                if (assetByCfr.getGuid() != null) {
+                    assetGuid = assetByCfr.getGuid();
+                }
+                assetHistoryGuid = assetHistoryRecord.getGuid();
             } else {
                 // create new asset entity and attach the history update to it
                 AssetEntity assetEntity = createAssetEntityFrom(assetHistoryRecord);
                 saveNewAssetEntity(assetHistoryRecord, assetEntity);
+                assetGuid = assetEntity.getGuid();
+                assetHistoryGuid = assetHistoryRecord.getGuid();
             }
         }
+        // send to reporting to keep synced its asset history table
+        sendAssetUpdateToReporting(mapFromAssetHistoryEntity(assetHistoryRecord, assetGuid, assetHistoryGuid));
     }
 
 
     private void addNewAssetHistoryEntry(AssetHistory assetHistoryRecord, AssetEntity assetByCfr) {
+        assetHistoryRecord.setGuid(UUID.randomUUID().toString());
         setMainFishingGear(assetHistoryRecord);
         setSubFishingGear(assetHistoryRecord);
         assetHistoryRecord.getContactInfo().forEach(c -> c.setAsset(assetHistoryRecord));
@@ -222,8 +252,10 @@ public class AssetHistoryRecordHandler {
 
         if (anyEventMoreRecent.isPresent()) {
             assetHistory.setActive(false);
+            assetHistoryRecord.setActive(false);
         } else {
             assetHistory.setActive(true);
+            assetHistoryRecord.setActive(true);
             assetHistory.getAsset().getHistories().stream()
                     .filter(e -> e.getDateOfEvent().toInstant().isBefore(assetHistoryRecord.getDateOfEvent().toInstant()))
                     .collect(Collectors.toList())
@@ -383,6 +415,41 @@ public class AssetHistoryRecordHandler {
         }
         if (assetHistoryRecord.getIccat() != null && !assetHistoryRecord.getIccat().equals(assetHistory.getIccat())) {
             assetHistory.setIccat(assetHistoryRecord.getIccat());
+        }
+    }
+
+    private Asset mapFromAssetHistoryEntity(AssetHistory a, String assetGuid, String assetHistoryGuid) {
+        Asset asset = new Asset();
+        asset.setCfr(a.getCfr());
+        asset.setIrcs(a.getIrcs());
+        asset.setIccat(a.getIccat());
+        asset.setUvi(a.getUvi());
+        asset.setGfcm(a.getGfcm());
+        asset.setExternalMarking(a.getExternalMarking());
+        asset.setName(a.getName());
+        asset.setCountryCode(a.getCountryOfRegistration());
+        asset.setGearType(a.getMainFishingGear().getCode());
+        asset.setLengthOverAll(a.getLengthOverAll());
+
+        AssetId assetId = new AssetId();
+        assetId.setGuid(assetGuid);
+        assetId.setType(AssetIdType.GUID);
+        asset.setAssetId(assetId);
+        asset.setActive(a.getActive());
+        AssetHistoryId assetHistoryId = new AssetHistoryId();
+        assetHistoryId.setEventId(assetHistoryGuid);
+        asset.setEventHistory(assetHistoryId);
+        return asset;
+    }
+
+    private void sendAssetUpdateToReporting(Asset asset) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("mainTopic", "reporting");
+            params.put("subTopic", "asset");
+            reportingProducer.sendMessageToSpecificQueueSameTx(AssetModuleRequestMapper.createUpsertAssetModuleResponse(asset), reportingProducer.getDestination(), null, params);
+        } catch (MessageException | AssetModelMarshallException e) {
+            log.error("Could not send asset update to reporting", e);
         }
     }
 }

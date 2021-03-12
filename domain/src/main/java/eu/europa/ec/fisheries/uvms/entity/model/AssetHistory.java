@@ -305,7 +305,9 @@ public class AssetHistory implements Serializable {
 
     @PrePersist
     private void prepersist() {
-        setGuid(UUID.randomUUID().toString());
+        if(this.getGuid() == null) {
+            setGuid(UUID.randomUUID().toString());
+        }
     }
 
     public Long getId() {
