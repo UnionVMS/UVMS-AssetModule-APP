@@ -461,7 +461,6 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         String ircs = "I" + randomSuffix;
         String testIrcs = "I " + randomSuffix;
         Asset asset = AssetTestHelper.createBasicAsset();
-        asset.setSource(CarrierSource.NATIONAL);
         asset.setMmsiNo(null);
         asset.setIrcs(ircs);
         jmsHelper.upsertAsset(asset);
