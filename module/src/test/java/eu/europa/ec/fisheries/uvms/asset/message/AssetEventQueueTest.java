@@ -454,6 +454,32 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetInformationTestIrcsWithSpaceTest() throws Exception {
+        String randomSuffix = AssetTestsHelper.getRandomIntegers(6);
+        String ircs = "I" + randomSuffix;
+        String testIrcs = "I " + randomSuffix;
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setName(null);
+        asset.setIrcs(ircs);
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(2000);
+
+        Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
+        assertTrue(assetById.getName() == null);
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setName(AssetTestsHelper.getRandomIntegers(10));
+        newAsset.setIrcs(testIrcs);
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
+        assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
+        assertTrue(assetById.getName() != null);
+        assertTrue(assetById.getName().equals(newAsset.getName()));
+
+    }
 
     @Test
     @OperateOnDeployment("normal")
