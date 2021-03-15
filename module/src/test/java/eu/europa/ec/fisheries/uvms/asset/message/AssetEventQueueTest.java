@@ -477,8 +477,9 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         jmsHelper.assetInfo(assetList);
         Thread.sleep(2000);
         assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById.getName() != null);
-        assertTrue(assetById.getName().equals(newAsset.getName()));
+        assertTrue(assetById != null);
+        assetById = jmsHelper.getAssetById(testIrcs, AssetIdType.IRCS);
+        assertTrue(assetById == null);
 
     }
 
