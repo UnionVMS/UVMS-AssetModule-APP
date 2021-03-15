@@ -462,25 +462,23 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         String testIrcs = "I " + randomSuffix;
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setSource(CarrierSource.NATIONAL);
-        asset.setName(null);
+        asset.setMmsiNo(null);
         asset.setIrcs(ircs);
         jmsHelper.upsertAsset(asset);
         Thread.sleep(2000);
 
         Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById.getName() == null);
+        assertTrue(assetById.getMmsiNo() == null);
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
-        newAsset.setName(AssetTestsHelper.getRandomIntegers(10));
+        newAsset.setMmsi(AssetTestsHelper.getRandomIntegers(9));
         newAsset.setIrcs(testIrcs);
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
         Thread.sleep(2000);
         assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById != null);
-        assetById = jmsHelper.getAssetById(testIrcs, AssetIdType.IRCS);
-        assertTrue(assetById == null);
-
+        assertTrue(assetById.getMmsiNo() != null);
+        assertTrue(assetById.getMmsiNo().equals(newAsset.getMmsi()));
     }
 
     @Test
