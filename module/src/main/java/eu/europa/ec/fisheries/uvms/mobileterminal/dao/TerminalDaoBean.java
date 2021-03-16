@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.VmsBillingDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchFields;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.hibernate.envers.AuditReader;
@@ -412,5 +413,33 @@ public class TerminalDaoBean {
 
     public void flushEm() {
         em.flush();
+    }
+    
+    public List<VmsBillingDto> getVmsBillingList() {
+        Query q = em.createNativeQuery("SELECT c.dnid, c.member_number,\n" +
+                " c.com_channel_name, m.serial_no,\n" +
+                " m.satellite_number, a.national_id,\n" +
+                "c.start_date, c.end_date\n" + 
+                "FROM asset.channel_aud c\n" + 
+                "JOIN asset.mobileterminal_aud m ON c.rev = m.rev\n" + 
+                "JOIN asset.asset_aud a ON m.asset_id = a.id \n" + 
+                "WHERE a.updatetime = (SELECT MAX(aud.updatetime)\n" + 
+                "                      FROM asset.asset_aud aud\n" + 
+                "                      WHERE aud.updatetime\\:\\:timestamp <= c.updattime\\:\\:timestamp\n" + 
+                "                      AND a.id = aud.id)\n"+
+                "AND c.chan_conf = false\n" + 
+                "AND c.chan_poll = false\n" + 
+                "AND a.national_id IS NOT NULL");
+        List<Object[]> vmsBillingObject = q.getResultList();
+        List<VmsBillingDto> vmsBillingListDao = new ArrayList<>();
+        
+        for (Object[] vmsBilling : vmsBillingObject) {
+            vmsBillingListDao.add(new VmsBillingDto((Integer)vmsBilling[0], (Integer)vmsBilling[1], 
+                    (String)vmsBilling[2], (String)vmsBilling[3], (String)vmsBilling[4], 
+                    vmsBilling[5] != null ? Long.valueOf((Integer) vmsBilling[5]) : null,
+                    vmsBilling[6] != null ? vmsBilling[6].toString().split("\\.")[0]: null, 
+                    vmsBilling[7] != null ? vmsBilling[7].toString().split("\\.")[0]: null ));
+        }
+        return vmsBillingListDao;
     }
 }

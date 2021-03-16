@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.VmsBillingDto;
 import eu.europa.ec.fisheries.uvms.asset.client.model.mt.*;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
 
@@ -605,6 +606,13 @@ public class AssetClientTest extends AbstractClientTest {
 
        // assertEquals(mobileTerminal.getId().toString(), "952a2efd-da9e-4932-808e-c37f3eda3aea");
         assertNull(mobileTerminal);
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getVmsBillingTest(){
+        List<eu.europa.ec.fisheries.uvms.asset.client.model.mt.VmsBillingDto> vmsBillingList = assetClient.getVmsBillingList();
+        assertNotNull(vmsBillingList);
     }
 
     private String createAsset(){
