@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +87,7 @@ public class AssetSyncDataConverter {
     private void mapRegistrationInfo(VesselTransportMeansType relatedVesselTransportMeans, AssetHistory assetHistory) {
         assetHistory.setCountryOfRegistration(relatedVesselTransportMeans.getRegistrationVesselCountry());
         assetHistory.setRegistrationNumber(relatedVesselTransportMeans.getRegistrationNumber());
-        Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator()).ifPresent(v ->{
+        Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator()).ifPresent(v -> {
             assetHistory.setHasLicence(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator().equals(BooleanType.Y));
         });
         assetHistory.setPortOfRegistration(relatedVesselTransportMeans.getSpecifiedRegistrationEvent().stream().findFirst().map(e -> e.getRelatedRegistrationLocation().getPlaceOfRegistrationPortID()).orElse(""));
@@ -123,7 +124,11 @@ public class AssetSyncDataConverter {
             }
 
             c.getURIEmailCommunication().stream().findFirst().ifPresent(e -> contactInfo.setEmail(e.getEmailAddress()));
-            contactInfo.setName(c.getName());
+            if (c.getName() == null || c.getName().isEmpty()) {
+                contactInfo.setName("- -");
+            } else {
+                contactInfo.setName(c.getName());
+            }
             c.getSpecifiedUniversalCommunication().stream().findFirst().ifPresent(p -> contactInfo.setPhoneNumber(p.getPhoneNumber()));
             contactInfo.setSource(ContactInfoSourceEnum.INTERNAL);
             contactInfo.setUpdatedBy(FLEETSYNC);
@@ -137,9 +142,9 @@ public class AssetSyncDataConverter {
     private void mapEngines(VesselTransportMeansType relatedVesselTransportMeans, AssetHistory assetHistory) {
         relatedVesselTransportMeans.getAttachedVesselEngine().forEach(e -> {
             if (FluxVesselEngineRoleType.MAIN.equals(e.getRole())) {
-                assetHistory.setPowerOfMainEngine(e.getPower().getValue());
+                assetHistory.setPowerOfMainEngine((e.getPower() != null ? e.getPower().getValue() : null));
             } else if (FluxVesselEngineRoleType.AUX.equals(e.getRole())) {
-                assetHistory.setPowerOfAuxEngine(e.getPower().getValue());
+                assetHistory.setPowerOfAuxEngine((e.getPower() != null ? e.getPower().getValue() : null));
             }
         });
     }
