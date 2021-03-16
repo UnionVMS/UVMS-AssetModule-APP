@@ -456,7 +456,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     @Test
     @OperateOnDeployment("normal")
-    public void assetInformationTestIrcsWithSpaceTest() throws Exception {
+    public void assetInformationIrcsWithSpaceTest() throws Exception {
         String randomSuffix = AssetTestsHelper.getRandomIntegers(6);
         String ircs = "I" + randomSuffix;
         String testIrcs = "I " + randomSuffix;
@@ -478,6 +478,38 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
         assertTrue(assetById.getMmsiNo() != null);
         assertTrue(assetById.getMmsiNo().equals(newAsset.getMmsi()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetInformationMergeIrcsWithSpaceTest() throws Exception {
+        String randomSuffix = AssetTestsHelper.getRandomIntegers(6);
+        String ircs = "I" + randomSuffix;
+        String testIrcs = "I " + randomSuffix;
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setSource(CarrierSource.NATIONAL);
+        asset.setMmsiNo(null);
+        asset.setIrcs(ircs);
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(2000);
+
+        Asset asset2 = AssetTestHelper.createBasicAsset();
+        String mmsi = AssetTestsHelper.getRandomIntegers(9);
+        asset2.setMmsiNo(mmsi);
+        asset2.setIrcs(null);
+        jmsHelper.upsertAsset(asset2);
+        Thread.sleep(2000);
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setMmsi(mmsi);
+        newAsset.setIrcs(testIrcs);
+        jmsHelper.assetInfo(Arrays.asList(newAsset));
+        Thread.sleep(2000);
+        Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
+        assertTrue(assetById.getMmsiNo() != null);
+        assertTrue(assetById.getMmsiNo().equals(newAsset.getMmsi()));
+        Asset assetByMmsi = jmsHelper.getAssetById(mmsi, AssetIdType.MMSI);
+        assertEquals(assetByMmsi.getAssetId().getGuid(), assetById.getAssetId().getGuid());
     }
 
     @Test
