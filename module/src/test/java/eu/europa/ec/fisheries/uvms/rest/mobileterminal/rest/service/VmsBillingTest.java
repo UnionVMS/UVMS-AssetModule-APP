@@ -110,7 +110,6 @@ public class VmsBillingTest extends AbstractAssetRestTest{
             List<VmsBillingDto> vmsResponse = jsonb.fromJson(result, 
                     new ArrayList<VmsBillingDto>(){private static final long serialVersionUID = 1L;}.getClass().getGenericSuperclass());
             
-            assertTrue(vmsResponse.size() > 0);
             return vmsResponse;
         }
         
