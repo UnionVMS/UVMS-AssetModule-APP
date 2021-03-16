@@ -717,7 +717,7 @@ public class AssetServiceBean {
         }
         if ((assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs())) && (assetFromAIS.getIrcs() != null)) {
             shouldUpdate = true;
-            assetFromDB.setIrcs(assetFromAIS.getIrcs());
+            assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
         }
         if ((assetFromDB.getVesselType() == null || !assetFromDB.getVesselType().equals(assetFromAIS.getVesselType())) && (assetFromAIS.getVesselType() != null)) {
             shouldUpdate = true;
