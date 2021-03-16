@@ -33,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.VmsBillingDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -457,6 +458,22 @@ public class InternalRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         }catch (Exception ex) {
             LOG.error("[ Error when getting MT from memberNumber {} and dnid {} at date {}] {}", memberNumber, dnid, date, ex);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+    
+    @GET
+    @Path("vmsBilling")
+ //   @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getVmsBilling(){
+        try {
+            List<VmsBillingDto> VmsBilling = terminalDaoBean.getVmsBillingList();
+            
+            String returnString = jsonb.toJson(VmsBilling);
+            
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        }catch (Exception ex) {
+            LOG.error(" Error when getting vmsBilling  ");
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }

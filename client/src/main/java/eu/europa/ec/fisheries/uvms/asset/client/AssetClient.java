@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.VmsBillingDto;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -407,6 +408,18 @@ public class AssetClient {
 
         checkForErrorResponse(response);
         return response.readEntity(MobileTerminal.class);
+    }
+    
+    public List<VmsBillingDto> getVmsBillingList(){
+        Response response = webTarget
+                .path("vmsBilling")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<VmsBillingDto>>() {});
     }
 
     private void checkForErrorResponse(Response response){
