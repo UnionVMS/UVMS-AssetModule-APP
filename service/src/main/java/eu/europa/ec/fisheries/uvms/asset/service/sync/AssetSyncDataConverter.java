@@ -72,14 +72,23 @@ public class AssetSyncDataConverter {
 
     private void mapIndicators(VesselTransportMeansType relatedVesselTransportMeans, AssetHistory assetHistory) {
         Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getPublicAidCode()).ifPresent(v -> assetHistory.setPublicAid(PublicAidEnum.valueOf(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getPublicAidCode())));
-        assetHistory.setHasVms(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getVMSIndicator().equals(BooleanType.Y));
-        assetHistory.setIrcsIndicator(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getIRCSIndicator().equals(BooleanType.Y) ? "1" : "0");
+
+        if (relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics() != null) {
+            Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getVMSIndicator()).ifPresent(i -> {
+                assetHistory.setHasVms(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getVMSIndicator().equals(BooleanType.Y));
+            });
+            Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getIRCSIndicator()).ifPresent(i -> {
+                assetHistory.setIrcsIndicator(relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getIRCSIndicator().equals(BooleanType.Y) ? "1" : "0");
+            });
+        }
     }
 
     private void mapRegistrationInfo(VesselTransportMeansType relatedVesselTransportMeans, AssetHistory assetHistory) {
         assetHistory.setCountryOfRegistration(relatedVesselTransportMeans.getRegistrationVesselCountry());
         assetHistory.setRegistrationNumber(relatedVesselTransportMeans.getRegistrationNumber());
-        assetHistory.setHasLicence(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator().equals(BooleanType.Y));
+        Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator()).ifPresent(v ->{
+            assetHistory.setHasLicence(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator().equals(BooleanType.Y));
+        });
         assetHistory.setPortOfRegistration(relatedVesselTransportMeans.getSpecifiedRegistrationEvent().stream().findFirst().map(e -> e.getRelatedRegistrationLocation().getPlaceOfRegistrationPortID()).orElse(""));
         Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getTypeOfExport()).ifPresent(e -> assetHistory.setTypeOfExport(TypeOfExportEnum.valueOf(e)));
     }
