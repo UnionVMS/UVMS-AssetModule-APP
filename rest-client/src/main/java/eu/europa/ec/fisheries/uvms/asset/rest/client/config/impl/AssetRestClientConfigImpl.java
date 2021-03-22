@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.asset.rest.client.config.AssetRestClientConfig;
+import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import lombok.SneakyThrows;
@@ -17,16 +18,19 @@ public class AssetRestClientConfigImpl implements AssetRestClientConfig {
 
     private ParameterService parameterService;
 
+    private ConfigHelper configHelper;
+    
     @Inject
-    public AssetRestClientConfigImpl(ParameterService parameterService) {
+    public AssetRestClientConfigImpl(ParameterService parameterService, ConfigHelper configHelper) {
         this.parameterService = parameterService;
+        this.configHelper = configHelper;
     }
 
     @SneakyThrows
     @Override
     public String getAssetGatewayEndpoint() {
         try {
-            return parameterService.getParamValueById(ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
+            return parameterService.getParamValueById(configHelper.getModuleName().toLowerCase() + "." + ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
         } catch (ConfigServiceException e) {
             log.error("Could not retrieve configuration parameter for key {}", ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
             throw new ConfigServiceException("Could not retrieve configuration parameter for key " + ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY, e);
@@ -39,7 +43,7 @@ public class AssetRestClientConfigImpl implements AssetRestClientConfig {
             return false;
         }
 
-        return endpointSettingKey.equalsIgnoreCase(ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
+        return endpointSettingKey.equalsIgnoreCase(configHelper.getModuleName().toLowerCase() + "." + ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
     }
 
 }
