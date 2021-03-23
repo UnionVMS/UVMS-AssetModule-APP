@@ -416,12 +416,12 @@ public class TerminalDaoBean {
     }
     
     public List<VmsBillingDto> getVmsBillingList() {
-        Query q = em.createNativeQuery("SELECT c.dnid, c.member_number,\n" +
+        Query q = em.createNativeQuery("SELECT DISTINCT c.dnid, c.member_number,\n" +
                 " c.com_channel_name, m.serial_no,\n" +
                 " m.satellite_number, a.national_id,\n" +
                 "c.start_date, c.end_date\n" + 
                 "FROM asset.channel_aud c\n" + 
-                "JOIN asset.mobileterminal_aud m ON c.rev = m.rev\n" + 
+                "JOIN asset.mobileterminal_aud m ON c.mobterm_id = m.id AND c.rev = m.rev\n" + 
                 "JOIN asset.asset_aud a ON m.asset_id = a.id \n" + 
                 "WHERE a.updatetime = (SELECT MAX(aud.updatetime)\n" + 
                 "                      FROM asset.asset_aud aud\n" + 
