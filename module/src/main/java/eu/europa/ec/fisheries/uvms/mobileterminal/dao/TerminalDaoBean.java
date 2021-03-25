@@ -432,7 +432,7 @@ public class TerminalDaoBean {
                 "AND aa.national_id IS NOT NULL\n" +
                 "UNION\n" +
                 "SELECT c.dnid, c.member_number, c.com_channel_name,\n" + 
-                " m.serial_no, m.satellite_number, a.national_id, c.end_date, c.start_date\n" +
+                " m.serial_no, m.satellite_number, a.national_id, c.start_date, c.end_date\n" +
                 "FROM asset.channel c \n" +
                 "JOIN asset.mobileterminal m ON c.mobterm_id = m.id \n" +
                 "JOIN asset.asset a ON m.asset_id = a.id \n" +
