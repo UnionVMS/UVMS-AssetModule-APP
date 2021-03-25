@@ -416,12 +416,12 @@ public class TerminalDaoBean {
     }
     
     public List<VmsBillingDto> getVmsBillingList() {
-        Query q = em.createNativeQuery("SELECT DISTINCT c.dnid, c.member_number,\n" +
+        Query q = em.createNativeQuery("SELECT DESTINCT c.dnid, c.member_number,\n" +
                 " c.com_channel_name, m.serial_no,\n" +
                 " m.satellite_number, a.national_id,\n" +
                 "c.start_date, c.end_date\n" + 
                 "FROM asset.channel_aud c\n" + 
-                "JOIN asset.mobileterminal_aud m ON c.mobterm_id = m.id AND c.rev = m.rev\n" + 
+                "JOIN asset.mobileterminal_aud m ON c.rev = m.rev\n" + 
                 "JOIN asset.asset_aud a ON m.asset_id = a.id \n" + 
                 "WHERE a.updatetime = (SELECT MAX(aud.updatetime)\n" + 
                 "                      FROM asset.asset_aud aud\n" + 
@@ -429,6 +429,15 @@ public class TerminalDaoBean {
                 "                      AND a.id = aud.id)\n"+
                 "AND c.chan_conf = false\n" + 
                 "AND c.chan_poll = false\n" + 
+                "AND a.national_id IS NOT NULL\n" +
+                "UNION\n" +
+                "SELECT c.dnid, c.member_number, c.com_channel_name,\n" + 
+                "m.serial_no, m.satellite_number, a.national_id, c.end_date, c.start_date\n" +
+                "FROM asset.channel c \n" +
+                "JOIN asset.mobileterminal m ON c.mobterm_id = m.id \n" +
+                "JOIN asset.asset a ON m.asset_id = a.id \n" +
+                "AND c.chan_conf = false\n" +
+                "AND c.chan_poll = false\n" +
                 "AND a.national_id IS NOT NULL");
         List<Object[]> vmsBillingObject = q.getResultList();
         List<VmsBillingDto> vmsBillingListDao = new ArrayList<>();
