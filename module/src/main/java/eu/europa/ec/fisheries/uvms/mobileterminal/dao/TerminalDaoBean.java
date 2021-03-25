@@ -416,20 +416,20 @@ public class TerminalDaoBean {
     }
     
     public List<VmsBillingDto> getVmsBillingList() {
-        Query q = em.createNativeQuery("SELECT DESTINCT c.dnid, c.member_number,\n" +
-                " c.com_channel_name, m.serial_no,\n" +
-                " m.satellite_number, a.national_id,\n" +
-                " c.start_date, c.end_date\n" + 
-                "FROM asset.channel_aud c\n" + 
-                "JOIN asset.mobileterminal_aud m ON c.mobterm_id = m.id AND c.rev = m.rev \n" + 
-                "JOIN asset.asset_aud a ON m.asset_id = a.id \n" + 
-                "WHERE a.updatetime = (SELECT MAX(aud.updatetime)\n" + 
+        Query q = em.createNativeQuery("SELECT DISTINCT ca.dnid, ca.member_number,\n" +
+                " ca.com_channel_name, mt.serial_no,\n" +
+                " mt.satellite_number, aa.national_id,\n" +
+                " ca.start_date, ca.end_date\n" + 
+                "FROM asset.channel_aud ca \n" + 
+                "JOIN asset.mobileterminal_aud mt ON ca.mobterm_id = mt.id AND ca.rev = mt.rev \n" + 
+                "JOIN asset.asset_aud aa ON mt.asset_id = aa.id \n" + 
+                "WHERE aa.updatetime = (SELECT MAX(aud.updatetime)\n" + 
                 "                      FROM asset.asset_aud aud\n" + 
-                "                      WHERE aud.updatetime\\:\\:timestamp <= c.updattime\\:\\:timestamp\n" + 
-                "                      AND a.id = aud.id)\n"+
-                "AND c.chan_conf = false\n" + 
-                "AND c.chan_poll = false\n" + 
-                "AND a.national_id IS NOT NULL\n" +
+                "                      WHERE aud.updatetime\\:\\:timestamp <= ca.updattime\\:\\:timestamp\n" + 
+                "                      AND aa.id = aud.id)\n"+
+                "AND ca.chan_conf = false\n" + 
+                "AND ca.chan_poll = false\n" + 
+                "AND aa.national_id IS NOT NULL\n" +
                 "UNION\n" +
                 "SELECT c.dnid, c.member_number, c.com_channel_name,\n" + 
                 " m.serial_no, m.satellite_number, a.national_id, c.end_date, c.start_date\n" +
