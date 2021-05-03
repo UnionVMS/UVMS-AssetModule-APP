@@ -11,18 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.List;
-
 import eu.europa.ec.fisheries.uvms.asset.facade.AssetFacadeNew;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.AssetError;
 import eu.europa.ec.fisheries.uvms.asset.rest.exception.AssetFacadeException;
@@ -31,24 +19,17 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import org.hibernate.exception.SQLGrammarException;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Date;
+import java.util.List;
 
 @Path("/asset-gateway")
 @Stateless
@@ -114,8 +95,6 @@ public class AssetFacadeResource {
         try {
             LOG.info("Getting asset list by cfr:{}", cfr);
             return assetFacade.findHistoryOfAssetByCfr(cfr);
-        } catch (SQLGrammarException e) { // should be caught at dao level or facade
-            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
         }
@@ -134,8 +113,6 @@ public class AssetFacadeResource {
         try {
             LOG.info("Getting asset list by cfr:{}", cfr);
             return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat, uvi);
-        } catch (SQLGrammarException e) { // should be caught at dao level or facade
-            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
         }
@@ -208,8 +185,6 @@ public class AssetFacadeResource {
         try {
             LOG.info("Getting asset list by query: " + query.toString());
             return assetFacade.getAssetList(query);
-        } catch (SQLGrammarException e) { // should be caught at dao level or facade
-            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
         }
@@ -222,14 +197,12 @@ public class AssetFacadeResource {
     public List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery) throws AssetFacadeException {
         try {
             LOG.info("Received the following AssetGroup List");
-            int i =1;
-            for(AssetGroup assetGroup: assetGroupQuery) {
+            int i = 1;
+            for (AssetGroup assetGroup : assetGroupQuery) {
                 LOG.info("Received " + i + " element from list with data: " + assetGroup.toString());
                 i++;
             }
             return assetFacade.getAssetGroup(assetGroupQuery);
-        } catch (SQLGrammarException e) {
-            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
         }
@@ -260,8 +233,6 @@ public class AssetFacadeResource {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, "Error when getting asset with assetHistId: " + assetHistId);
         }
     }
-
-
 
 
 }

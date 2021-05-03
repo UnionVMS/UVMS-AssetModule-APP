@@ -33,6 +33,7 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>config-library</artifactId>
             <version>${uvms.config.version}</version>
+            <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
