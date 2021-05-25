@@ -41,8 +41,7 @@ public class EventStreamSender {
     public void updatedAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
         try {
             if (asset != null) {
-                MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll(), asset.getHasLicence());
-                String outgoingJson = jsonb.toJson(micro);
+                String outgoingJson = jsonb.toJson(asset);
                 sendMessageOnEventStream(outgoingJson, "Updated Asset");
             }
         }catch (Exception e){
@@ -69,6 +68,8 @@ public class EventStreamSender {
         message.setStringProperty(MessageConstants.EVENT_STREAM_SUBSCRIBER_LIST, null);
         MappedDiagnosticContext.addThreadMappedDiagnosticContextToMessageProperties(message);
 
-        context.createProducer().setDeliveryMode(1).setTimeToLive(5000L).send(destination, message);
+        context.createProducer()
+            .setDeliveryMode(DeliveryMode.PERSISTENT)
+            .send(destination, message);
     }
 }
