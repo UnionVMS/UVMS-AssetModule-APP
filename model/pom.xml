@@ -26,14 +26,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-test-deps</artifactId>
+			<artifactId>uvms-pom-java11-deps</artifactId>
 			<type>pom</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.jaxb2_commons</groupId>
-			<artifactId>jaxb2-basics</artifactId>
-			<version>1.11.1</version>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
@@ -41,18 +36,23 @@
 		    <version>3.12.0</version>
 		</dependency>
 		<dependency>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-test-deps</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-client</artifactId>
 			<version>5.16.0</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- Java 11 has removed theses from the standard package   -->
-		<dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-java11-deps</artifactId>
-			<type>pom</type>
-		</dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.3.3</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -111,8 +111,6 @@
 							<goal>wsdl2java</goal>
 						</goals>
 					</execution>
-
-
 					<execution>
 						<id>generate-asset-module2</id>
 						<phase>generate-sources</phase>
@@ -155,9 +153,6 @@
 							<goal>wsdl2java</goal>
 						</goals>
 					</execution>
-
-
-
 				</executions>
 				<dependencies>
 					<dependency>
@@ -167,36 +162,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<!--<plugin>-->
-				<!--<groupId>com.github.siom79.japicmp</groupId>-->
-				<!--<artifactId>japicmp-maven-plugin</artifactId>-->
-				<!--<configuration>-->
-					<!--<oldVersion>-->
-						<!--<dependency>-->
-							<!--<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>-->
-							<!--<artifactId>asset-model</artifactId>-->
-							<!--<version>${asset.api.check.against.version}</version>-->
-							<!--<type>jar</type>-->
-						<!--</dependency>-->
-					<!--</oldVersion>-->
-					<!--<newVersion>-->
-						<!--<file>-->
-							<!--<path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>-->
-						<!--</file>-->
-					<!--</newVersion>-->
-					<!--<parameter>-->
-						<!--<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>-->
-					<!--</parameter>-->
-				<!--</configuration>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<phase>verify</phase>-->
-						<!--<goals>-->
-							<!--<goal>cmp</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 </project>
