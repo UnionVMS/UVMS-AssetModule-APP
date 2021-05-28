@@ -28,7 +28,6 @@ import javax.ws.rs.sse.SseEventSource;
 
 import eu.europa.ec.fisheries.uvms.rest.asset.AuthorizationHeaderWebTarget;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
 import org.junit.Test;
