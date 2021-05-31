@@ -45,14 +45,18 @@
             <version>${uvms.commons.version}</version>
         </dependency>
         <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>config-library</artifactId>
+            <version>${uvms.config.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
             <artifactId>uvms-pom-arquillian-deps</artifactId>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
     <build>
         <finalName>${project.name}-${project.parent.version}</finalName>
         <plugins>
@@ -65,5 +69,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

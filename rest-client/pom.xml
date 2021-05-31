@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>asset-rest-client</artifactId>
@@ -7,9 +8,9 @@
     <packaging>jar</packaging>
 
     <parent>
-	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-	    <artifactId>asset</artifactId>
-	    <version>${uvms.asset.module.version}</version>
+        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+        <artifactId>asset</artifactId>
+        <version>${uvms.asset.module.version}</version>
     </parent>
 
 
@@ -24,6 +25,7 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>config-library</artifactId>
             <version>${uvms.config.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -70,5 +72,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

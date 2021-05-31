@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>asset-message-impl</artifactId>
@@ -7,15 +8,15 @@
     <packaging>ejb</packaging>
 
     <parent>
-	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-	    <artifactId>asset</artifactId>
-	    <version>${uvms.asset.module.version}</version>
+        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+        <artifactId>asset</artifactId>
+        <version>${uvms.asset.module.version}</version>
     </parent>
 
     <properties>
         <maven.ejb.plugin.ejb.version>3.1</maven.ejb.plugin.ejb.version>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
@@ -38,18 +39,19 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>config-library</artifactId>
             <version>${uvms.config.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
             <version>${uvms.commons.version}</version>
         </dependency>
-		<dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-arquillian-deps</artifactId>
-			<type>pom</type>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-arquillian-deps</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,5 +66,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>
