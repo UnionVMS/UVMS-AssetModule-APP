@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +11,6 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.HullMaterialEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
@@ -48,6 +46,10 @@ public class AssetSyncDataConverter {
         assetHistory.setDateOfEvent(vesselEventType.getOccurrenceDateTime());
 //        assetHistory.setUpdateTime();
         assetHistory.setUpdatedBy(FLEETSYNC);
+
+        assetHistory.setIccat(vesselEventType.getRelatedVesselTransportMeans().getThirdPartyVesselID().getICCAT());
+        assetHistory.setGfcm(vesselEventType.getRelatedVesselTransportMeans().getThirdPartyVesselID().getGFCM());
+
         /*
         Ignore the values of these fields for now as they are not used in FluxFMC and the enum has not all the incoming values.
         assetHistory.setSegment(SegmentFUP.valueOf(relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getSegment()));

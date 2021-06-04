@@ -51,30 +51,34 @@
     <message name="getVesselPhotosResponse">
         <part name="result" element="tns:getVesselPhotosResponse"/>
     </message>
+    <message name="getVesselAggregatedData">
+        <part name="parameters" element="tns:getVesselAggregatedData"/>
+        <part name="clientId" element="tns:clientId"/>
+        <part name="partialFailure" element="tns:partialFailure"/>
+    </message>
+    <message name="getVesselAggregatedDataResponse">
+        <part name="result" element="tns:getVesselAggregatedDataResponse"/>
+    </message>
     <portType name="VesselDataService">
         <operation name="getVesselExtendedData" parameterOrder="parameters clientId partialFailure">
-            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedDataRequest"
-                   message="tns:getVesselExtendedData"/>
-            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedDataResponse"
-                    message="tns:getVesselExtendedDataResponse"/>
-            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault"
-                   wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedData/Fault/FleetDataServiceExceptionFault"/>
+            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedDataRequest" message="tns:getVesselExtendedData"/>
+            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedDataResponse" message="tns:getVesselExtendedDataResponse"/>
+            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault" wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselExtendedData/Fault/FleetDataServiceExceptionFault"/>
         </operation>
         <operation name="getVesselCoreData" parameterOrder="parameters clientId partialFailure">
-            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreDataRequest"
-                   message="tns:getVesselCoreData"/>
-            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreDataResponse"
-                    message="tns:getVesselCoreDataResponse"/>
-            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault"
-                   wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreData/Fault/FleetDataServiceExceptionFault"/>
+            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreDataRequest" message="tns:getVesselCoreData"/>
+            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreDataResponse" message="tns:getVesselCoreDataResponse"/>
+            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault" wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselCoreData/Fault/FleetDataServiceExceptionFault"/>
         </operation>
         <operation name="getVesselPhotos" parameterOrder="parameters clientId partialFailure">
-            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotosRequest"
-                   message="tns:getVesselPhotos"/>
-            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotosResponse"
-                    message="tns:getVesselPhotosResponse"/>
-            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault"
-                   wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotos/Fault/FleetDataServiceExceptionFault"/>
+            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotosRequest" message="tns:getVesselPhotos"/>
+            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotosResponse" message="tns:getVesselPhotosResponse"/>
+            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault" wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselPhotos/Fault/FleetDataServiceExceptionFault"/>
+        </operation>
+        <operation name="getVesselAggregatedData" parameterOrder="parameters clientId partialFailure">
+            <input wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselAggregatedDataRequest" message="tns:getVesselAggregatedData"/>
+            <output wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselAggregatedDataResponse" message="tns:getVesselAggregatedDataResponse"/>
+            <fault message="tns:FleetDataServiceExceptionFault" name="FleetDataServiceExceptionFault" wsam:Action="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0/VesselDataService/getVesselAggregatedData/Fault/FleetDataServiceExceptionFault"/>
         </operation>
     </portType>
     <binding name="VesselDataServicePortBinding" type="tns:VesselDataService">
@@ -123,11 +127,24 @@
                 <soap:fault name="FleetDataServiceExceptionFault" use="literal"/>
             </fault>
         </operation>
+        <operation name="getVesselAggregatedData">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal" parts="parameters"/>
+                <soap:header message="tns:getVesselAggregatedData" part="clientId" use="literal"/>
+                <soap:header message="tns:getVesselAggregatedData" part="partialFailure" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FleetDataServiceExceptionFault">
+                <soap:fault name="FleetDataServiceExceptionFault" use="literal"/>
+            </fault>
+        </operation>
     </binding>
     <service name="VesselDataService">
         <port name="VesselDataServicePort" binding="tns:VesselDataServicePortBinding">
-            <soap:address
-                    location="http://localhost:8889/mare-fleet-register-webservices/v1_0/VesselDataService"/>
+            <soap:address location="http://localhost:8889/mare-fleet-register-webservices/v1_0/VesselDataService"/>
         </port>
     </service>
 </definitions>

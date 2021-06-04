@@ -15,16 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetSyncException;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreData;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselCoreDataResponse;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselExtendedData;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselExtendedDataResponse;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.OrderByType;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.PagingType;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.PredicateType;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.PredicateTypeOperator;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.SelectorType;
-import eu.europa.ec.mare.fisheries.vessel.common.v1.SortOrderType;
+import eu.europa.ec.mare.fisheries.vessel.common.v1.*;
 import eu.europa.ec.mare.fisheries.vessel.common.v1_0.FleetDataServiceExceptionFault;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +26,7 @@ public class AssetWsClient {
     @Inject
     private VesselDataServiceClientProducer vesselDataServiceClientProducer;
 
-    public GetVesselCoreDataResponse getAssetPage(Integer pageNumber, Integer pageSize) {
+    public GetVesselAggregatedDataResponse getAssetPage(Integer pageNumber, Integer pageSize) {
         SelectorType selectorType = new SelectorType();
         PagingType pagingType = new PagingType();
         pagingType.setMaxResults(pageSize);
@@ -48,16 +39,18 @@ public class AssetWsClient {
         order.setSortOrder(SortOrderType.ASC);
         selectorType.setOrdering(order);
 
-        GetVesselCoreData getVesselCoreData = new GetVesselCoreData();
-        getVesselCoreData.setSelector(selectorType);
+        GetVesselAggregatedData getVesselAggregatedData = new GetVesselAggregatedData();
+        getVesselAggregatedData.setSelector(selectorType);
 
-        GetVesselCoreDataResponse vesselCoreDataResponse = null;
+        GetVesselAggregatedDataResponse vesselAggregatedDataResponse = null;
         try {
-            vesselCoreDataResponse = vesselDataServiceClientProducer.getVesselDataService().getVesselCoreData(getVesselCoreData, "clientId", "partialFailure");
+            vesselAggregatedDataResponse =
+                    vesselDataServiceClientProducer.getVesselDataService().
+                            getVesselAggregatedData(getVesselAggregatedData, "clientId", "partialFailure");
         } catch (FleetDataServiceExceptionFault e) {
             throw new AssetSyncException("Error getting page " + pageNumber + " with page size " + pageSize + " from fleet server", e);
         }
-        return vesselCoreDataResponse;
+        return vesselAggregatedDataResponse;
     }
 
 

@@ -3,6 +3,16 @@
 <xsd:schema xmlns:ns0="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0">
+    <xsd:complexType name="getVesselAggregatedData">
+        <xsd:sequence>
+            <xsd:element name="Selector" type="ns0:SelectorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselAggregatedDataResponse">
+        <xsd:sequence>
+            <xsd:element name="VesselAggregatedDataPageType" type="ns0:VesselAggregatedDataPageType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
     <xsd:complexType name="getVesselCoreData">
         <xsd:sequence>
             <xsd:element name="Selector" type="ns0:SelectorType" minOccurs="0"/>
@@ -43,8 +53,7 @@
     <xsd:complexType name="SelectorType">
         <xsd:sequence>
             <xsd:element name="projectionFields" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
-            <xsd:element name="predicates" type="ns0:PredicateType" minOccurs="0" maxOccurs="unbounded"
-                         nillable="true"/>
+            <xsd:element name="predicates" type="ns0:PredicateType" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
             <xsd:element name="ordering" type="ns0:OrderByType" minOccurs="0"/>
             <xsd:element name="dateRange" type="ns0:DateRangeType" minOccurs="0"/>
             <xsd:element name="paging" type="ns0:PagingType" minOccurs="0"/>
@@ -75,7 +84,7 @@
             <xsd:element name="maxResults" type="xsd:int" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
-    <xsd:complexType name="VesselCoreDataPageType">
+    <xsd:complexType name="VesselAggregatedDataPageType">
         <xsd:complexContent>
             <xsd:extension base="ns0:PageType">
                 <xsd:sequence>
@@ -90,6 +99,15 @@
             <xsd:element name="totalNumOfEntries" type="xsd:int"/>
             <xsd:element name="pageType" type="xsd:string"/>
         </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselCoreDataPageType">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:PageType">
+                <xsd:sequence>
+                    <xsd:element name="VesselEvent" type="ns0:VesselEventType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
     </xsd:complexType>
     <xsd:complexType name="VesselExtendedDataPageType">
         <xsd:complexContent>
@@ -107,8 +125,7 @@
             <xsd:element name="EventActiveIndicator" type="ns0:BooleanType"/>
             <xsd:element name="EventLastIndicator" type="ns0:BooleanType"/>
             <xsd:element name="RelatedVesselTransportMeans" type="ns0:VesselTransportMeansType"/>
-            <xsd:element name="RelatedVesselHistoricalCharacteristic" type="ns0:VesselHistoricalCharacteristicType"
-                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="RelatedVesselHistoricalCharacteristic" type="ns0:VesselHistoricalCharacteristicType" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="VesselTransportMeansType">
@@ -127,24 +144,18 @@
             <xsd:element name="VesselSpeed" type="ns0:MeasureType" minOccurs="0"/>
             <xsd:element name="TrawlingSpeed" type="ns0:MeasureType" minOccurs="0"/>
             <xsd:element name="RegistrationVesselCountry" type="xsd:string"/>
-            <xsd:element name="SpecifiedRegistrationEvent" type="ns0:RegistrationEventType" minOccurs="0"
-                         maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedRegistrationEvent" type="ns0:RegistrationEventType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="SpecifiedConstructionEvent" type="ns0:ConstructionEventType" minOccurs="0"/>
             <xsd:element name="AttachedVesselEngine" type="ns0:VesselEngineType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="SpecifiedVesselDimensions" type="ns0:VesselDimensionsType" minOccurs="0"/>
             <xsd:element name="OnBoardFishingGear" type="ns0:FishingGearType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="ApplicableVesselAdministrativeCharacteristics"
-                         type="ns0:VesselAdministrativeCharacteristicsType" minOccurs="0"/>
-            <xsd:element name="ApplicableVesselEquipmentCharacteristics" type="ns0:VesselEquipmentCharacteristicsType"
-                         minOccurs="0"/>
-            <xsd:element name="ApplicableVesselTechnicalCharacteristics" type="ns0:VesselTechnicalCharacteristicsType"
-                         minOccurs="0"/>
-            <xsd:element name="ApplicableVesselStorageCharacteristics" type="ns0:VesselStorageCharacteristicsType"
-                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="ApplicableVesselAdministrativeCharacteristics" type="ns0:VesselAdministrativeCharacteristicsType" minOccurs="0"/>
+            <xsd:element name="ApplicableVesselEquipmentCharacteristics" type="ns0:VesselEquipmentCharacteristicsType" minOccurs="0"/>
+            <xsd:element name="ApplicableVesselTechnicalCharacteristics" type="ns0:VesselTechnicalCharacteristicsType" minOccurs="0"/>
+            <xsd:element name="ApplicableVesselStorageCharacteristics" type="ns0:VesselStorageCharacteristicsType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="SpecifiedVesselCrew" type="ns0:VesselCrewType" minOccurs="0"/>
             <xsd:element name="SpecifiedContactParty" type="ns0:ContactPartyType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="VesselPhoto" type="ns0:VesselPhotoType" minOccurs="0" maxOccurs="unbounded"
-                         nillable="true"/>
+            <xsd:element name="VesselPhoto" type="ns0:VesselPhotoType" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="ThirdPartyVesselIDType">
@@ -328,10 +339,8 @@
             <xsd:element name="IMOCompanyNumber" type="xsd:string" minOccurs="0"/>
             <xsd:element name="SpecifiedContactPerson" type="ns0:ContactPersonType" minOccurs="0"/>
             <xsd:element name="SpecifiedStructuredAddress" type="ns0:StructuredAddressType" minOccurs="0"/>
-            <xsd:element name="URIEmailCommunication" type="ns0:EmailCommunicationType" minOccurs="0"
-                         maxOccurs="unbounded"/>
-            <xsd:element name="SpecifiedUniversalCommunication" type="ns0:UniversalCommunicationType" minOccurs="0"
-                         maxOccurs="unbounded"/>
+            <xsd:element name="URIEmailCommunication" type="ns0:EmailCommunicationType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedUniversalCommunication" type="ns0:UniversalCommunicationType" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="ContactPersonType">
@@ -442,6 +451,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+    <xsd:element name="getVesselAggregatedData" type="ns0:getVesselAggregatedData"/>
+    <xsd:element name="getVesselAggregatedDataResponse" type="ns0:getVesselAggregatedDataResponse"/>
     <xsd:element name="getVesselCoreData" type="ns0:getVesselCoreData"/>
     <xsd:element name="getVesselCoreDataResponse" type="ns0:getVesselCoreDataResponse"/>
     <xsd:element name="getVesselExtendedData" type="ns0:getVesselExtendedData"/>

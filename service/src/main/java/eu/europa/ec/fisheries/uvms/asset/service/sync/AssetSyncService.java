@@ -43,15 +43,7 @@ public class AssetSyncService {
     @Transactional
     public void syncAssetPage(Integer pageNumber, Integer pageSize) {
         List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
-        assetHistoryFromPage.forEach(assetHistoryRecord -> {
-            try {
-                enrichAssetHistoryRecord(assetHistoryRecord, assetSyncClient.getAssetExtendedDataCached(assetHistoryRecord.getCfr()));
-                assetHistoryRecordHandler.handleRecord(assetHistoryRecord);
-            } catch (Exception e) {
-                // add to a dead letter queue ??
-                log.error("Could not perform sync for record with asset hash key {}", assetHistoryRecord.getHashKey(), e);
-            }
-        });
+        assetHistoryFromPage.forEach(assetHistoryRecord -> assetHistoryRecordHandler.handleRecord(assetHistoryRecord));
         addMessageToQueueForNextPage(pageNumber, pageSize, assetHistoryFromPage.size());
     }
 
@@ -64,15 +56,12 @@ public class AssetSyncService {
         }
     }
 
-    private void enrichAssetHistoryRecord(AssetHistory assetHistoryRecord, AssetHistory iccatAndGfcm) {
-        assetHistoryRecord.setIccat(iccatAndGfcm.getIccat());
-        assetHistoryRecord.setGfcm(iccatAndGfcm.getGfcm());
-    }
-
     private void addMessageToQueueForNextPage(Integer pageNumber, Integer pageSize, int elementsInLastPage) {
         if (elementsInLastPage == pageSize) {
             try {
-                assetSyncProducerBean.sendModuleMessage(AssetHistorySyncRetrievalMessage.encode(new AssetHistorySyncRetrievalMessage(pageNumber + 1, pageSize)), null);
+                assetSyncProducerBean.sendModuleMessage(
+                        AssetHistorySyncRetrievalMessage.encode(
+                                new AssetHistorySyncRetrievalMessage(pageNumber + 1, pageSize)), null);
             } catch (MessageException e) {
                 log.error("Error sending message for next page to asset history sync queue", e);
             }
@@ -81,7 +70,9 @@ public class AssetSyncService {
 
     public void triggerSync() {
         try {
-            assetSyncProducerBean.sendModuleMessage(AssetHistorySyncRetrievalMessage.encode(new AssetHistorySyncRetrievalMessage(FIRST_PAGE, PAGE_SIZE)), null);
+            assetSyncProducerBean.sendModuleMessage(
+                    AssetHistorySyncRetrievalMessage.encode(
+                            new AssetHistorySyncRetrievalMessage(FIRST_PAGE, PAGE_SIZE)), null);
         } catch (MessageException e) {
             log.error("Error sending message to trigger start of asset history sync queue", e);
         }
