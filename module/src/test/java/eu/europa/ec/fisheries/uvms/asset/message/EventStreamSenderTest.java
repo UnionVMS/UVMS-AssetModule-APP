@@ -6,9 +6,9 @@
 package eu.europa.ec.fisheries.uvms.asset.message;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.timer.AssetRemapTask;
@@ -21,14 +21,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
 import javax.json.bind.Jsonb;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -74,12 +72,12 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
 
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
         assertNull(message.getStringProperty(MessageConstants.EVENT_STREAM_SUBSCRIBER_LIST));
-        MicroAsset micro = jsonb.fromJson(message.getText(), MicroAsset.class);
-        assertNotNull(micro);
+        Asset assetEvent = jsonb.fromJson(message.getText(), Asset.class);
+        assertNotNull(assetEvent);
 
-        assertEquals(asset.getIrcs(), micro.getIrcs());
-        assertEquals(asset.getCfr(), micro.getCfr());
-        assertEquals(asset.getName(), micro.getAssetName());
+        assertEquals(asset.getIrcs(), assetEvent.getIrcs());
+        assertEquals(asset.getCfr(), assetEvent.getCfr());
+        assertEquals(asset.getName(), assetEvent.getName());
 
     }
 
@@ -92,7 +90,7 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         TextMessage message = (TextMessage)listenOnEventStream(5000l);
         assertNotNull(message);
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
-        MicroAsset oldAsset = jsonb.fromJson(message.getText(), MicroAsset.class);
+        Asset oldAsset = jsonb.fromJson(message.getText(), Asset.class);
 
         eu.europa.ec.fisheries.wsdl.asset.types.Asset asset2 = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset2);
@@ -100,11 +98,11 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         message = (TextMessage)listenOnEventStream(5000l);
         assertNotNull(message);
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
-        MicroAsset newAsset = jsonb.fromJson(message.getText(), MicroAsset.class);
+        Asset newAsset = jsonb.fromJson(message.getText(), Asset.class);
 
         AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
-        assetRemapMapping.setOldAssetId(oldAsset.getAssetId());
-        assetRemapMapping.setNewAssetId(newAsset.getAssetId());
+        assetRemapMapping.setOldAssetId(oldAsset.getId());
+        assetRemapMapping.setNewAssetId(newAsset.getId());
         assetRemapMapping.setCreatedDate(Instant.now().minus(4, ChronoUnit.HOURS));
 
         assetRemapMapping = assetDao.createAssetRemapMapping(assetRemapMapping);
@@ -118,8 +116,8 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         assertEquals("Merged Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
 
         AssetMergeInfo mergeInfo = jsonb.fromJson(message.getText(), AssetMergeInfo.class);
-        assertEquals(oldAsset.getAssetId().toString(), mergeInfo.getOldAssetId());
-        assertEquals(newAsset.getAssetId().toString(), mergeInfo.getNewAssetId());
+        assertEquals(oldAsset.getId().toString(), mergeInfo.getOldAssetId());
+        assertEquals(newAsset.getId().toString(), mergeInfo.getNewAssetId());
 
     }
 

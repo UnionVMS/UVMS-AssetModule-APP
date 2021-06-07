@@ -4,12 +4,12 @@
 	<parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>6.8.9-SNAPSHOT</version>
+	    <version>6.8.11-SNAPSHOT</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<artifactId>liquibase</artifactId>
-	<version>6.8.9-SNAPSHOT</version>
+	<version>6.8.11-SNAPSHOT</version>
 	<name>liquibase</name>
 	<packaging>pom</packaging>
 
@@ -34,7 +34,7 @@
 				<db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
 				<driver.groupId>org.postgresql</driver.groupId>
 				<driver.artifactId>postgresql</driver.artifactId>
-				<driver.version>42.2.19</driver.version>
+				<driver.version>42.2.20</driver.version>
 			</properties>
 			<dependencies>
 		        <dependency>
@@ -74,7 +74,7 @@
 					<plugin>
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
-						<version>4.3.1</version>
+						<version>4.3.5</version>
 						<configuration>
 							<url>${db.docker.url}</url>
 							<migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
@@ -135,7 +135,7 @@
 				<plugin>
 					<groupId>org.liquibase</groupId>
 					<artifactId>liquibase-maven-plugin</artifactId>
-					<version>4.3.1</version>
+					<version>4.3.5</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
