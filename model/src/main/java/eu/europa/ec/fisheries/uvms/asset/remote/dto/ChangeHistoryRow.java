@@ -10,6 +10,7 @@ public class ChangeHistoryRow {
     private UUID id;
     private UUID historyId;
     private ChangeType changeType;
+    private String assetName;
 
     private Map<UUID, ChannelChangeHistory> channelChanges = new HashMap<>();
 
@@ -92,5 +93,13 @@ public class ChangeHistoryRow {
 
     public void setChangeType(ChangeType changeType) {
         this.changeType = changeType;
+    }
+    
+    public String getAssetName() {
+        return assetName;
+    }
+    
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 }

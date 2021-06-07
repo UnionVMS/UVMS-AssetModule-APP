@@ -321,8 +321,8 @@ public class MobileTerminalRestResource {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
-            List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions);
-            Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(dtos);
+           // List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions);
+            Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(mobileTerminalRevisions);
             String returnString = jsonb.toJson(changeHistory);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
