@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -91,7 +90,8 @@ public class HistoryMapper {
 
             MobileTerminalDto previousMt = null;
             for (MobileTerminal mtFull : histories) {
-                String assetName = mtFull.getAsset().getName();
+                String assetName = mtFull.getAsset() != null ? mtFull.getAsset().getName() : null;
+
                 MobileTerminalDto mt = MobileTerminalDtoMapper.mapToMobileTerminalDto(mtFull);
                 if (previousMt == null) {
                     if (mt.getUpdatetime().equals(mt.getCreateTime())) {

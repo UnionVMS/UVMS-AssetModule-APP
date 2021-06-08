@@ -739,7 +739,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get(Response.class);
 
         String json = response.readEntity(String.class);
-        //System.out.println(json);
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
@@ -851,7 +850,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get(Response.class);
 
         String json = response.readEntity(String.class);
-        //System.out.println(json);
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
@@ -1266,8 +1264,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         // After store_data_at_delete = true Change 1 -> 2
         // For some reason mtChange at index 1 seems to have 2 changes more often then index 2...
 
-        //System.out.println("1 " +mtChanges.get(1).getChannelChanges().size());
-        //System.out.println("2 " +mtChanges.get(2).getChannelChanges().size());
 
         assertEquals(2, mtChanges.get(1).getChannelChanges().size());
         
@@ -1323,7 +1319,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get();
 
         assertEquals(200, mTChangesResponse.getStatus());
-       // System.out.println(mTChangesResponse.readEntity(String.class));
         Map<UUID, ChangeHistoryRow> mtChangesResponse = mTChangesResponse.readEntity(new GenericType<Map<UUID, ChangeHistoryRow>>() {});
         List<ChangeHistoryRow> mtChanges = new ArrayList<>(mtChangesResponse.values());
         mtChanges.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
@@ -1335,7 +1330,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Optional<ChannelChangeHistory> eightChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
                 .filter(list -> list.getChanges().size() == 9).findAny();
         
-        mtChanges.get(1).getChannelChanges().values().stream().forEach(list -> System.out.println("list: "+list+"  size: " + list.getChanges().size()));
         assertTrue(eightChangesChannel.isPresent());
         assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
@@ -1467,6 +1461,40 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(0, updated.getChannels().size());
 
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getChangeHistoryRowWithAssetName() throws InterruptedException {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        Asset asset = createAndRestBasicAsset();
+        mt.setAsset(asset);
+        mt.setAssetUUID(asset.getId().toString()); 
+        
+        MobileTerminal mtCreated = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+        
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal/")
+                .path(mtCreated.getId().toString())
+                .path("/changeHistory/")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+        assertEquals(200, response.getStatus());
+        
+        Map<UUID, ChangeHistoryRow> jsonMap = response.readEntity(new GenericType<Map<UUID, ChangeHistoryRow>>() {});
+        
+        assertEquals(asset.getName(), jsonMap.values().stream()
+                .filter(row -> row.getAssetName() != null)
+                .filter(row -> row.getAssetName().equals(asset.getName()))
+                .map(row -> row.getAssetName())
+                .findFirst()
+                .orElse("Not!!AssetName"));
+    }
 
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
@@ -1481,5 +1509,4 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         return createdAsset;
     }
-
 }
