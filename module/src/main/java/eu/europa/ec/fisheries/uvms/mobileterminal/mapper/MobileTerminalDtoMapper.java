@@ -14,8 +14,7 @@ public class MobileTerminalDtoMapper {
 
 
     public static Map<UUID, ChangeHistoryRow> mapToMobileTerminalRevisionsMap(List<MobileTerminal> mts) {
-        List<MobileTerminalDto> mobileTerminalDtos = mapToMobileTerminalDtos(mts);
-        return HistoryMapper.mobileTerminalChangeHistory(mobileTerminalDtos);
+        return HistoryMapper.mobileTerminalChangeHistory(mts);
     }
 
     public static List<MobileTerminalDto> mapToMobileTerminalDtos(List<MobileTerminal> mts) {

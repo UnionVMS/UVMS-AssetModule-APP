@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeType;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -82,13 +83,16 @@ public class HistoryMapper {
 
 
 
-    public static Map<UUID, ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
+    public static Map<UUID, ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminal> histories) {
         try {
             List<Field> fields = listMembers(MobileTerminalDto.class);
             Map<UUID, ChangeHistoryRow> returnMap = new HashMap<>();
 
             MobileTerminalDto previousMt = null;
-            for (MobileTerminalDto mt : histories) {
+            for (MobileTerminal mtFull : histories) {
+                String assetName = mtFull.getAsset() != null ? mtFull.getAsset().getName() : null;
+
+                MobileTerminalDto mt = MobileTerminalDtoMapper.mapToMobileTerminalDto(mtFull);
                 if (previousMt == null) {
                     if (mt.getUpdatetime().equals(mt.getCreateTime())) {
                         ChangeHistoryRow row = new ChangeHistoryRow(mt.getUpdateuser(), mt.getUpdatetime());
@@ -96,6 +100,7 @@ public class HistoryMapper {
                         row.setId(mt.getId());
                         row.setChangeType(ChangeType.CREATED);
                         row.setSnapshot(mt);
+                        row.setAssetName(assetName);
                         if (mt.getAssetId() != null) {
                             row.addNewItem(MOBILE_TERMINAL_ASSET_ID, null, mt.getAssetId());
                         }
