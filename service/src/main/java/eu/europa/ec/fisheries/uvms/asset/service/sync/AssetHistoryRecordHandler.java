@@ -33,10 +33,14 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 @Slf4j
 public class AssetHistoryRecordHandler {
+
+    private final static Logger LOG = LoggerFactory.getLogger(AssetHistoryRecordHandler.class);
 
     private static final String FLEETSYNC = "fleetsync";
     private static final int TTL_IN_MINUTES = 30;
@@ -220,11 +224,17 @@ public class AssetHistoryRecordHandler {
     }
 
     private void setSubFishingGear(AssetHistory assetHistoryRecord) {
-        Optional<FishingGear> fishingGearSub = getAllFishingGear().stream()
-                .filter(g -> g.getCode().equals(assetHistoryRecord.getSubFishingGear().getCode())).findFirst();
-        fishingGearSub.ifPresent(g -> {
-            assetHistoryRecord.setSubFishingGear(fishingGearSub.get());
-        });
+        FishingGear subFishingGear  = assetHistoryRecord.getSubFishingGear();
+        if (subFishingGear != null) {
+            Optional<FishingGear> fishingGearSub = getAllFishingGear().stream()
+                    .filter(g -> g.getCode().equals(subFishingGear.getCode())).findFirst();
+            fishingGearSub.ifPresent(g -> {
+                assetHistoryRecord.setSubFishingGear(fishingGearSub.get());
+            });
+        } else {
+            LOG.error("Data is inconsistent. Missing subsidiary fishing gear for {}.",
+                    assetHistoryRecord.getCfr());
+        }
     }
 
     private void updateExistingAssetHistoryEntry(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
