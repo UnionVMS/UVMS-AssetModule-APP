@@ -158,9 +158,9 @@ public class ModelToEntityMapper {
 
         if(asset.getProducer() != null ) {
             AssetProdOrg assetProdOrg = new AssetProdOrg();
-            if(asset.getProducer().getId() > 0) {
-                assetProdOrg.setId(asset.getProducer().getId());
-            }
+//            if(asset.getProducer().getId() > 0) {
+//                assetProdOrg.setId(asset.getProducer().getId());
+//            }
             assetProdOrg.setCode(asset.getProducer().getCode());
             assetProdOrg.setName(asset.getProducer().getName());
             assetProdOrg.setAddress(asset.getProducer().getAddress());

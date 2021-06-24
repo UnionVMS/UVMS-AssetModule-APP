@@ -174,7 +174,7 @@ public class AssetHistory implements Serializable {
     private String ownerName;
 
     @Fetch(FetchMode.JOIN)
-    @OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
     @JoinColumn(name = "assethist_assetpo_id")
     private AssetProdOrg assetProdOrg;
 

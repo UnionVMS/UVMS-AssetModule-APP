@@ -81,6 +81,9 @@ public class MapperUtil {
             if (!equals(newAsset.getUvi(), originalAsset.getUvi())) {
                 return false;
             }
+            if (!equals(newAsset.getIccat(), originalAsset.getIccat())) {
+                return false;
+            }
             if (!equals(newAsset.getIrcs(), originalAsset.getIrcs())) {
                 return false;
             }
@@ -133,7 +136,10 @@ public class MapperUtil {
             }
 
             if(newAsset.getProducer()!=null && originalAsset.getProducer()!=null){
-                if((!equals(newAsset.getProducer().getId(), originalAsset.getProducer().getId()))) {
+                if((!equals(newAsset.getProducer().getCode(), originalAsset.getProducer().getCode()))) {
+                    return false;
+                }
+                if((!equals(newAsset.getProducer().getName(), originalAsset.getProducer().getName()))) {
                     return false;
                 }
             }
