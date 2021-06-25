@@ -42,7 +42,10 @@ public class AssetSyncMessageConsumerBean implements MessageListener {
         try {
             textMessage = (TextMessage) message;
             AssetHistorySyncRetrievalMessage data = AssetHistorySyncRetrievalMessage.decode(textMessage.getText());
-            assetSyncService.syncAssetPage(data.getPageNumber(), data.getPageSize());
+            Integer pageNumber = data.getPageNumber();
+            Integer pageSize = data.getPageSize();
+            log.info("FLEET SYNC: message received for page {} of page size {}.", pageNumber, pageSize);
+            assetSyncService.syncAssetPage(pageNumber, pageSize);
         } catch (JMSException e) {
             log.error("error while handling asset sync data message", e);
         }

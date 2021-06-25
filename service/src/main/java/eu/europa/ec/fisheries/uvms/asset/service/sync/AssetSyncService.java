@@ -30,6 +30,7 @@ public class AssetSyncService {
 
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_SIZE = 1000;
+    private static long historyRecords = 0;
 
     @Inject
     private AssetSyncClient assetSyncClient;
@@ -43,8 +44,13 @@ public class AssetSyncService {
     @Transactional
     public void syncAssetPage(Integer pageNumber, Integer pageSize) {
         List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
-        assetHistoryFromPage.forEach(assetHistoryRecord -> assetHistoryRecordHandler.handleRecord(assetHistoryRecord));
+        assetHistoryFromPage.forEach(assetHistoryRecord -> {
+            assetHistoryRecordHandler.handleRecord(assetHistoryRecord);
+            historyRecords++;
+        });
         addMessageToQueueForNextPage(pageNumber, pageSize, assetHistoryFromPage.size());
+        log.info("FLEET SYNC: page {} of page size {} processed. {} records processed for all pages.",
+                pageNumber, pageSize, historyRecords);
     }
 
     private List<AssetHistory> getAssetsPageSafe(Integer pageNumber, Integer pageSize) {

@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class AssetHistoryRecordHandler {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AssetHistoryRecordHandler.class);
-
     private static final String FLEETSYNC = "fleetsync";
     private static final int TTL_IN_MINUTES = 30;
 
@@ -232,7 +230,7 @@ public class AssetHistoryRecordHandler {
                 assetHistoryRecord.setSubFishingGear(fishingGearSub.get());
             });
         } else {
-            LOG.error("Data is inconsistent. Missing subsidiary fishing gear for {}.",
+            log.error("Data received from Fleet App is inconsistent. Missing subsidiary fishing gear for {}.",
                     assetHistoryRecord.getCfr());
         }
     }
