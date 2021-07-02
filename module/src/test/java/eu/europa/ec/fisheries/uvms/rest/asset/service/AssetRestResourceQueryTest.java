@@ -1114,6 +1114,30 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertEquals(0, output.getAssetList().get(0).getMobileTerminalUUIDList().size());
     }
 
+    @Test
+    @RunAsClient
+    @OperateOnDeployment("normal")
+    public void getAssetListBySource() {
+        Asset asset = AssetHelper.createBasicAsset();
+        String testVesselSource = "NATIONAL";
+        asset.setSource(testVesselSource);
+        Asset createdAsset = sendAssetToCreation(asset);
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.SOURCE, testVesselSource);
+        trunk.getFields().add(leaf);
+
+        AssetListResponse listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(trunk), AssetListResponse.class);
+
+        List<Asset> assetList = listResponse.getAssetList();
+        assertTrue(assetList.stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
+    }
 
     private Asset sendAssetToCreation(Asset asset) {
         Asset createdAsset = getWebTargetExternal()
