@@ -35,7 +35,8 @@ public enum SearchFields {
     LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
     ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
     PRODUCER_NAME("producerName"),
-    DATE(null, SearchFieldType.DATE);
+    DATE(null, SearchFieldType.DATE),
+    SOURCE("source", SearchFieldType.STRING);
 
     private String fieldName;
     private SearchFieldType fieldType;
