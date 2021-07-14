@@ -42,6 +42,7 @@ public class AssetHistoryRecordHandler {
 
     private static final String FLEETSYNC = "fleetsync";
     private static final int TTL_IN_MINUTES = 30;
+    private static final String FISHING_GEAR_UNKNOWN = "NK";
 
     private List<FishingGear> allFishingGear = null;
     private Instant lastUpdateOfAllFishingGear = Instant.now().minus(TTL_IN_MINUTES, ChronoUnit.MINUTES);
@@ -216,19 +217,32 @@ public class AssetHistoryRecordHandler {
         List<FishingGear> allFishingGear = getAllFishingGear(); // need to cache this
         Optional<FishingGear> fishingGearMain = allFishingGear.stream()
                 .filter(g -> g.getCode().equals(assetHistoryRecord.getMainFishingGear().getCode())).findFirst();
-        fishingGearMain.ifPresent(g -> {
+        if (fishingGearMain.isPresent()) {
             assetHistoryRecord.setMainFishingGear(fishingGearMain.get());
-        });
+        } else if (allFishingGear.size() > 0) {
+            //set UNKNOWN fishing gear
+            FishingGear fishingGearUnknown = allFishingGear.stream()
+                    .filter((g->g.getCode().equalsIgnoreCase(FISHING_GEAR_UNKNOWN)))
+                    .findFirst().get();
+            assetHistoryRecord.setMainFishingGear(fishingGearUnknown);
+        }
     }
 
     private void setSubFishingGear(AssetHistory assetHistoryRecord) {
+        List<FishingGear> allFishingGear = getAllFishingGear(); // need to cache this
         FishingGear subFishingGear  = assetHistoryRecord.getSubFishingGear();
         if (subFishingGear != null) {
-            Optional<FishingGear> fishingGearSub = getAllFishingGear().stream()
+            Optional<FishingGear> fishingGearSub = allFishingGear.stream()
                     .filter(g -> g.getCode().equals(subFishingGear.getCode())).findFirst();
-            fishingGearSub.ifPresent(g -> {
+            if (fishingGearSub.isPresent()) {
                 assetHistoryRecord.setSubFishingGear(fishingGearSub.get());
-            });
+            } else if (allFishingGear.size() > 0) {
+                //set UNKNOWN fishing gear
+                FishingGear fishingGearUnknown = allFishingGear.stream()
+                        .filter((g->g.getCode().equalsIgnoreCase(FISHING_GEAR_UNKNOWN)))
+                        .findFirst().get();
+                assetHistoryRecord.setSubFishingGear(fishingGearUnknown);
+            }
         } else {
             log.error("Data received from Fleet App is inconsistent. Missing subsidiary fishing gear for {}.",
                     assetHistoryRecord.getCfr());
@@ -301,9 +315,11 @@ public class AssetHistoryRecordHandler {
 
     private void updateFishingGearIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
         assetHistory.setType(GearFishingTypeEnum.UNKNOWN);
-        if (assetHistoryRecord.getMainFishingGear() != null && !assetHistoryRecord.getMainFishingGear().getCode().equals(assetHistory.getMainFishingGear().getCode())) {
+        FishingGear mainFishingGear = assetHistoryRecord.getMainFishingGear();
+        if (mainFishingGear != null
+                && !mainFishingGear.getCode().equals(assetHistory.getMainFishingGear().getCode())) {
             setMainFishingGear(assetHistoryRecord);
-            assetHistory.setMainFishingGear(assetHistoryRecord.getMainFishingGear());
+            assetHistory.setMainFishingGear(mainFishingGear);
         }
         if (assetHistoryRecord.getSubFishingGear() != null && !assetHistoryRecord.getSubFishingGear().getCode().equals(assetHistory.getSubFishingGear().getCode())) {
             setSubFishingGear(assetHistoryRecord);
