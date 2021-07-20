@@ -173,8 +173,8 @@ public class EntityToModelMapper {
             }
 
             asset.setLicenseType(historyEntity.getLicenceType());
-            if (historyEntity.getType() != null) {
-                asset.setGearType(historyEntity.getType().name());
+            if (historyEntity.getMainFishingGear() != null) {
+                asset.setGearType(historyEntity.getMainFishingGear().getCode());
             }
 
             if(historyEntity.getAssetProdOrg() != null) {

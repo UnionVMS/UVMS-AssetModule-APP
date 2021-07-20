@@ -16,10 +16,11 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FlagStateDao;
 import eu.europa.ec.fisheries.uvms.dao.LicenseTypeDao;
 import eu.europa.ec.fisheries.uvms.dao.SettingDao;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -47,6 +49,9 @@ public class ConfigDomainModelBean  {
 
     @EJB
     private SettingDao settingDao;
+
+    @EJB
+    private FishingGearDao fishingGearDao;
 
     public List<String> getLicenseType() throws ConfigModelException {
         try {
@@ -119,12 +124,12 @@ public class ConfigDomainModelBean  {
         return dto;
     }
 
-    private static List<String> getGearTypes() {
-        List<String> values = new ArrayList<>();
-        for (GearFishingTypeEnum gearType : GearFishingTypeEnum.values()) {
-            values.add(gearType.name());
-        }
-        return values;
+    private List<String> getGearTypes() {
+        return fishingGearDao
+                    .getAllFishingGear()
+                    .stream()
+                    .map(FishingGear::getCode)
+                    .collect(Collectors.toList());
     }
 
     private static List<String> getLengthUnit() {

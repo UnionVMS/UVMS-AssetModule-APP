@@ -28,4 +28,6 @@ public interface FishingGearDao {
     void create(FishingGear fishingGear);
 
     FishingGear update(FishingGear fishingGear);
+
+    FishingGear getFishingGearByCode(String code);
 }

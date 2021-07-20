@@ -119,11 +119,13 @@ public class MapperUtil {
                     return false;
                 }
             }
-            if(newAsset.getGearType() != null && originalAsset.getGearType() != null) {
-            	if(!equals(newAsset.getGearType(), originalAsset.getGearType())) {
-            		return false;
-            	}
+            if ((newAsset.getGearType() != null && originalAsset.getGearType() == null)
+                    || (newAsset.getGearType() == null && originalAsset.getGearType() != null)
+                    || (newAsset.getGearType() != null && originalAsset.getGearType() != null
+            	            && !equals(newAsset.getGearType(), originalAsset.getGearType())) )  {
+            		    return false;
             }
+
             if(newAsset.getLicenseType() != null && originalAsset.getLicenseType() != null) {
             	if(!equals(newAsset.getLicenseType(), originalAsset.getLicenseType())) {
             		return false;
@@ -173,6 +175,7 @@ public class MapperUtil {
         }
         return false;
     }
+
 
     public static XMLGregorianCalendar getXMLGregorianCalendar(Date date) {
         if (date != null) {

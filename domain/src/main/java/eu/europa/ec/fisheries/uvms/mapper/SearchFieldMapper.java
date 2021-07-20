@@ -11,12 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory_;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
@@ -129,13 +127,6 @@ public class SearchFieldMapper {
 
     private static String prepareSearchValue(SearchFields searchField, String searchValue) throws AssetDaoMappingException {
     	String value = searchValue;
-        if(SearchFields.GEAR_TYPE.equals(searchField)) {
-        	try {
-				value = GearFishingTypeEnum.getValue(searchValue);
-			} catch (AssetModelValidationException e) {
-				throw new AssetDaoMappingException("GearType couldn't be transformed to valid search value");
-			}
-        }
         value = value.replace("-", "");
         value = value.toUpperCase();
         return value;
