@@ -67,6 +67,7 @@ public class UvmsConstants {
     public static final String FISHING_GEAR_FIND_ALL = "Fishinggear.findAll";
     public static final String FISHING_GEAR_FIND_BY_ID = "Fishinggear.findById";
     public static final String FISHING_GEAR_FIND_BY_EXT_ID = "Fishinggear.findByExternalId";
+    public static final String FISHING_GEAR_FIND_BY_CODE = "FishingGear.findByCode";
 
     public static final String ASSET_NOTE_ACTIVITY_CODE_FIND_ALL = "AssetNoteActivity.findAll";
 

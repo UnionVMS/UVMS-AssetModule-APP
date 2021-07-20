@@ -18,9 +18,11 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.mapper.*;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
@@ -53,13 +55,24 @@ public class AssetDomainModelBean {
     @EJB
     private AssetGroupDao assetGroupDaoBean;
 
+    @EJB
+    private FishingGearDao fishingGearDao;
+
     private static final Logger LOG = LoggerFactory.getLogger(AssetDomainModelBean.class);
 
     public Asset createAsset(Asset asset, String username) throws AssetModelException {
         assertAssetDoesNotExist(asset);
         AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(asset, configModel.getLicenseType(), username);
+        this.setFishingGearToAssetHistory(asset.getGearType(),assetEntity);
         assetDao.createAsset(assetEntity);
         return EntityToModelMapper.toAssetFromEntity(assetEntity);
+    }
+
+    private void setFishingGearToAssetHistory(String fishingGearCode, AssetEntity assetEntity) {
+        Optional<AssetHistory> history = assetEntity.getHistories().stream().filter(AssetHistory::getActive).findAny();
+        if (history.isPresent()) {
+            history.get().setMainFishingGear(fishingGearDao.getFishingGearByCode(fishingGearCode));
+        }
     }
 
     public Asset getAssetById(AssetId id) throws AssetModelException {
@@ -130,6 +143,7 @@ public class AssetDomainModelBean {
             }
 
             assetEntity = ModelToEntityMapper.mapToAssetEntity(assetEntity, asset, configModel.getLicenseType(), username);
+            this.setFishingGearToAssetHistory(asset.getGearType(), assetEntity);
             AssetEntity updated = assetDao.updateAsset(assetEntity);
 
             Asset retVal = EntityToModelMapper.toAssetFromEntity(updated);
@@ -190,6 +204,8 @@ public class AssetDomainModelBean {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
+        this.updateFishingGearCriteria(query.getAssetSearchCriteria().getCriterias());
+
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
         String sql;
         if (query.getOrderByCriteria() != null && query.getOrderByCriteria().getOrderByParam() != null) {
@@ -210,7 +226,6 @@ public class AssetDomainModelBean {
         }
 
         List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields);
-
         for (AssetHistory entity : assetEntityList) {
             arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
         }
@@ -222,6 +237,18 @@ public class AssetDomainModelBean {
 
         return response;
 
+    }
+
+    private List<AssetListCriteriaPair> updateFishingGearCriteria(List<AssetListCriteriaPair> criteria) {
+        Optional<AssetListCriteriaPair> gearCriterion = criteria.stream()
+                            .filter(c->ConfigSearchField.GEAR_TYPE == c.getKey())
+                            .findAny();
+        if (gearCriterion.isPresent()) {
+            AssetListCriteriaPair pair = gearCriterion.get();
+            FishingGear gear = fishingGearDao.getFishingGearByCode(pair.getValue());
+            pair.setValue(String.valueOf(gear.getId()));
+        }
+        return criteria;
     }
 
     public List<AssetHistory> getAssetListSearchPaginated(String guid, Date occurrenceDate, int page, int listSize) throws AssetException{
