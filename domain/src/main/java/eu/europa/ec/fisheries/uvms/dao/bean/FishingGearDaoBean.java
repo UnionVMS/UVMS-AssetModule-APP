@@ -18,11 +18,10 @@ import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+
 
 @Stateless
 public class FishingGearDaoBean extends Dao implements FishingGearDao {
@@ -83,5 +82,22 @@ public class FishingGearDaoBean extends Dao implements FishingGearDao {
     public FishingGear update(FishingGear fishingGear){
         FishingGear result = em.merge(fishingGear);
         return result;
+    }
+
+
+    @Override
+    public FishingGear getFishingGearByCode(String code)  {
+        TypedQuery<FishingGear> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_BY_CODE, FishingGear.class);
+        query.setParameter("code", code);
+        List<FishingGear> resultsList = query.getResultList();
+        if (resultsList == null || resultsList.isEmpty()) {
+            LOG.warn("getFishingGearByCode found no results for code " + code);
+            return null;
+        }
+        if (resultsList.size() > 1) {
+            LOG.warn("getFishingGearByCode found more than one results for code " + code);
+            return resultsList.get(0);
+        }
+        return resultsList.get(0);
     }
 }

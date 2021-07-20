@@ -13,9 +13,6 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.FishingGearMobilityEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -35,7 +32,8 @@ import java.util.Date;
 @NamedQueries({
 	@NamedQuery(name= UvmsConstants.FISHING_GEAR_FIND_ALL, query="SELECT f FROM FishingGear f"),
 	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGear f where id = :id"),
-	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGear f where externalId = :externalId")
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGear f where externalId = :externalId"),
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_CODE, query="SELECT f FROM FishingGear f where code = :code")
 })
 
 public class FishingGear implements Serializable {

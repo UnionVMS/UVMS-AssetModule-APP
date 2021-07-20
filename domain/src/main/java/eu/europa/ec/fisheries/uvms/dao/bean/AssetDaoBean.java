@@ -266,6 +266,9 @@ public class AssetDaoBean extends Dao implements AssetDao {
                         parameter.add(Integer.parseInt(param));
                     }
                     query.setParameter(field.getSearchField().getValueName(), parameter);
+                } else if (field.getSearchField().getFieldType().equals(SearchFieldType.ID_LONG)) {
+                    List<Long> parameter = field.getSearchValues().stream().map(Long::parseLong).collect(Collectors.toList());
+                    query.setParameter(field.getSearchField().getValueName(), parameter);
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                     query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) { //BOOLEAN only one value
@@ -309,6 +312,9 @@ public class AssetDaoBean extends Dao implements AssetDao {
                     for (String param : field.getSearchValues()) {
                         parameter.add(Integer.parseInt(param));
                     }
+                    query.setParameter(field.getSearchField().getValueName(), parameter);
+                } else if (field.getSearchField().getFieldType().equals(SearchFieldType.ID_LONG)) {
+                    List<Long> parameter = field.getSearchValues().stream().map(Long::parseLong).collect(Collectors.toList());
                     query.setParameter(field.getSearchField().getValueName(), parameter);
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                     query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
