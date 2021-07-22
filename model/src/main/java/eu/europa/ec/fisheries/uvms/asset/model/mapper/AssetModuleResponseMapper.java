@@ -267,8 +267,9 @@ public class AssetModuleResponseMapper {
             identifiersHolder.setCfr(asset.getCfr());
             identifiersHolder.setIrcs(asset.getIrcs());
             identifiersHolder.setIccat(asset.getIccat());
-            identifiersHolder.setExtMark(asset.getExternalMarking());
+            identifiersHolder.setExtmark(asset.getExternalMarking());
             identifiersHolder.setUvi(asset.getUvi());
+            identifiersHolder.setGfcm(asset.getGfcm());
             identifiersHolder.setCountryCode(asset.getCountryCode());
             identifiersHolder.setAssetGuid(asset.getAssetId().getGuid());
         }

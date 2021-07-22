@@ -331,7 +331,7 @@ public class EntityToModelMapper {
 
         VesselIdentifiersWithConnectIdHolder vesselIdentifier = new VesselIdentifiersWithConnectIdHolder();
         vesselIdentifier.setConnectId(assetHistory.getGuid());
-        vesselIdentifier.setExtMark(assetHistory.getExternalMarking());
+        vesselIdentifier.setExtmark(assetHistory.getExternalMarking());
         vesselIdentifier.setCfr(assetHistory.getCfr());
         vesselIdentifier.setIccat(assetHistory.getIccat());
         vesselIdentifier.setIrcs(assetHistory.getIrcs());
