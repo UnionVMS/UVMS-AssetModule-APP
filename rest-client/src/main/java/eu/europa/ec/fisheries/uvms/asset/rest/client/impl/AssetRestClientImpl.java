@@ -47,12 +47,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequ
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,12 +64,14 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String GET_ASSET_LIST_BY_ASSET_GROUP_LIST = "/find-asset-by-asset-group-list";
     private static final String FIND_ASSET_FROM_ASSET_GUID_AND_DATE = "/find-asset-by-guid-occurrence-date";
     private static final String FIND_ASSET_BU_ASSET_HIST_ID = "/find-asset-by-asset-hist-id";
+    private static final String GET_ASSET_BY_IDENTIFIER_PRECEDENCE = "/find-asset-by-identifier-precedence";
 
     private static final String GET_ASSET_HISTORY_LIST_BY_GUIDS = "/assets/history/by-guids";
     private static final String GET_ASSET_HISTORY_BY_GUID = "/asset/history/by-guid";
     private static final String GET_ASSET_HISTORY_BY_GUID_AND_DATE = "/asset/history/by-guid-and-date";
     private static final String GET_ASSET_GROUPS_FOR_ASSET = "/asset/groups";
     private static final String GET_ASSET_IDENTIFIERS_FOR_GROUP_GUID = "/asset/identifiers/group/by-guid";
+
     private static final String REPORT_DATE = "reportDate";
     private static final String CFR = "cfr";
     private static final String REG_COUNTRY = "regCountry";
@@ -426,6 +423,29 @@ public class AssetRestClientImpl implements AssetClient {
                     .post(Entity.json(request), Response.class);
 
             return handleAssetIdsForGroupGuidResponseElement(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_BY_IDENTIFIER_PRECEDENCE)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(assetListCriteria), Response.class);
+
+            return handleAssetResponse(response);
         } catch (ResponseProcessingException e) {
             log.error("Error processing response from server");
             throw new AssetRestClientException("Error response processing from server", e);

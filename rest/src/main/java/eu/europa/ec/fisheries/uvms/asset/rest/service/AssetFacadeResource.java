@@ -235,4 +235,17 @@ public class AssetFacadeResource {
     }
 
 
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/find-asset-by-identifier-precedence")
+    public Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria) throws AssetFacadeException {
+        try {
+            LOG.info("Getting asset by assetListCriteria: " + assetListCriteria.toString());
+            return assetFacade.getAssetByIdentifierPrecedence(assetListCriteria);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+
 }

@@ -151,4 +151,6 @@ public interface AssetService {
     List<AssetGroupsForAssetResponseElement> findAssetGroupsForAssets(List<AssetGroupsForAssetQueryElement> assetIdentificationList) throws AssetException;
 
     List<AssetHistory> findAssetHistoriesByGuidAndOccurrenceDate(String guid, Date occurrenceDate, int page, int listSize) throws AssetDaoException, AssetException;
+
+    Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria);
 }

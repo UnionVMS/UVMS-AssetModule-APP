@@ -169,4 +169,14 @@ public class AssetFacadeNew {
             return new AssetIdsForGroupGuidResponseElement();
         }
     }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria) {
+        Asset asset =  assetService.getAssetByIdentifierPrecedence(assetListCriteria);
+        log.info("[INFO] Finding asset by precedence identifiers");
+        return asset;
+    }
+
+
+
 }
