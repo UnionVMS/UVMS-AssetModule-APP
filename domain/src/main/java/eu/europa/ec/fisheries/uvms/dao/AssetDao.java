@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 
 @Local
@@ -212,4 +212,6 @@ public interface AssetDao {
     AssetHistory getAssetHistoryFromAssetGuidAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetDaoException;
 
     Optional<AssetEntity> getAssetByAssetIdList(List<AssetId> idList);
+
+    List<AssetHistory> getAssetsByVesselIdientifiers(AssetListCriteria criteria);
 }

@@ -39,10 +39,10 @@ import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.uvms.util.DateUtil;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -567,5 +567,65 @@ public class AssetDaoBean extends Dao implements AssetDao {
             return Optional.empty();
         }
     }
+
+    public List<AssetHistory> getAssetsByVesselIdientifiers(AssetListCriteria criteria){
+        String jpqlHistory = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v " +
+                "WHERE vh.active = '1' AND vh.countryOfRegistration = :" + ConfigSearchField.FLAG_STATE + " AND vh.dateOfEvent <= :" + ConfigSearchField.DATE +
+                " AND ( ";
+        final Map< ConfigSearchField, Object> jpqlParams = new HashMap<>();
+        String jpqlBody = criteria.getCriterias().stream().filter(crt -> crt.getValue() != null).map(pair -> {
+            switch (pair.getKey()) {
+                case CFR: {
+                    jpqlParams.put(ConfigSearchField.CFR,pair.getValue());
+                    return " v.cfr = :CFR ";
+                }
+                case IRCS: {
+                    jpqlParams.put(ConfigSearchField.IRCS,pair.getValue());
+                    return " v.ircs = :IRCS ";
+                }
+                case UVI: {
+                    jpqlParams.put(ConfigSearchField.UVI,pair.getValue());
+                    return " v.uvi = :UVI ";
+                }
+                case GFCM: {
+                    jpqlParams.put(ConfigSearchField.GFCM,pair.getValue());
+                    return " v.gfcm = :GFCM ";
+                }
+                case EXTERNAL_MARKING: {
+                    jpqlParams.put(ConfigSearchField.EXTERNAL_MARKING,pair.getValue());
+                    return " vh.externalMarking = :EXTERNAL_MARKING ";
+                }
+                case ICCAT: {
+                    jpqlParams.put(ConfigSearchField.ICCAT, pair.getValue());
+                    return " v.iccat = :ICCAT ";
+                }
+                case MMSI: {
+                    jpqlParams.put(ConfigSearchField.MMSI, pair.getValue());
+                    return " v.mmsi = :MMSI ";
+                }
+                case DATE: {
+                    Date date = DateUtil.parseToUTCDate(pair.getValue());
+                    jpqlParams.put(ConfigSearchField.DATE, date);
+                    return "";
+                }
+                case FLAG_STATE: {
+                    jpqlParams.put(ConfigSearchField.FLAG_STATE, pair.getValue());
+                    return "";
+                }
+                default: {
+                    LOG.warn("No asset found for pair [{},{}] ", pair.getKey(), pair.getValue());
+                    return  "";
+                }
+            }
+        }).filter(StringUtils::isNotEmpty).collect(Collectors.joining(" OR ")) + " )";
+
+        TypedQuery<AssetHistory> q = em.createQuery(jpqlHistory + jpqlBody, AssetHistory.class);
+        for (Map.Entry entry : jpqlParams.entrySet()) {
+            q.setParameter(entry.getKey().toString(), entry.getValue());
+        }
+
+        return q.getResultList();
+    }
+
 
 }

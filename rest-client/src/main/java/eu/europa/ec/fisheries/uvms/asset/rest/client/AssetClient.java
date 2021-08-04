@@ -22,12 +22,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequ
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import javax.ws.rs.QueryParam;
 
@@ -60,4 +55,6 @@ public interface AssetClient {
     Asset getAssetFromAssetGuidAndDate(String assetGuid, Date occurrenceDate);
 
     Asset getAssetFromAssetHistGuid(String assetHistId);
+
+    Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria);
 }
