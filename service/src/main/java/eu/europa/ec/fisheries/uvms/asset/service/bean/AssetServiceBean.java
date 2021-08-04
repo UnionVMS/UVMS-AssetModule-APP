@@ -45,18 +45,7 @@ import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetQueryElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
-import eu.europa.ec.fisheries.wsdl.asset.types.ZeroBasedIndexListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -374,4 +363,8 @@ public class AssetServiceBean implements AssetService {
         return assetDomainModel.getAssetListSearchPaginated(guid, occurrenceDate, page, listSize);
     }
 
+    @Override
+    public Asset getAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria) {
+        return assetDomainModel.findAssetByIdentifierPrecedence(assetListCriteria);
+    }
 }

@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
+import eu.europa.ec.fisheries.uvms.constant.VesselIdentifierPrecedenceEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
@@ -25,8 +26,10 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.mapper.*;
+import eu.europa.ec.fisheries.uvms.util.VesselIdentifiersUtil;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,8 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.*;
+import java.util.function.Function;
+import static java.util.stream.Collectors.*;
 
 import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
 import static eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper.createSearchFieldsFromGroupCriterias;
@@ -524,5 +529,83 @@ public class AssetDomainModelBean {
         assetGroup.setRefUuid(refUuid);
         assetGroup.getGroupUuid().addAll(groupUuidList);
         assetGroupsForAssetResponseElementList.add(assetGroup);
+    }
+
+    /**
+     * Returns the asset that matches best based on the given criteria and the predefined precedence order as defined
+     * by @{@link VesselIdentifierPrecedenceEnum}:
+     * <ul>
+     *     <li>CFR</li>
+     *     <li>UVI</li>
+     *     <li>IRCS</li>
+     *     <li>EXTERNAL_MARKING</li>
+     *     <li>ICCAT</li>
+     *     <li>GFCM</li>
+     *     <li>MMSI</li>
+     * </ul>
+     */
+    public Asset findAssetByIdentifierPrecedence(AssetListCriteria assetListCriteria) {
+
+        //Check for UVI check bit and remove from criteria if invalid
+        AssetListCriteriaPair uviPair =
+                assetListCriteria.getCriterias().stream()
+                        .filter(p-> ConfigSearchField.UVI == p.getKey())
+                        .findAny().orElse(null);
+        if (uviPair != null) {
+            boolean invalid = VesselIdentifiersUtil.isLastCheckBitInvalidInUVISchemeId(uviPair.getValue());
+            if (invalid) {
+                assetListCriteria.getCriterias().remove(uviPair);
+            }
+        }
+
+        //Retrieve the assets from database
+        List<AssetHistory> assetHistories = assetDao.getAssetsByVesselIdientifiers(assetListCriteria);
+        final List<Asset> assets = assetHistories.stream()
+                .map(EntityToModelMapper::toAssetFromAssetHistory).collect(toList());
+        if (CollectionUtils.isEmpty(assetHistories)) {
+            return null;
+        }
+
+
+        //Sort the criteria
+        List<AssetListCriteriaPair> sortedPairs =
+        assetListCriteria.getCriterias().stream()
+                .filter(p-> (VesselIdentifierPrecedenceEnum.getByField(p.getKey())) != null)
+                .collect(toMap(pair-> VesselIdentifierPrecedenceEnum.getByField(pair.getKey()), Function.identity()))
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(e->e.getKey().getPrecedence()))
+                .collect(mapping(entry->entry.getValue(), toList()));
+
+        //Loop the sorted criteria and return the first asset that matches
+        Asset entity = null;
+        for (AssetListCriteriaPair pair : sortedPairs) {
+            if ((entity = this.getAssetEntityByConfigField(assets, pair)) != null) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    private Asset getAssetEntityByConfigField(List<Asset> assets, AssetListCriteriaPair pair)  {
+        if (pair == null)   return  null;
+        switch (pair.getKey()) {
+            case CFR:
+                return assets.stream().filter(a->a.getCfr().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case UVI:
+                return assets.stream().filter(a->a.getUvi().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case IRCS:
+                return assets.stream().filter(a->a.getIrcs().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case EXTERNAL_MARKING:
+                return assets.stream().filter(a->a.getExternalMarking().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case ICCAT:
+                return assets.stream().filter(a->a.getIccat().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case GFCM:
+                return assets.stream().filter(a->a.getGfcm().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            case MMSI:
+                return assets.stream().filter(a->a.getMmsiNo().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+            default:
+                return null;
+        }
     }
 }
