@@ -173,8 +173,8 @@ public class EntityToModelMapper {
             }
 
             asset.setLicenseType(historyEntity.getLicenceType());
-            if (historyEntity.getType() != null) {
-                asset.setGearType(historyEntity.getType().name());
+            if (historyEntity.getMainFishingGear() != null) {
+                asset.setGearType(historyEntity.getMainFishingGear().getCode());
             }
 
             if(historyEntity.getAssetProdOrg() != null) {
@@ -331,7 +331,7 @@ public class EntityToModelMapper {
 
         VesselIdentifiersWithConnectIdHolder vesselIdentifier = new VesselIdentifiersWithConnectIdHolder();
         vesselIdentifier.setConnectId(assetHistory.getGuid());
-        vesselIdentifier.setExtMark(assetHistory.getExternalMarking());
+        vesselIdentifier.setExtmark(assetHistory.getExternalMarking());
         vesselIdentifier.setCfr(assetHistory.getCfr());
         vesselIdentifier.setIccat(assetHistory.getIccat());
         vesselIdentifier.setIrcs(assetHistory.getIrcs());

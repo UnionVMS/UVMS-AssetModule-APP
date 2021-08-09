@@ -107,7 +107,7 @@ public class ModelToEntityMapper {
         assetHistory.setDateOfEvent(DateUtils.getNowDateUTC());
 
         //TODO set gear fishing type
-        assetHistory.setType(GearFishingTypeEnum.getType(asset.getGearType()));
+        assetHistory.setType(GearFishingTypeEnum.UNKNOWN);
 
         assetHistory.setCountryOfRegistration(asset.getCountryCode());
         assetHistory.setExternalMarking(asset.getExternalMarking());

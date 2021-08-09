@@ -382,8 +382,9 @@
             <xsd:element name="cfr" type="xsd:string"/>
             <xsd:element name="ircs" type="xsd:string"/>
             <xsd:element name="iccat" type="xsd:string"/>
-            <xsd:element name="ext_mark" type="xsd:string"/>
+            <xsd:element name="extmark" type="xsd:string"/>
             <xsd:element name="uvi" type="xsd:string"/>
+            <xsd:element name="gfcm" type="xsd:string"/>
             <xsd:element name="countryCode" type="xsd:string"/>
             <xsd:element name="assetGuid" type="xsd:string"/>
         </xsd:sequence>
