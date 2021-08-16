@@ -23,7 +23,7 @@ public enum HullMaterialEnum {
 	public Long getId() {
 		return id;
 	}
-	public HullMaterialEnum getType(Long id) {
+	public static HullMaterialEnum getType(Long id) {
 		if(id != null) {
 			for(HullMaterialEnum material : HullMaterialEnum.values()) {
 				if(id.equals(material.getId())) {

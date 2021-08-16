@@ -11,7 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.sync;
 
+import eu.europa.ec.fisheries.uvms.asset.service.sync.collector.AssetSyncRawDataConverter;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.GetVesselAggregatedDataResponse;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -28,6 +30,9 @@ public class AssetSyncClient {
     @Inject
     private AssetSyncDataConverter mapper;
 
+    @Inject
+    private AssetSyncRawDataConverter rawMapper;
+
     public AssetSyncClient() { }
 
     public List<AssetHistory> getAssetsPage(Integer pageNumber, Integer pageSize) {
@@ -40,4 +45,13 @@ public class AssetSyncClient {
                 .collect(Collectors.toList());
     }
 
+    public List<AssetRawHistory> getRawAssetsPage(Integer pageNumber, Integer pageSize) {
+        GetVesselAggregatedDataResponse assetsFromPage = assetWsClient.getAssetPage(pageNumber, pageSize);
+
+        return assetsFromPage.getVesselAggregatedDataPageType()
+                .getVesselEvent()
+                .stream()
+                .map(rawMapper::rawConvert)
+                .collect(Collectors.toList());
+    }
 }

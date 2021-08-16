@@ -33,8 +33,11 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "Asset")
 @NamedQueries({
     @NamedQuery(name = UvmsConstants.ASSET_FIND_ALL, query = "SELECT v FROM AssetEntity v"),
+    @NamedQuery(name = UvmsConstants.ASSET_GET_ALL_CFRS_SORTED, query = "SELECT v.cfr FROM AssetEntity v ORDER BY v.cfr ASC"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ID, query = "SELECT v FROM AssetEntity v WHERE v.id = :id"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR, query = "SELECT v FROM AssetEntity v WHERE v.cfr = :cfr"),
+    @NamedQuery(name = UvmsConstants.ASSET_BY_CFR_EXISTS, query = "SELECT COUNT(v) FROM AssetEntity v WHERE v.cfr = :cfr"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR_WITH_HISTORY, query = "SELECT v FROM AssetEntity v JOIN FETCH v.histories WHERE v.cfr = :cfr"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IRCS, query = "SELECT v FROM AssetEntity v WHERE v.ircs = :ircs"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GUID, query = "SELECT v FROM AssetEntity v WHERE v.guid = :guid"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetEntity v WHERE v.imo = :imo"),
@@ -118,7 +121,7 @@ public class AssetEntity implements Serializable {
     @JoinColumn(name = "asset_carr_id")
     private Carrier carrier;
 
-    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @NotNull
     private List<AssetHistory> histories;
 
@@ -291,6 +294,15 @@ public class AssetEntity implements Serializable {
         this.histories = histories;
     }
 
+    public void addHistoryRecord(AssetHistory record) {
+        record.setAsset(this);
+        histories.add(record);
+    }
+
+    public void removeHistoryRecord(AssetHistory record) {
+        histories.remove(record);
+        record.setAsset(null);
+    }
 
     public String getIccat() { return iccat; }
 

@@ -60,11 +60,16 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "Assethistory")
 @NamedQueries({
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_HASH_KEY, query = "SELECT v FROM AssetHistory v WHERE v.hashKey = :hashKey"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS, query = "SELECT v FROM AssetHistory v WHERE v.guid IN :guids"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, query = "SELECT vh FROM AssetHistory vh WHERE " +
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_HASH_KEY,
+            query = "SELECT v FROM AssetHistory v WHERE v.hashKey = :hashKey"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID,
+            query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS,
+            query = "SELECT v FROM AssetHistory v WHERE v.guid IN :guids"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS,
+            query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA,
+            query = "SELECT vh FROM AssetHistory vh WHERE " +
         "((:EXTERNAL_MARKING is NULL) OR vh.externalMarking = :EXTERNAL_MARKING) AND " +
         "((:CFR is NULL) OR vh.cfr = :CFR) AND" +
         "((:IRCS is NULL) OR vh.ircs = :IRCS) AND" +
@@ -75,7 +80,8 @@ import org.hibernate.annotations.FetchMode;
         "((:FLAG_STATE is NULL) OR vh.countryOfRegistration = :FLAG_STATE) AND " +
         "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
         "ORDER BY dateOfEvent"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE, query = "SELECT result FROM AssetHistory result WHERE result.asset.guid =: assetGuid AND result.dateOfEvent <= :occurrenceDate ORDER BY result.dateOfEvent DESC")
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE,
+            query = "SELECT result FROM AssetHistory result WHERE result.asset.guid =: assetGuid AND result.dateOfEvent <= :occurrenceDate ORDER BY result.dateOfEvent DESC")
 })
 public class AssetHistory implements Serializable {
 
@@ -158,11 +164,13 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_licencetype")
     private String licenceType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assethist_main_fishgear_id")
     private FishingGear mainFishingGear;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assethist_sub_fishgear_id")
     private FishingGear subFishingGear;
 

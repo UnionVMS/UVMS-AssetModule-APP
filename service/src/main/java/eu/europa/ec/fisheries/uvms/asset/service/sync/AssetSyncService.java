@@ -18,8 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetSyncException;
+import eu.europa.ec.fisheries.uvms.asset.service.sync.collector.AssetSyncCollectorService;
 import eu.europa.ec.fisheries.uvms.asset.service.sync.message.AssetHistorySyncRetrievalMessage;
 import eu.europa.ec.fisheries.uvms.asset.service.sync.message.AssetSyncProducerBean;
+import eu.europa.ec.fisheries.uvms.asset.service.sync.processor.AssetSyncProcessorService;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,6 @@ public class AssetSyncService {
 
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_SIZE = 1000;
-    private static long historyRecords = 0;
 
     @Inject
     private AssetSyncClient assetSyncClient;
@@ -41,16 +42,19 @@ public class AssetSyncService {
     @Inject
     private AssetHistoryRecordHandler assetHistoryRecordHandler;
 
+    @Inject
+    private AssetSyncCollectorService collectorService;
+
+    @Inject
+    private AssetSyncProcessorService processorService;
+
     @Transactional
     public void syncAssetPage(Integer pageNumber, Integer pageSize) {
         List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
         assetHistoryFromPage.forEach(assetHistoryRecord -> {
             assetHistoryRecordHandler.handleRecord(assetHistoryRecord);
-            historyRecords++;
         });
         addMessageToQueueForNextPage(pageNumber, pageSize, assetHistoryFromPage.size());
-        log.info("FLEET SYNC: page {} of page size {} processed. {} records processed for all pages.",
-                pageNumber, pageSize, historyRecords);
     }
 
     private List<AssetHistory> getAssetsPageSafe(Integer pageNumber, Integer pageSize) {
@@ -84,4 +88,10 @@ public class AssetSyncService {
         }
     }
 
+    public void syncFleet(Integer pageSize) {
+        collectorService.collectDataFromFleet(0,false , pageSize, PAGE_SIZE);
+        if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+            processorService.syncRawRecordsWithExisting();
+        }
+    }
 }

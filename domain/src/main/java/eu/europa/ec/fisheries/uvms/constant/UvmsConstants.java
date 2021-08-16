@@ -14,8 +14,11 @@ package eu.europa.ec.fisheries.uvms.constant;
 public class UvmsConstants {
 
     public static final String ASSET_FIND_ALL = "Asset.findAll";
+    public static final String ASSET_GET_ALL_CFRS_SORTED = "Asset.getAllCfrsSorted";
     public static final String ASSET_FIND_BY_ID = "Asset.findById";
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
+    public static final String ASSET_BY_CFR_EXISTS = "Asset.assetCfrExists";
+    public static final String ASSET_FIND_BY_CFR_WITH_HISTORY = "Asset.findByCfrWithHistory";
     public static final String ASSET_FIND_BY_IRCS = "Asset.findByIrcs";
     public static final String ASSET_FIND_BY_GUID = "Asset.findByGuid";
     public static final String ASSET_FIND_BY_IMO = "Asset.findByImo";
@@ -73,4 +76,7 @@ public class UvmsConstants {
 
     public static final String FLAGSTATE_GET_BY_CODE = "FlagState.getByCode";
     public static final String ASSETHISTORY_FIND_BY_GUID_AND_DATE = "Assethistory.findByGuidAndDate";
+
+    public static final String FIND_ALL_DISTINCT_RAW_CFRS = "AssetRawHistory.findAllDistinctCfrs";
+    public static final String FIND_ASSET_BY_CFR_ORDER_BY_EVENT_DESC = "AssetRawHistory.findAssetByCfrOrderByEventDesc";
 }
