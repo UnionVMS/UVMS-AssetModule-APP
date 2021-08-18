@@ -47,12 +47,11 @@ public class AssetSyncMessageConsumerBean implements MessageListener {
             log.info("FLEET SYNC: message received for page {} of page size {}.", pageNumber, pageSize);
             //assetSyncService.syncAssetPage(pageNumber, pageSize);
             if (pageNumber == 0) {
-                //TODO to revisit the retry-on-failure logic
                 new Thread(() -> {
                     assetSyncService.syncFleet(pageSize);
                 }).start();
             } else {
-                //TODO Is there a need to request a specific page via queue?
+                assetSyncService.syncFleet(pageNumber, pageSize);
             }
         } catch (JMSException e) {
             log.error("error while handling asset sync data message", e);

@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -80,8 +81,9 @@ public class AssetHistoryRawRecordHandler {
         AssetHistory record = new AssetHistory();
 
         record.setHashKey(rawRecord.getHashKey());
-        if (rawRecord.getEventCodeType() != null) {
-            record.setEventCode(EventCodeEnum.valueOf(rawRecord.getEventCodeType()));
+        String eventCodeType = rawRecord.getEventCodeType();
+        if (EnumUtils.isValidEnum(EventCodeEnum.class, eventCodeType)) {
+            record.setEventCode(EventCodeEnum.valueOf(eventCodeType));
         } else {
             record.setEventCode(EventCodeEnum.UNK);
         }
@@ -97,9 +99,11 @@ public class AssetHistoryRawRecordHandler {
         record.setName(rawRecord.getName());
         record.setExternalMarking(rawRecord.getExternalMarking());
         record.setMmsi(rawRecord.getMmsi());
-        try {
-            record.setSegment(SegmentFUP.valueOf(rawRecord.getSegment().toUpperCase()));
-        } catch (IllegalArgumentException e) {
+
+        String segmentFup = rawRecord.getSegment();
+        if(EnumUtils.isValidEnum(SegmentFUP.class, segmentFup)) {
+            record.setSegment(SegmentFUP.valueOf(segmentFup));
+        } else {
             log.debug("Segment for asset {} does not exist.", record.getCfr());
         }
 
@@ -108,8 +112,10 @@ public class AssetHistoryRawRecordHandler {
         record.setHasLicence(rawRecord.getHasLicence());
         //TODO check this business logic
         record.setPortOfRegistration(rawRecord.getPlaceOfRegistration());
-        if (rawRecord.getTypeOfExport() != null) {
-            record.setTypeOfExport(TypeOfExportEnum.valueOf(rawRecord.getTypeOfExport()));
+
+        String typeOfExport = rawRecord.getTypeOfExport();
+        if (EnumUtils.isValidEnum(TypeOfExportEnum.class, typeOfExport)) {
+            record.setTypeOfExport(TypeOfExportEnum.valueOf(typeOfExport));
         } else {
             record.setTypeOfExport(TypeOfExportEnum.EX);
         }
@@ -132,8 +138,9 @@ public class AssetHistoryRawRecordHandler {
             record.setHullMaterial(HullMaterialEnum.UNKNOWN);
         }
 
-        if (rawRecord.getPublicAid() != null) {
-            record.setPublicAid(PublicAidEnum.valueOf(rawRecord.getPublicAid()));
+        String publicAid = rawRecord.getPublicAid();
+        if (EnumUtils.isValidEnum(PublicAidEnum.class, publicAid)) {
+            record.setPublicAid(PublicAidEnum.valueOf(publicAid));
         } else {
             record.setPublicAid(PublicAidEnum.AE);
         }
@@ -193,7 +200,8 @@ public class AssetHistoryRawRecordHandler {
     void createMainFishingGear(AssetRawHistory rawRecord, AssetHistory assetHistoryRecord) {
         allExistingFishingGear = getAllExistingFishingGear();
         String newFishingGearCode = rawRecord.getMainFishingGearType();
-        if (!allExistingFishingGear.isEmpty() && allExistingFishingGear.containsKey(newFishingGearCode)) {
+        if (newFishingGearCode != null && !allExistingFishingGear.isEmpty()
+                && allExistingFishingGear.containsKey(newFishingGearCode)) {
             assetHistoryRecord.setMainFishingGear(allExistingFishingGear.get(newFishingGearCode));
         } else {
             assetHistoryRecord.setMainFishingGear(allExistingFishingGear.get(FISHING_GEAR_UNKNOWN));
@@ -203,7 +211,8 @@ public class AssetHistoryRawRecordHandler {
     void createSubFishingGear(AssetRawHistory rawRecord, AssetHistory assetHistoryRecord) {
         allExistingFishingGear = getAllExistingFishingGear();
         String newFishingGearCode = rawRecord.getSubFishingGearType();
-        if (!allExistingFishingGear.isEmpty() && allExistingFishingGear.containsKey(newFishingGearCode)) {
+        if (newFishingGearCode != null && !allExistingFishingGear.isEmpty()
+                && allExistingFishingGear.containsKey(newFishingGearCode)) {
             assetHistoryRecord.setSubFishingGear(allExistingFishingGear.get(newFishingGearCode));
         } else {
             assetHistoryRecord.setSubFishingGear(allExistingFishingGear.get(FISHING_GEAR_UNKNOWN));

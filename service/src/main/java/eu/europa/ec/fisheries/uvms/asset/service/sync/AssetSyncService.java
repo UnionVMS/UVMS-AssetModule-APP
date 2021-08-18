@@ -89,8 +89,23 @@ public class AssetSyncService {
     }
 
     public void syncFleet(Integer pageSize) {
-        collectorService.collectDataFromFleet(0,false , pageSize, PAGE_SIZE);
-        if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+        if (pageSize >= 0) {
+            collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
+            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+                processorService.syncRawRecordsWithExisting();
+            }
+        } else {
+            processorService.syncRawRecordsWithExisting();
+        }
+    }
+
+    public void syncFleet(Integer pageNumber, Integer pageSize) {
+        if (pageNumber > 0) {
+            collectorService.collectDataFromFleet(pageNumber, true, pageSize, PAGE_SIZE);
+            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+                processorService.syncRawRecordsWithExisting();
+            }
+        } else {
             processorService.syncRawRecordsWithExisting();
         }
     }

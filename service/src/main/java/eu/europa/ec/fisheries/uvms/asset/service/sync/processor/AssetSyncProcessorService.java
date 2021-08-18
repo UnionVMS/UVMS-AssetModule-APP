@@ -69,8 +69,8 @@ public class AssetSyncProcessorService {
     public void syncRawRecordsWithExisting() {
         executorService = Executors.newWorkStealingPool();
         processedAssetsCount = 0;
-        List<String> existingCfrs = assetRawHistoryDao.getAllCfrsSorted();
-        List<String> incomingCfrs = assetRawHistoryDao.getAllDistinctRawCfrs();
+        final List<String> existingCfrs = assetRawHistoryDao.getAllCfrsSorted();
+        final List<String> incomingCfrs = assetRawHistoryDao.getAllDistinctRawCfrs();
         log.info("FLEET SYNC: Start processing raw history records in batches of {}. Existing CFRs: {}. Incoming CFRs {}",
                 BATCH_PROC_SIZE, existingCfrs.size(), incomingCfrs.size());
 
@@ -103,14 +103,14 @@ public class AssetSyncProcessorService {
                             updateHandler.updateAssetsHistory(assetsToUpdate);
                         });
                     }
-                    log.info("FLEET SYNC: Processed: {} assets. Possible updates {}. Created {}",
+                    log.info("FLEET SYNC: Processed: {} assets. Update candidates {}. Create candidates {}",
                             processedAssetsCount, toUpdateAssetsCount, toCreateAssetsCount);
                 });
-        log.info("FLEET SYNC: All history records sent to processing: {}.", processedAssetsCount);
+        log.info("FLEET SYNC: All history records sent to processing. CFRs: {}. Collecting results...", processedAssetsCount);
 
         collectSyncActivityResults();
         if (activitySuccessfullyCompleted) {
-            log.info("FLEET SYNC: {}} history records processed.", processedAssetsCount);
+            log.info("FLEET SYNC: {} history records processed.", processedAssetsCount);
         } else {
             log.error("FLEET SYNC: Processing {} records interrupted.", processedAssetsCount);
         }
