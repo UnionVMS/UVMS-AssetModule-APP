@@ -180,7 +180,7 @@ public class AssetDao {
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
         Root<Asset> asset = cq.from(Asset.class);
 
-        cq.select(criteriaBuilder.count(asset));
+        cq.select(criteriaBuilder.countDistinct(asset));
         Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
 
         if (!includeInactivated) {
@@ -228,6 +228,7 @@ public class AssetDao {
     private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
+        cq.distinct(true);
         Root<Asset> asset = cq.from(Asset.class);
 
         Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
