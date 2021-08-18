@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -44,7 +43,6 @@ import java.util.stream.Collectors;
 
 @Path("/filter")
 @Stateless
-@Api(value = "Asset Filter Service")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AssetFilterRestResource {
@@ -71,13 +69,9 @@ public class AssetFilterRestResource {
      * @summary Get asset Filter list by user
      */
     @GET
-    @ApiOperation(value = "Get a list of Assetfilters for user", notes = "Get a list of Assetfilters for user", response = AssetFilter.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving AssetFilter list"),
-            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
     @Path("/listbyuser")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetFilterListByUser(@ApiParam(value = "user") @QueryParam(value = "user") String user) throws Exception {
+    public Response getAssetFilterListByUser(@QueryParam(value = "user") String user) throws Exception {
         try {
         	if(user == null) {
         		user = servletRequest.getRemoteUser();
@@ -97,13 +91,9 @@ public class AssetFilterRestResource {
      * @summary Get asset filter by ID
      */
     @GET
-    @ApiOperation(value = "Get an AssetFilter by its id", notes = "Get a an AssetFilter by its id", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
-            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
     @Path("/{assetFilterId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetFilterById(@ApiParam(value = "AssetFilter Id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
+    public Response getAssetFilterById(@PathParam(value = "assetFilterId") final UUID id) throws Exception {
         try {
             AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
             String response = jsonb.toJson(assetFilter);
@@ -120,13 +110,9 @@ public class AssetFilterRestResource {
      * @summary Create a asset filter
      */
     @POST
-    @ApiOperation(value = "Create an AssetFilter", notes = "Create an AssetFilter", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
-            @ApiResponse(code = 200, message = "AssetFilter successfully created")})
     @Path("/createFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilterIn(@ApiParam(value = "AssetFilter", required = true) final AssetFilter assetFilter) throws Exception {
+    public Response createAssetFilterIn(final AssetFilter assetFilter) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
@@ -143,13 +129,9 @@ public class AssetFilterRestResource {
      * @summary Delete a asset group
      */
     @DELETE
-    @ApiOperation(value = "Delete an AssetFilter", notes = "Delete an AssetFilter", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when delete AssetFilter"),
-            @ApiResponse(code = 200, message = "AssetFilter successfully deleted")})
     @Path("/{assetFilterId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetFilter(@ApiParam(value = "AssetFilter id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
+    public Response deleteAssetFilter(@PathParam(value = "assetFilterId") final UUID id) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             assetFilterService.deleteAssetFilterById(id, user);
@@ -161,13 +143,9 @@ public class AssetFilterRestResource {
     }
 
     @GET
-    @ApiOperation(value = "GetAssetFilterByAssetId", notes = "This works if field is stored with GUID and value pointing to AssetId", response = AssetFilter.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when delete assetFilters"),
-            @ApiResponse(code = 200, message = "assetFilters successfully deleted")})
     @Path("/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetFilterListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "assetId") UUID assetId) throws Exception {
+    public Response getAssetFilterListByAssetId(@PathParam(value = "assetId") UUID assetId) throws Exception {
         try {
             List<AssetFilter> assetFilters = assetFilterService.getAssetFilterListByAssetId(assetId);
             String response = jsonb.toJson(assetFilters);
@@ -179,14 +157,10 @@ public class AssetFilterRestResource {
     }
 
     @POST
-    @ApiOperation(value = "CreateAssetFilterQuery", notes = "CreateAssetFilterQuery", response = AssetFilterQuery.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when create AssetFilterQuery"),
-            @ApiResponse(code = 200, message = "AssetFilterQuery successfully deleted")})
     @Path("/{assetFilterId}/query")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilterQuery(@ApiParam(value = "Parent AssetFilter id", required = true) @PathParam(value = "assetFilterId") UUID parentAssetFilterId,
-                                          @ApiParam(value = "The AssetFilterQuery to be created", required = true) AssetFilterQuery assetFilterQuery) throws Exception {
+    public Response createAssetFilterQuery(@PathParam(value = "assetFilterId") UUID parentAssetFilterId,
+                                          AssetFilterQuery assetFilterQuery) throws Exception {
         try {
             AssetFilterQuery createdAssetFilterQuery = assetFilterService.createAssetFilterQuery(parentAssetFilterId, assetFilterQuery);//  createAssetFilterQuery(parentAssetFilterId, assetFilterQuery, user);
             String response = jsonb.toJson(createdAssetFilterQuery);
@@ -198,14 +172,10 @@ public class AssetFilterRestResource {
     }
 
     @POST
-    @ApiOperation(value = "CreateAssetFilterValue", notes = "CreateAssetFilterValue", response = AssetFilterQuery.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when create AssetFilterValue"),
-            @ApiResponse(code = 200, message = "AssetFilterValue successfully deleted")})
     @Path("/{assetFilterQueryId}/value")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilterValue(@ApiParam(value = "Parent AssetFilterQuery id", required = true) @PathParam(value = "assetFilterQueryId") UUID parentAssetFilterQueryId,
-                                          @ApiParam(value = "The AssetFilterValue to be created", required = true) AssetFilterValue assetFilterValue) throws Exception {
+    public Response createAssetFilterValue(@PathParam(value = "assetFilterQueryId") UUID parentAssetFilterQueryId,
+                                          AssetFilterValue assetFilterValue) throws Exception {
         try {
             AssetFilterValue createdAssetFilterValue = assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, assetFilterValue);
             
@@ -218,13 +188,9 @@ public class AssetFilterRestResource {
     }
     
     @PUT
-    @ApiOperation(value = "UpdateAssetFilterValue", notes = "UpdateAssetFilterValue", response = AssetFilterValue.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
-            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
     @Path("/value")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilterValue(@ApiParam(value = "Parent AssetFilterValue", required = true) AssetFilterValue assetFilterValue) throws Exception {
+    public Response updateAssetFilterValue(AssetFilterValue assetFilterValue) throws Exception {
 
         try {
             String user = servletRequest.getRemoteUser();
@@ -238,13 +204,9 @@ public class AssetFilterRestResource {
     }
 
     @GET
-    @ApiOperation(value = "GetAssetFilterValue by id", notes = "GetAssetFilterValue by id", response = AssetFilterValue.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when get AssetFilterValue"),
-            @ApiResponse(code = 200, message = "AssetFilterValue successfully fetched")})
     @Path("/value/{assetFilterValueId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetFilterValue(@ApiParam(value = "AssetFilterValue id", required = true) @PathParam(value = "assetFilterValueId") UUID id) throws Exception {
+    public Response getAssetFilterValue(@PathParam(value = "assetFilterValueId") UUID id) throws Exception {
 
         try {
         	AssetFilterValue fetchedAssetFilterValue = assetFilterService.getAssetFilterValue(id);
@@ -257,13 +219,9 @@ public class AssetFilterRestResource {
     }
 
     @DELETE
-    @ApiOperation(value = "DeleteAssetFilterValue by id", notes = "DeleteAssetFilterValue by id", response = AssetFilterValue.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when delete AssetFilterValue"),
-            @ApiResponse(code = 200, message = "AssetFilterValue successfully deleted")})
     @Path("/value/{assetFilterValueId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetFilterValue(@ApiParam(value = "AssetFilterValue id", required = true) @PathParam(value = "assetFilterValueId") UUID assetFilterValueId) throws Exception {
+    public Response deleteAssetFilterValue(@PathParam(value = "assetFilterValueId") UUID assetFilterValueId) throws Exception {
 
         try {
             String user = servletRequest.getRemoteUser();
@@ -282,12 +240,8 @@ public class AssetFilterRestResource {
      * @summary Create a asset filter
      */
     @POST
-    @ApiOperation(value = "Create an AssetFilter", notes = "Create an AssetFilter", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
-            @ApiResponse(code = 200, message = "AssetFilter successfully created")})
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilter(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+    public Response createAssetFilter(String jsonAssetFilter) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter assetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
@@ -301,12 +255,8 @@ public class AssetFilterRestResource {
     }
     
     @PUT
-    @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
-            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilter(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+    public Response updateAssetFilter(String jsonAssetFilter) throws Exception {
 
         try {
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
@@ -326,10 +276,6 @@ public class AssetFilterRestResource {
      * @summary Get asset Filter list by user
      */
     @GET
-    @ApiOperation(value = "Get a list of Assetfilters for user", notes = "Get a list of Assetfilters for user", response = AssetFilter.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving AssetFilter list"),
-            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getListOfAssetFilterByUser() throws Exception {

@@ -37,14 +37,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.VmsBillingDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -287,9 +285,9 @@ public class InternalRestResource {
     @GET
     @Path("{constant}/{code}/verify")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
-                           @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date) {
+    public Response verify(@PathParam("constant") String constant,
+                           @PathParam("code") String code,
+                           @QueryParam(value = "date") String date) {
         try {
             Instant aDate = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             Boolean exists = customCodesService.verify(constant, code, aDate);
