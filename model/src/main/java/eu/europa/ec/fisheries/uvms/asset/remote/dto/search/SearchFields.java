@@ -37,7 +37,8 @@ public enum SearchFields {
     PRODUCER_NAME("producerName"),
     LONG_TERM_PARKED("parked", SearchFieldType.BOOLEAN),
     DATE(null, SearchFieldType.DATE),
-    SOURCE("source", SearchFieldType.STRING);
+    SOURCE("source", SearchFieldType.STRING),
+    ACTIVE_MOBILETERMINAL("mobileTerminals", SearchFieldType.BOOLEAN);
 
     private String fieldName;
     private SearchFieldType fieldType;
