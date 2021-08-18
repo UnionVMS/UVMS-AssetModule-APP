@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -21,6 +22,8 @@ import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
@@ -312,7 +315,12 @@ public class AssetDao {
                     UUID id = UUID.fromString(leaf.getSearchValue());
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), id));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                    predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Boolean.valueOf(leaf.getSearchValue())));
+                    if (leaf.getSearchField().equals(SearchFields.ACTIVE_MOBILETERMINAL)) {
+                        Join<Asset, MobileTerminal> mobileterminal = asset.join(leaf.getSearchField().getFieldName(), JoinType.LEFT);
+                        predicates.add(criteriaBuilder.equal(mobileterminal.get("active"), Boolean.valueOf(leaf.getSearchValue())));
+                    } else {
+                        predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Boolean.valueOf(leaf.getSearchValue())));
+                    }
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)){
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), leaf.getSearchValue()));
                 }
@@ -392,8 +400,10 @@ public class AssetDao {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(id));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
-                    operatorUsed = true;
+                    if (!leaf.getSearchField().equals(SearchFields.ACTIVE_MOBILETERMINAL)) {
+                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
+                        operatorUsed = true;
+                    }
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)){
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
                     operatorUsed = true;
