@@ -22,7 +22,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;

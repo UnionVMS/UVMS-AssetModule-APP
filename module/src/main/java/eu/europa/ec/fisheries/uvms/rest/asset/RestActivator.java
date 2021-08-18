@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
@@ -35,7 +34,6 @@ public class RestActivator extends Application {
         set.add(AssetRestExceptionMapper.class);
         set.add(UnionVMSFeatureFilter.class);
         set.add(JsonBConfiguratorAsset.class);
-        set.add(com.github.phillipkruger.apiee.ApieeService.class);
         set.add(SSEResource.class);
 
         //V2

@@ -84,11 +84,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.phillip-kruger</groupId>
-            <artifactId>apiee-core</artifactId>
-            <version>1.0.8</version>
-        </dependency>
-        <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
             <artifactId>uvms-pom-arquillian-deps</artifactId>
             <type>pom</type>
