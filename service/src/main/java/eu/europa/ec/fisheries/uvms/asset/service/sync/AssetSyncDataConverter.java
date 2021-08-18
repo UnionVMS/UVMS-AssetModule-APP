@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class AssetSyncDataConverter {
 
         assetHistory.setHashKey(relatedVesselTransportMeans.getHaskKey());
         assetHistory.setEventCode(EventCodeEnum.valueOf(vesselEventType.getEventType()));
-        assetHistory.setActive(vesselEventType.getEventActiveIndicator().equals(BooleanType.Y));
+        assetHistory.setActive(BooleanType.Y.equals(vesselEventType.getEventActiveIndicator()));
         assetHistory.setDateOfEvent(vesselEventType.getOccurrenceDateTime());
 //        assetHistory.setUpdateTime();
         assetHistory.setUpdatedBy(FLEETSYNC);
@@ -78,51 +79,37 @@ public class AssetSyncDataConverter {
             log.error("Public AID code does not exist for asset {} ", assetHistory.getCfr());
         }
 
-        if (relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics() != null) {
-            Optional.ofNullable(
-                    relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getVMSIndicator())
-                    .ifPresent(i -> {
-                        assetHistory.setHasVms(
-                            relatedVesselTransportMeans
-                                    .getApplicableVesselEquipmentCharacteristics()
-                                    .getVMSIndicator().equals(BooleanType.Y));
-            });
-            Optional.ofNullable(
-                    relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics().getIRCSIndicator())
-                    .ifPresent(i -> {
-                        assetHistory.setIrcsIndicator(
-                            relatedVesselTransportMeans
-                                    .getApplicableVesselEquipmentCharacteristics()
-                                    .getIRCSIndicator().equals(BooleanType.Y) ? "1" : "0");
-            });
+        VesselEquipmentCharacteristicsType equipmentCharacteristics =
+                                relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics();
+        if (equipmentCharacteristics != null) {
+            assetHistory.setHasVms(
+                    BooleanType.Y.equals(equipmentCharacteristics.getVMSIndicator()));
+            assetHistory.setIrcs(
+                    BooleanType.Y.equals(equipmentCharacteristics.getIRCSIndicator()) ? "1" : "0");
         }
     }
 
     private void mapRegistrationInfo(VesselTransportMeansType relatedVesselTransportMeans, AssetHistory assetHistory) {
         assetHistory.setCountryOfRegistration(relatedVesselTransportMeans.getRegistrationVesselCountry());
         assetHistory.setRegistrationNumber(relatedVesselTransportMeans.getRegistrationNumber());
-        Optional.ofNullable(
-                relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics().getLicenceIndicator())
-                    .ifPresent(v -> {
-                        assetHistory.setHasLicence(
-                            relatedVesselTransportMeans
-                                    .getApplicableVesselAdministrativeCharacteristics()
-                                    .getLicenceIndicator().equals(BooleanType.Y));
-        });
+
         assetHistory.setPortOfRegistration(
                 relatedVesselTransportMeans.getSpecifiedRegistrationEvent().stream()
                         .findFirst()
                         .map(e -> e.getRelatedRegistrationLocation().getPlaceOfRegistrationPortID())
                         .orElse(""));
-        try {
-            String typeOfExport = relatedVesselTransportMeans
-                    .getApplicableVesselAdministrativeCharacteristics()
-                    .getTypeOfExport();
-            if (typeOfExport != null) {
+
+        VesselAdministrativeCharacteristicsType administrativeCharacteristicsType =
+                            relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics();
+
+        if (administrativeCharacteristicsType != null) {
+            assetHistory.setHasLicence(
+                    BooleanType.Y.equals(administrativeCharacteristicsType.getLicenceIndicator()));
+
+            String typeOfExport = administrativeCharacteristicsType.getTypeOfExport();
+            if (EnumUtils.isValidEnum(TypeOfExportEnum.class, typeOfExport)) {
                 assetHistory.setTypeOfExport(TypeOfExportEnum.valueOf(typeOfExport));
             }
-        } catch (java.lang.IllegalArgumentException e) {
-            log.error("Type of export does not exist for asset {} ", assetHistory.getCfr());
         }
     }
 

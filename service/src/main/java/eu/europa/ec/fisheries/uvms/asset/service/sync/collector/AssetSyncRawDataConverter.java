@@ -1,18 +1,11 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync.collector;
 
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
-import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.mare.fisheries.vessel.common.v1.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +51,7 @@ public class AssetSyncRawDataConverter {
                                AssetRawHistory assetRawHistory) {
         assetRawHistory.setEventCodeType(vesselEventType.getEventType());
         assetRawHistory.setDateOfEvent(vesselEventType.getOccurrenceDateTime());
-        assetRawHistory.setEventActive(vesselEventType.getEventActiveIndicator().equals(BooleanType.Y));
+        assetRawHistory.setEventActive(BooleanType.Y.equals(vesselEventType.getEventActiveIndicator()));
     }
 
     private void mapVesselIdentifiers(VesselEventType vesselEventType,
@@ -164,9 +157,7 @@ public class AssetSyncRawDataConverter {
         Optional.ofNullable(
                 relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics())
                 .ifPresent(v -> {
-                    if (v.getLicenceIndicator() != null) {
-                        assetRawHistory.setHasLicence(v.getLicenceIndicator().equals(BooleanType.Y));
-                    }
+                    assetRawHistory.setHasLicence(BooleanType.Y.equals(v.getLicenceIndicator()));
                     assetRawHistory.setSegment(v.getSegment());
                     assetRawHistory.setDateOfServiceEntry(v.getDateOfEntryIntoService());
                     assetRawHistory.setPublicAid(v.getPublicAidCode());
@@ -180,26 +171,14 @@ public class AssetSyncRawDataConverter {
                 relatedVesselTransportMeans.getApplicableVesselEquipmentCharacteristics();
 
         if (vesselEquipmentCharacteristicsType != null) {
-            Optional.ofNullable(
-                    vesselEquipmentCharacteristicsType.getIRCSIndicator())
-                    .ifPresent(indicator -> {
-                        assetRawHistory.setHasIrcs(indicator.equals(BooleanType.Y));
-                    });
-            Optional.ofNullable(
-                    vesselEquipmentCharacteristicsType.getVMSIndicator())
-                    .ifPresent(indicator -> {
-                        assetRawHistory.setHasVms(indicator.equals(BooleanType.Y));
-                    });
-            Optional.ofNullable(
-                    vesselEquipmentCharacteristicsType.getVMSIndicator())
-                    .ifPresent(indicator -> {
-                        assetRawHistory.setHasErs(indicator.equals(BooleanType.Y));
-                    });
-            Optional.ofNullable(
-                    vesselEquipmentCharacteristicsType.getVMSIndicator())
-                    .ifPresent(indicator -> {
-                        assetRawHistory.setHasAis(indicator.equals(BooleanType.Y));
-                    });
+            assetRawHistory.setHasIrcs(
+                    BooleanType.Y.equals(vesselEquipmentCharacteristicsType.getIRCSIndicator()));
+            assetRawHistory.setHasVms(
+                    BooleanType.Y.equals(vesselEquipmentCharacteristicsType.getVMSIndicator()));
+            assetRawHistory.setHasErs(
+                    BooleanType.Y.equals(vesselEquipmentCharacteristicsType.getERSIndicator()));
+            assetRawHistory.setHasAis(
+                    BooleanType.Y.equals(vesselEquipmentCharacteristicsType.getAISIndicator()));
         }
     }
 

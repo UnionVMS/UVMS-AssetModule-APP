@@ -145,8 +145,7 @@ public class AssetHistoryRawRecordHandler {
             record.setPublicAid(PublicAidEnum.AE);
         }
         record.setHasVms(rawRecord.getHasVms());
-        //TODO double check this value set
-        String hasIrcs = rawRecord.getHasIrcs() ? "T" : "F";
+        String hasIrcs = Boolean.TRUE.equals(rawRecord.getHasIrcs()) ? "T" : "F";
         record.setIrcsIndicator(hasIrcs);
 
         record.setPowerOfMainEngine(rawRecord.getPowerOfMainEngine());
