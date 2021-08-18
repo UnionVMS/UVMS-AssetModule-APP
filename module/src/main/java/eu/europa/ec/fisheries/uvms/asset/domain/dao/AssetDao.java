@@ -404,10 +404,8 @@ public class AssetDao {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(id));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                    if (!leaf.getSearchField().equals(SearchFields.HAS_MOBILETERMINAL)) {
-                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
-                        operatorUsed = true;
-                    }
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)){
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
                     operatorUsed = true;
