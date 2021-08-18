@@ -1142,73 +1142,16 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
-    public void getAssetWithActiveMobileTerminal() {
+    public void getAssetWithMobileTerminal() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = sendAssetToCreation(asset);
 
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal.setActive(true);
         mobileTerminal.setAsset(createdAsset);
         createMobileTerminal(mobileTerminal);
 
         SearchBranch trunk = new SearchBranch(true);
-        SearchLeaf leaf = new SearchLeaf(SearchFields.ACTIVE_MOBILETERMINAL, "true");
-        trunk.getFields().add(leaf);
-
-        AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
-                .path("list")
-                .queryParam("size","1000")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(trunk), AssetListResponse.class);
-
-        List<Asset> assetList = listResponse.getAssetList();
-        assertTrue(assetList.stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
-    }
-
-    @Test
-    @RunAsClient
-    @OperateOnDeployment("normal")
-    public void getAssetWithActiveMobileTerminalNoMatch() {
-        Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = sendAssetToCreation(asset);
-
-        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal.setActive(false);
-        mobileTerminal.setAsset(createdAsset);
-        createMobileTerminal(mobileTerminal);
-
-        SearchBranch trunk = new SearchBranch(true);
-        SearchLeaf leaf = new SearchLeaf(SearchFields.ACTIVE_MOBILETERMINAL, "true");
-        trunk.getFields().add(leaf);
-
-        AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
-                .path("list")
-                .queryParam("size","1000")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(trunk), AssetListResponse.class);
-
-        List<Asset> assetList = listResponse.getAssetList();
-        assertTrue(assetList.stream().noneMatch(a -> a.getId().equals(createdAsset.getId())));
-    }
-
-    @Test
-    @RunAsClient
-    @OperateOnDeployment("normal")
-    public void getAssetWithInactiveMobileTerminal() {
-        Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = sendAssetToCreation(asset);
-
-        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal.setActive(false);
-        mobileTerminal.setAsset(createdAsset);
-        createMobileTerminal(mobileTerminal);
-
-        SearchBranch trunk = new SearchBranch(true);
-        SearchLeaf leaf = new SearchLeaf(SearchFields.ACTIVE_MOBILETERMINAL, "false");
+        SearchLeaf leaf = new SearchLeaf(SearchFields.HAS_MOBILETERMINAL, "true");
         trunk.getFields().add(leaf);
 
         AssetListResponse listResponse = getWebTargetExternal()
@@ -1231,7 +1174,34 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = sendAssetToCreation(asset);
 
         SearchBranch trunk = new SearchBranch(true);
-        SearchLeaf leaf = new SearchLeaf(SearchFields.ACTIVE_MOBILETERMINAL, "true");
+        SearchLeaf leaf = new SearchLeaf(SearchFields.HAS_MOBILETERMINAL, "true");
+        trunk.getFields().add(leaf);
+
+        AssetListResponse listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(trunk), AssetListResponse.class);
+
+        List<Asset> assetList = listResponse.getAssetList();
+        assertTrue(assetList.stream().noneMatch(a -> a.getId().equals(createdAsset.getId())));
+    }
+
+    @Test
+    @RunAsClient
+    @OperateOnDeployment("normal")
+    public void getAssetWithMobileTerminalNoMatch() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = sendAssetToCreation(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(createdAsset);
+        createMobileTerminal(mobileTerminal);
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.HAS_MOBILETERMINAL, "false");
         trunk.getFields().add(leaf);
 
         AssetListResponse listResponse = getWebTargetExternal()

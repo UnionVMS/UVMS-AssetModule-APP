@@ -315,9 +315,13 @@ public class AssetDao {
                     UUID id = UUID.fromString(leaf.getSearchValue());
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), id));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                    if (leaf.getSearchField().equals(SearchFields.ACTIVE_MOBILETERMINAL)) {
+                    if (leaf.getSearchField().equals(SearchFields.HAS_MOBILETERMINAL)) {
                         Join<Asset, MobileTerminal> mobileterminal = asset.join(leaf.getSearchField().getFieldName(), JoinType.LEFT);
-                        predicates.add(criteriaBuilder.equal(mobileterminal.get("active"), Boolean.valueOf(leaf.getSearchValue())));
+                        if (Boolean.TRUE.equals(Boolean.valueOf(leaf.getSearchValue()))) {
+                            predicates.add(criteriaBuilder.isNotNull(mobileterminal.get("id")));
+                        } else {
+                            predicates.add(criteriaBuilder.isNull(mobileterminal.get("id")));
+                        }
                     } else {
                         predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Boolean.valueOf(leaf.getSearchValue())));
                     }
@@ -400,7 +404,7 @@ public class AssetDao {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(id));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                    if (!leaf.getSearchField().equals(SearchFields.ACTIVE_MOBILETERMINAL)) {
+                    if (!leaf.getSearchField().equals(SearchFields.HAS_MOBILETERMINAL)) {
                         operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
                         operatorUsed = true;
                     }
