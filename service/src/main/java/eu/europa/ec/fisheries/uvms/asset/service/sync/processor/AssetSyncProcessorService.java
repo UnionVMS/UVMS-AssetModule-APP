@@ -110,9 +110,9 @@ public class AssetSyncProcessorService {
 
         collectSyncActivityResults();
         if (activitySuccessfullyCompleted) {
-            log.info("FLEET SYNC: {} history records processed.", processedAssetsCount);
+            log.info("FLEET SYNC: {} assets with their history records processed.", processedAssetsCount);
         } else {
-            log.error("FLEET SYNC: Processing {} records interrupted.", processedAssetsCount);
+            log.error("FLEET SYNC: Processing {} assets interrupted.", processedAssetsCount);
         }
     }
 

@@ -43,6 +43,7 @@ public class AssetHistoryUpdateHandler {
     public void updateAssetsHistory(List<String> assetsCfrToUpdate) {
         for (String cfr : assetsCfrToUpdate) {
             updateAssetToFullHistory(cfr);
+            log.debug("Asset {} processed for update.", cfr);
         }
     }
 
@@ -163,7 +164,7 @@ public class AssetHistoryUpdateHandler {
                 return new RawRecordStatus(false, isUpdate, record);
             }
         }
-        return new RawRecordStatus(false, false);
+        return new RawRecordStatus(true, false);
     }
 
     private boolean isCurrentRawRecordAnUpdate(AssetHistory duplicatedRecord, AssetRawHistory rawRecord) {
