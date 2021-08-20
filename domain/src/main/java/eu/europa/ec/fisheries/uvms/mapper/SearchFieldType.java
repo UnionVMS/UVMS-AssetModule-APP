@@ -13,5 +13,5 @@ package eu.europa.ec.fisheries.uvms.mapper;
 
 public enum SearchFieldType {
 
-	LIST, NUMBER, MIN_DECIMAL, MAX_DECIMAL, BOOLEAN, ID_LONG;
+	LIST, NUMBER, MIN_DECIMAL, MAX_DECIMAL, BOOLEAN, STRING;
 }
