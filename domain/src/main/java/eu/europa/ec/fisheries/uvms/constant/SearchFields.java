@@ -29,7 +29,7 @@ public enum SearchFields {
     LICENSE("licenceType", SearchTables.ASSET_HIST, "license"),
     GUID("guid", SearchTables.ASSET, "guid"),
     HIST_GUID("guid", SearchTables.ASSET_HIST, "histGuid"),
-    GEAR_TYPE("mainFishingGear.id", SearchTables.ASSET_HIST, "mainFishingGear", SearchFieldType.ID_LONG),
+    GEAR_TYPE("mainFishingGear.code", SearchTables.ASSET_HIST, "mainFishingGear", SearchFieldType.STRING),
     MAX_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "maxLength", SearchFieldType.MAX_DECIMAL),
     MIN_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "minLength", SearchFieldType.MIN_DECIMAL),
     MAX_POWER("powerOfMainEngine", SearchTables.ASSET_HIST, "maxPower", SearchFieldType.MAX_DECIMAL),
