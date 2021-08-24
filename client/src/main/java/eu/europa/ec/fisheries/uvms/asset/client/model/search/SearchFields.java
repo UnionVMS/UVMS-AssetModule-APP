@@ -36,7 +36,8 @@ public enum SearchFields {
     ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
     PRODUCER_NAME("producerName"),
     DATE(null, SearchFieldType.DATE),
-    SOURCE("source", SearchFieldType.STRING);
+    SOURCE("source", SearchFieldType.STRING),
+    HAS_MOBILETERMINAL("mobileTerminals", SearchFieldType.BOOLEAN);
 
     private String fieldName;
     private SearchFieldType fieldType;
