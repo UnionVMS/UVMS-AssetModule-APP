@@ -138,6 +138,7 @@ public class HistoryMapper {
                 }
                 row.setChangeType(ChangeType.UPDATED);
                 row.setSnapshot(mt);
+                row.setAssetName(assetName);
                 returnMap.put(mt.getHistoryId(), row);
                 previousMt = mt;
             }
