@@ -206,7 +206,7 @@ public class AssetSyncRawDataConverter {
                 if (Optional.ofNullable(contactParty.getName()).isPresent()) {
                     assetRawHistory.setAgentName(contactParty.getName());
                 } else {
-                    assetRawHistory.setOwnerName(EMPTY_NAME);
+                    assetRawHistory.setAgentName(EMPTY_NAME);
                 }
                 Optional.of(contactParty.getSpecifiedStructuredAddress())
                         .ifPresent(a -> assetRawHistory.setAgentAddress(a.getStreetName()));

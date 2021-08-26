@@ -17,6 +17,10 @@ public interface AssetRawHistoryDao {
 
     int cleanUpRawRecordsTable();
 
+    void deleteAsset(AssetEntity asset);
+
+    void deleteAssetByCfr(String assetByCfr);
+
     int deleteOldDuplicatedHistoryRecords(List<AssetHistory> duplicatedRecords);
 
     void flushCurrentChanges();

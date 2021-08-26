@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -35,6 +36,24 @@ public class AssetRawHistoryDaoBean extends Dao implements AssetRawHistoryDao {
                 em.persist(assetHistoryRecords.get(idx));
                 /* if (idx % 1000 == 0) { em.flush(); } */
             });
+    }
+
+    @Override
+    public void deleteAsset(AssetEntity asset) {
+        if (asset != null) {
+            em.remove(asset);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAssetByCfr(String assetByCfr) {
+        if (assetByCfr != null) {
+            AssetEntity asset = getAssetByCfr(assetByCfr);
+            if (asset != null) {
+                em.remove(asset);
+            }
+        }
     }
 
     @Override

@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,12 +63,14 @@ public class AssetHistoryUpdateHandler {
             if (newRawRecords.size() > 0) {
                 List<AssetHistory> newRecords = rawRecordHandler.mapRawHistoryToHistory(newRawRecords);
                 for(AssetHistory record : newRecords) {
-                    record.setActive(false);
                     asset.addHistoryRecord(record);
                     //TODO to be fixed and re-enabled
                     //sendAssetHistoryUpdateToReporting(mapFromAssetHistoryEntity(record, asset.getGuid()));
                 }
                 AssetHistory mostRecentRecord = getMostRecentHistoryRecordToUpdateAsset(asset, newRecords);
+                for(AssetHistory record : newRecords) {
+                    record.setActive(false);
+                }
                 if (mostRecentRecord != null) {
                     mostRecentRecord.setActive(true);
                     updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
@@ -119,7 +121,7 @@ public class AssetHistoryUpdateHandler {
                 break;
             }
         }
-        if (recentIncomingIsMostRecent) {
+        if (recentIncomingIsMostRecent && mostRecentIncomingRecord.getActive()) {
             return mostRecentIncomingRecord;
         }
         return null;
@@ -142,12 +144,14 @@ public class AssetHistoryUpdateHandler {
         asset.setConstructionPlace(mostRecentRecord.getPortOfRegistration());
         asset.setHullMaterial(mostRecentRecord.getHullMaterial());
         Optional.ofNullable(mostRecentRecord.getConstructionDate())
-                .ifPresent(date -> asset.setConstructionYear(Integer.toString(
-                    LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC).getYear() + 1900)));
+                .ifPresent(date -> {
+                    int year = ZonedDateTime.ofInstant(date.toInstant(), ZoneOffset.systemDefault()).getYear();
+                    asset.setConstructionYear(Integer.toString(year));
+                });
         Optional.ofNullable(mostRecentRecord.getCommissionDate()).ifPresent(date -> {
-            LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
-            asset.setCommissionDay(StringUtils.leftPad(Integer.toString(dateTime.getDayOfMonth()),2));
-            asset.setCommissionMonth(StringUtils.leftPad(Integer.toString(dateTime.getMonthValue()), 2));
+            ZonedDateTime dateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneOffset.systemDefault());
+            asset.setCommissionDay(StringUtils.leftPad(Integer.toString(dateTime.getDayOfMonth()),2, '0'));
+            asset.setCommissionMonth(StringUtils.leftPad(Integer.toString(dateTime.getMonthValue()), 2,'0'));
             asset.setCommissionYear(Integer.toString(dateTime.getYear()));
         });
         return asset;

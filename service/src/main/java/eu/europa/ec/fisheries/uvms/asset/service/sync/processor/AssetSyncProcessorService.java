@@ -124,7 +124,7 @@ public class AssetSyncProcessorService {
     private <T> List<T>[] partition(List<T> list, int batchSize) {
         int listSize = list.size();
         int batchCount = listSize / batchSize;
-        if (listSize % batchCount != 0) {
+        if (batchCount == 0 || listSize % batchCount != 0) {
             batchCount++;
         }
         List<T>[] partition = new ArrayList[batchCount];
