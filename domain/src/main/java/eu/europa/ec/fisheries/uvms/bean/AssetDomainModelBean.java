@@ -204,8 +204,6 @@ public class AssetDomainModelBean {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        this.updateFishingGearCriteria(query.getAssetSearchCriteria().getCriterias());
-
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
         String sql;
         if (query.getOrderByCriteria() != null && query.getOrderByCriteria().getOrderByParam() != null) {
@@ -237,18 +235,6 @@ public class AssetDomainModelBean {
 
         return response;
 
-    }
-
-    private List<AssetListCriteriaPair> updateFishingGearCriteria(List<AssetListCriteriaPair> criteria) {
-        Optional<AssetListCriteriaPair> gearCriterion = criteria.stream()
-                            .filter(c->ConfigSearchField.GEAR_TYPE == c.getKey())
-                            .findAny();
-        if (gearCriterion.isPresent()) {
-            AssetListCriteriaPair pair = gearCriterion.get();
-            FishingGear gear = fishingGearDao.getFishingGearByCode(pair.getValue());
-            pair.setValue(String.valueOf(gear.getId()));
-        }
-        return criteria;
     }
 
     public List<AssetHistory> getAssetListSearchPaginated(String guid, Date occurrenceDate, int page, int listSize) throws AssetException{
