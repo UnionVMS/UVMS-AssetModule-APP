@@ -68,10 +68,11 @@ public class AssetHistoryUpdateHandler {
                     //sendAssetHistoryUpdateToReporting(mapFromAssetHistoryEntity(record, asset.getGuid()));
                 }
                 AssetHistory mostRecentRecord = getMostRecentHistoryRecordToUpdateAsset(asset, newRecords);
-                for(AssetHistory record : newRecords) {
-                    record.setActive(false);
-                }
                 if (mostRecentRecord != null) {
+                    List<AssetHistory> existingAndIncomingRecords = asset.getHistories();
+                    for(AssetHistory record : existingAndIncomingRecords) {
+                        record.setActive(false);
+                    }
                     mostRecentRecord.setActive(true);
                     updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
                 }
