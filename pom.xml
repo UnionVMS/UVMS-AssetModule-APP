@@ -15,6 +15,7 @@
     </parent>
 
     <properties>
+        <sonar.projectKey>Asset</sonar.projectKey>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
         <docker.dev.version>4.0.3</docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
