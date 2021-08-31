@@ -619,11 +619,11 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getAssetListFromIDsTest(){
         List<String> assetIdList = new ArrayList<>();
-        for (int i = 1; i < 10 ; i++){
+        for (int i = 0; i < 10 ; i++){
             assetIdList.add(createAsset());
         }
         String output = assetClient.getAssetList(assetIdList);
-
+System.out.println("output: " + output);
         assertEquals(10, output.split("assetName").length);
     }
 
