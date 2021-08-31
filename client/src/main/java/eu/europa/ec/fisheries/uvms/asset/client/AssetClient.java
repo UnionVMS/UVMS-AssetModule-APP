@@ -343,7 +343,7 @@ public class AssetClient {
     
     public String getAssetList(List<String> assetIdList){
         Response response = webTarget
-                .path("microAssets")
+                .path("assetListFromListOfIDs")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
