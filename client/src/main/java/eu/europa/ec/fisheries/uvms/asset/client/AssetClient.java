@@ -340,6 +340,18 @@ public class AssetClient {
         checkForErrorResponse(response);
         return response.readEntity(String.class);
     }
+    
+    public String getAssetList(List<String> assetIdList){
+        Response response = webTarget
+                .path("microAssets")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .post(Entity.json(assetIdList), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(String.class);
+    }
 
     public List<SanePollDto> getPollsForAssetInTheLastDay(UUID assetId){
         Response response = webTarget

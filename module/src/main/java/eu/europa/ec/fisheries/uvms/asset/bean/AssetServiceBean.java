@@ -754,6 +754,14 @@ public class AssetServiceBean {
         }
         return assetDao.getMicroAssetListByAssetGuids(assetUuidList);
     }
+    
+    public List<Asset> getAssetListFromIdList(List<String> assetIdList) {
+        List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
+        for (String s : assetIdList) {
+            assetUuidList.add(UUID.fromString(s));
+        }
+        return assetDao.getAssetListByAssetGuids(assetUuidList);
+    }
 
     public Note getNoteById(UUID id) {
         nullValidation(id, "Cant search for noteId: " + id);
