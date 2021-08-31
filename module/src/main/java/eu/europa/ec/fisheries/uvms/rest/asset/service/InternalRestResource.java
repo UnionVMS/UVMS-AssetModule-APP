@@ -477,7 +477,7 @@ public class InternalRestResource {
     }
     
     @POST
-    @Path("AssetListFromListOfIDs")
+    @Path("assetListFromListOfIDs")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetListFromListOfIDs(List<String> assetIdList) {
         try {
