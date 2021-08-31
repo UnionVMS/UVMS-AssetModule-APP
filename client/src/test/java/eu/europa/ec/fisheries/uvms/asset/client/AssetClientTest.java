@@ -623,8 +623,7 @@ public class AssetClientTest extends AbstractClientTest {
             assetIdList.add(createAsset());
         }
         String output = assetClient.getAssetList(assetIdList);
-System.out.println("output: " + output);
-        assertEquals(10, output.split("assetName").length);
+        assertEquals(10, output.split("externalMarking").length);
     }
 
     @Test
