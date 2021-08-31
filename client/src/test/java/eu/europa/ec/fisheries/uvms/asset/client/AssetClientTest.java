@@ -614,6 +614,27 @@ public class AssetClientTest extends AbstractClientTest {
         List<eu.europa.ec.fisheries.uvms.asset.client.model.mt.VmsBillingDto> vmsBillingList = assetClient.getVmsBillingList();
         assertNotNull(vmsBillingList);
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFromIDsTest(){
+        List<String> assetIdList = new ArrayList<>();
+        for (int i = 1; i < 10 ; i++){
+            assetIdList.add(createAsset());
+        }
+        String output = assetClient.getAssetList(assetIdList);
+
+        assertEquals(10, output.split("assetName").length);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFromIDsWithEmptyInputListTest(){
+        List<String> assetIdList = new ArrayList<>();
+        String output = assetClient.getAssetList(assetIdList);
+
+        assertEquals("[]", output);
+    }
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();
