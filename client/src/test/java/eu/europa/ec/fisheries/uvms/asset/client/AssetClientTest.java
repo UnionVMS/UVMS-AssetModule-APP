@@ -619,7 +619,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getAssetListFromIDsTest(){
         List<String> assetIdList = new ArrayList<>();
-        for (int i = 0; i < 10 ; i++){
+        for (int i = 0; i < 9 ; i++){
             assetIdList.add(createAsset());
         }
         String output = assetClient.getAssetList(assetIdList);
