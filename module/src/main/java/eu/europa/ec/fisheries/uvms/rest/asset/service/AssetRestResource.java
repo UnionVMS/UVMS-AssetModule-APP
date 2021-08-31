@@ -27,6 +27,8 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -500,4 +502,18 @@ public class AssetRestResource {
             throw e;
         }
     }
+    
+    @POST
+    @Path("assetListFromListOfIDs")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getAssetListFromListOfIDs(List<String> assetIdList) throws Exception{
+        try {
+        List<Asset> assetList = assetService.getAssetListFromIdList(assetIdList);
+        return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("getAssetListFromListOfIDs", e);
+            throw e;
+        }
+    }
+    
 }
