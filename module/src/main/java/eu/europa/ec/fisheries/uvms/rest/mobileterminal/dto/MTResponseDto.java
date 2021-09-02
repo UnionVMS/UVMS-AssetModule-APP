@@ -67,10 +67,7 @@ public class MTResponseDto<T> {
         if (!Objects.equals(this.data, other.data)) {
             return false;
         }
-        if (!Objects.equals(this.code, other.code)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.code, other.code);
     }
 
     @Override
