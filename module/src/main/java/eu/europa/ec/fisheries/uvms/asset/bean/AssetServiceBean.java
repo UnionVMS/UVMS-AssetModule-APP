@@ -129,6 +129,14 @@ public class AssetServiceBean {
         }
         return assetDao.getAssetCount(queryTree, includeInactivated);
     }
+    
+    public List<Asset> getAssetList(List<String> assetIdList) {
+        List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
+        for (String s : assetIdList) {
+            assetUuidList.add(UUID.fromString(s));
+        }
+        return assetDao.getAssetListByAssetGuids(assetUuidList);
+    }
 
     public Asset updateAsset(Asset asset, String username, String comment) {
         Asset updatedAsset = updateAssetInternal(asset, username, comment);
@@ -753,14 +761,6 @@ public class AssetServiceBean {
             assetUuidList.add(UUID.fromString(s));
         }
         return assetDao.getMicroAssetListByAssetGuids(assetUuidList);
-    }
-    
-    public List<Asset> getAssetListFromIdList(List<String> assetIdList) {
-        List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
-        for (String s : assetIdList) {
-            assetUuidList.add(UUID.fromString(s));
-        }
-        return assetDao.getAssetListByAssetGuids(assetUuidList);
     }
 
     public Note getNoteById(UUID id) {

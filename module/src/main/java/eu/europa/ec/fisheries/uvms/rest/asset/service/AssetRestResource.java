@@ -96,6 +96,19 @@ public class AssetRestResource {
             throw e;
         }
     }
+    
+    @POST
+    @Path("assetList")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getAssetList(List<String> assetIdList) throws Exception{
+        try {
+        List<Asset> assetList = assetService.getAssetList(assetIdList);
+        return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("getAssetListFromListOfIDs", e);
+            throw e;
+        }
+    }
 
     @GET
     @Path("vesselTypes")
@@ -499,19 +512,6 @@ public class AssetRestResource {
             return Response.ok(licence).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting fishing licence for asset {}.", assetId, e);
-            throw e;
-        }
-    }
-    
-    @POST
-    @Path("assetListFromListOfIDs")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetListFromListOfIDs(List<String> assetIdList) throws Exception{
-        try {
-        List<Asset> assetList = assetService.getAssetListFromIdList(assetIdList);
-        return Response.ok(assetList).build();
-        } catch (Exception e) {
-            LOG.error("getAssetListFromListOfIDs", e);
             throw e;
         }
     }

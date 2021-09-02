@@ -127,6 +127,19 @@ public class InternalRestResource {
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
+    
+    @POST
+    @Path("assetList")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getAssetList(List<String> assetIdList) {
+        try {
+        List<Asset> assetList = assetService.getAssetList(assetIdList);
+        return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("getAssetListFromListOfIDs", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
 
     @POST
     @Path("queryIdOnly")
@@ -476,16 +489,4 @@ public class InternalRestResource {
         }
     }
     
-    @POST
-    @Path("assetListFromListOfIDs")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetListFromListOfIDs(List<String> assetIdList) {
-        try {
-        List<Asset> assetList = assetService.getAssetListFromIdList(assetIdList);
-        return Response.ok(assetList).build();
-        } catch (Exception e) {
-            LOG.error("getAssetListFromListOfIDs", e);
-            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
-        }
-    }
 }
