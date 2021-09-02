@@ -25,7 +25,7 @@ import java.util.List;
 
 public class PollTimerTask implements Runnable{
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollTimerTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PollTimerTask.class);
     private PollServiceBean pollService;
 
     public PollTimerTask(PollServiceBean pollService){
