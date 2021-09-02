@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 public class AssetClient {
 
     private WebTarget webTarget;
+    private static final String QUERY = "query";
 
     @Resource(name = "java:global/asset_endpoint")
     private String assetEndpoint;
@@ -82,7 +83,7 @@ public class AssetClient {
     
     public List<AssetDTO> getAssetList(SearchBranch query) {
         Response response = webTarget
-                .path("query")
+                .path(QUERY)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(query), Response.class);
@@ -94,7 +95,7 @@ public class AssetClient {
 
     public List<AssetDTO> getAssetList(String query, int page, int size, boolean includeInactivated) {
         Response response = webTarget
-                .path("query")
+                .path(QUERY)
                 .queryParam("page", page)
                 .queryParam("size", size)
                 .queryParam("includeInactivated", includeInactivated)
@@ -123,7 +124,7 @@ public class AssetClient {
     
     public List<AssetDTO> getAssetList(SearchBranch query, int page, int size) {
         Response response = webTarget
-                    .path("query")
+                    .path(QUERY)
                     .queryParam("page", page)
                     .queryParam("size", size)
                     .request(MediaType.APPLICATION_JSON)
