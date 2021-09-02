@@ -48,7 +48,7 @@ import java.util.UUID;
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class PollRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
 
     @Inject
     private PollServiceBean pollServiceBean;
