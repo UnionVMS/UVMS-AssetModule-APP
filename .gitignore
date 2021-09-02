@@ -1,7 +1,0 @@
-target
-logging.properties
-*.iml
-.idea/
-/module/src/main/webapp/apidocs
-
-model/pom.xml.rej

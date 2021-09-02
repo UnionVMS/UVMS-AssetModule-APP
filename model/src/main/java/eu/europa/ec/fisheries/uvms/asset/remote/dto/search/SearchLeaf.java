@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
 import javax.json.bind.annotation.JsonbTransient;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+
 public class SearchLeaf implements AssetSearchInterface {
 
 	private SearchFields searchField;
