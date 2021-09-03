@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 @Stateless
 public class AssetFilterServiceBean{
 
-    private static final String USERNAMECONSTANT = "requestId";
+    private static final String USERNAMECONSTANT = "Username must be provided for selected operation";
 
     @Inject
     private AssetFilterDao assetFilterDao;
