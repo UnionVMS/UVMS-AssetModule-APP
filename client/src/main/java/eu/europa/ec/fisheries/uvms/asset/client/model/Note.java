@@ -21,7 +21,7 @@ public class Note {
 
     private Instant createdOn;
 
-    private String note;
+    private String notation;
 
     private String createdBy;
 
@@ -50,11 +50,11 @@ public class Note {
     }
 
     public String getNote() {
-        return note;
+        return notation;
     }
 
     public void setNote(String note) {
-        this.note = note;
+        this.notation = note;
     }
 
     public String getCreatedBy() {
