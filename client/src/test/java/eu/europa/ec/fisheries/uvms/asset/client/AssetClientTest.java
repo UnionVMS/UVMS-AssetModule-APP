@@ -33,6 +33,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 public class AssetClientTest extends AbstractClientTest {
@@ -442,7 +443,7 @@ public class AssetClientTest extends AbstractClientTest {
         assertNotNull(response.getAssetHistoryId());
         assertNotNull(response.getAssetUUID());
         assertTrue(response.getAssetName().contains("Unknown"));
-        assertTrue(response.getFlagstate().equals("UNK"));
+        assertEquals("UNK", response.getFlagstate());
         assertEquals("123456789", response.getMmsi());
     }
 
