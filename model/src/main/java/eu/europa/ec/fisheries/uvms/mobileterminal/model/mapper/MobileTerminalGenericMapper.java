@@ -21,6 +21,10 @@ import java.util.List;
 
 public class MobileTerminalGenericMapper {
 
+    private MobileTerminalGenericMapper() {
+        // private constructor because class is a utility class
+    }
+
     public static String getComChannelTypeValue(ComChannelType comchannel, String type) {
         for (ComChannelAttribute comChannelAttr : comchannel.getAttributes()) {
             if (comChannelAttr.getType().equalsIgnoreCase(type)) {
