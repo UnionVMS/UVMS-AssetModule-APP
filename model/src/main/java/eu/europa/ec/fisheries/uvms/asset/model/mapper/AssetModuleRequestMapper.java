@@ -32,7 +32,7 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    private static AssetId createAssetId(String value, AssetIdType type) throws AssetException {
+    private static AssetId createAssetId(String value, AssetIdType type) {
     	if(value == null) {
     		throw new NullPointerException("Id value is null");
     	}
