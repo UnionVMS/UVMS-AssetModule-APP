@@ -16,8 +16,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 @Stateless
 public class AssetFilterServiceBean{
 
-    private static final String USERNAMECONSTANT = "requestId";
-
     @Inject
     private AssetFilterDao assetFilterDao;
     
@@ -47,7 +45,7 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("Cannot create asset filter because the assetFilter is null.");
         }
         if (username == null || username.trim().isEmpty()) {
-            throw new NullPointerException(USERNAMECONSTANT);
+            throw new NullPointerException("Username must be provided for selected operation");
         }
         assetFilter.setOwner(username);
         assetFilter.setUpdatedBy(username);
@@ -60,7 +58,7 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("Cannot update assetfilter because group or ID is null.");
         }
         if (username == null || username.trim().isEmpty()) {
-            throw new NullPointerException(USERNAMECONSTANT);
+            throw new NullPointerException("Username must be provided for selected operation");
         }
 
         AssetFilter fetchedassetFilter = assetFilterDao.getAssetFilterByGuid(assetFilter.getId());
@@ -77,7 +75,7 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("Cannot delete asset filter because the group ID is null.");
         }
         if (username == null || username.trim().isEmpty()) {
-            throw new NullPointerException(USERNAMECONSTANT);
+            throw new NullPointerException("Username must be provided for selected operation");
         }
         AssetFilter filterEntity = assetFilterDao.getAssetFilterByGuid(guid);
         if (filterEntity == null) {
@@ -134,7 +132,7 @@ public class AssetFilterServiceBean{
 	    	 throw new NullPointerException("Cannot update assetFilterValue because assetFilterValue is invalid.");
 	     }
 	     if (username == null || username.trim().isEmpty()) {
-	    	 throw new NullPointerException(USERNAMECONSTANT);
+	    	 throw new NullPointerException("Username must be provided for selected operation");
 	     }
 	     AssetFilterValue fetchedValue = assetFilterDao.get(assetFilterValue.getId());
 	     if (fetchedValue == null) {
@@ -155,7 +153,7 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("AssetFilterValueId fail because ID is null.");
         }
         if (username == null || username.trim().isEmpty()) {
-            throw new NullPointerException(USERNAMECONSTANT);
+            throw new NullPointerException("Username must be provided for selected operation");
         }
 
         AssetFilterValue assetFilterValue = assetFilterDao.get(id);
