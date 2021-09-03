@@ -39,7 +39,9 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Inject
     AssetClient assetClient;
-    
+
+    private final static String TEST_CONSTANT = "Test_Constant";
+
     @Before
     public void before() throws NamingException{
         InitialContext ctx = new InitialContext();
@@ -324,7 +326,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getCodesForConstantsTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
 
         for (int i = 0; i < 5; i++) {
             CustomCode customCode = AssetHelper.createCustomCode(constant);
@@ -339,7 +341,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void isCodeValidTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
         assertNotNull(createdCustomCode);
@@ -356,7 +358,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void isCodeValidNegativeTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
         assertNotNull(createdCustomCode);
@@ -373,7 +375,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getCodeForDateTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
         assertNotNull(createdCustomCode);
@@ -392,7 +394,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void getCodeForDateNegativeTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
         assertNotNull(createdCustomCode);
@@ -411,7 +413,7 @@ public class AssetClientTest extends AbstractClientTest {
     @OperateOnDeployment("normal")
     public void customCodesReplaceTest() {
 
-        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        String constant = TEST_CONSTANT + UUID.randomUUID();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         assetClient.replace(customCode);
         customCode.setDescription("replaced");

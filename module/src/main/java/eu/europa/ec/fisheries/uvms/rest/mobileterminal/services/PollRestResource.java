@@ -48,7 +48,9 @@ import java.util.UUID;
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class PollRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
+    private static final String REQUESTID = "requestId";
+
+    private static final Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
 
     @Inject
     private PollServiceBean pollServiceBean;
@@ -77,7 +79,7 @@ public class PollRestResource {
         try {
             createPoll.setUserName(request.getRemoteUser());
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
-            return Response.ok(createPollResultDto).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(createPollResultDto).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
             throw ex;
@@ -93,7 +95,7 @@ public class PollRestResource {
             String username = request.getRemoteUser();
             CreatePollResultDto createdPoll = pollServiceBean.createPollForAsset(asset, pollDto, username);
             return Response.ok(createdPoll)
-                    .header("MDC", MDC.get("requestId")).build();
+                    .header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
             throw ex;
@@ -107,7 +109,7 @@ public class PollRestResource {
         LOG.info("Get running program polls invoked in rest layer");
         try {
             List<PollDto> polls = pollServiceBean.getRunningProgramPolls();
-            return Response.ok(polls).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(polls).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting running program polls ] {}", (Object) ex.getStackTrace());
             throw ex;
@@ -123,7 +125,7 @@ public class PollRestResource {
             ProgramPoll program = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
             PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
-            return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(poll).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
             throw ex;
@@ -139,7 +141,7 @@ public class PollRestResource {
             ProgramPoll program = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
             PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
-            return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(poll).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
             throw ex;
@@ -156,7 +158,7 @@ public class PollRestResource {
             ProgramPoll program = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
             PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
-            return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(poll).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());
             throw ex;
@@ -170,7 +172,7 @@ public class PollRestResource {
         LOG.info("Get poll by search criteria invoked in rest layer:{}",query);
         try {
         	PollChannelListDto pollChannelList = pollServiceBean.getPollBySearchCriteria(query);
-            return Response.ok(pollChannelList).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(pollChannelList).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}",query, ex.getStackTrace());
             throw ex;
@@ -184,7 +186,7 @@ public class PollRestResource {
         LOG.info("Get pollables invoked in rest layer:{}",query);
         try {
             PollChannelListDto pollChannelList = mobileTerminalServiceBean.getPollableMobileTerminal(query);
-            return Response.ok(pollChannelList).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(pollChannelList).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());
             throw ex;
@@ -198,7 +200,7 @@ public class PollRestResource {
         try {
             ProgramPoll pollProgram = pollProgramDao.getProgramPollByGuid(pollProgramId);
             String returnString = jsonb.toJson(pollProgram);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception ex) {
             LOG.error("getPollProgram", ex.getStackTrace());
             throw ex;

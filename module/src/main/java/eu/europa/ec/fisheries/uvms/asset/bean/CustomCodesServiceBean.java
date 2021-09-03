@@ -23,6 +23,9 @@ import java.util.List;
 @Stateless
 public class CustomCodesServiceBean {
 
+    private static final String CONSTANTNOTNULL = "Constant cannot be null";
+    private static final String CONSTANTNOTEMPTY = "Constant cannot be empty";
+
     @EJB
     private CustomCodeDao dao;
 
@@ -122,20 +125,20 @@ public class CustomCodesServiceBean {
 
     public List<CustomCode> getAllFor(String constant) {
         if (constant == null) {
-            throw new IllegalArgumentException("Constant cannot be null");
+            throw new IllegalArgumentException(CONSTANTNOTNULL);
         }
         if (constant.trim().length() < 1) {
-            throw new IllegalArgumentException("Constant cannot be empty");
+            throw new IllegalArgumentException(CONSTANTNOTEMPTY);
         }
         return dao.getAllFor(constant.toUpperCase());
     }
 
     public void deleteAllFor(String constant) {
         if (constant == null) {
-            throw new IllegalArgumentException("Constant cannot be null");
+            throw new IllegalArgumentException(CONSTANTNOTNULL);
         }
         if (constant.trim().length() < 1) {
-            throw new IllegalArgumentException("Constant cannot be empty");
+            throw new IllegalArgumentException(CONSTANTNOTEMPTY);
         }
         dao.deleteAllFor(constant.toUpperCase());
     }
@@ -179,10 +182,10 @@ public class CustomCodesServiceBean {
 
     private void validateParameters(String constant, String code, Instant aDate) {
         if (constant == null) {
-            throw new IllegalArgumentException("Constant cannot be null");
+            throw new IllegalArgumentException(CONSTANTNOTNULL);
         }
         if (constant.trim().length() < 1) {
-            throw new IllegalArgumentException("Constant cannot be empty");
+            throw new IllegalArgumentException(CONSTANTNOTEMPTY);
         }
         if (code == null) {
             throw new IllegalArgumentException("Code cannot be null");
