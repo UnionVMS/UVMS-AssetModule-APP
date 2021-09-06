@@ -111,7 +111,6 @@ public class CustomCodeDao {
         if (exists(primaryKey)) {
             delete(primaryKey);
         }
-        CustomCode createdCustomCode = em.merge(customCode);
-        return createdCustomCode;
+        return em.merge(customCode);
     }
 }
