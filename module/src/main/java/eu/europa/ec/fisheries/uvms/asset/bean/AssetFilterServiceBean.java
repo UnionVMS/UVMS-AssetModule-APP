@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -164,9 +163,7 @@ public class AssetFilterServiceBean{
         }
         return assetFilterDao.delete(assetFilterValue);
 	}
-	
-	
-	
+
 	public AssetFilter updateAllAssetFilter(AssetFilter assetFilter, String username) {
 	     if (assetFilter == null) {
 	    	 throw new NullPointerException("Cannot update assetFilterList because assetFilters is invalid.");
@@ -191,9 +188,10 @@ public class AssetFilterServiceBean{
     		 assetFilterQuery = assetFilterDao.create(assetFilterQuery);
     		 for(AssetFilterValue assetFilterValue : assetFilterQuery.getValues()) {
     			 assetFilterValue.setAssetFilterQuery(assetFilterQuery);
-    			 assetFilterValue = assetFilterDao.create(assetFilterValue);
+    			 assetFilterDao.create(assetFilterValue);
     		 }
-    	 };
+    	 }
+
     	 assetFilter.setOwner(username);
     	 assetFilter.setUpdatedBy(username);
     	 assetFilter.setUpdateTime(Instant.now());
