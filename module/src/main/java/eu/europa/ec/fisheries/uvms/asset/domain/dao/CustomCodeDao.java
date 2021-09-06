@@ -18,15 +18,18 @@ public class CustomCodeDao {
     @PersistenceContext
     private EntityManager em;
 
-    public CustomCode create(CustomCode record) {
-        em.persist(record);
-        return record;
+    private static final String PARAMETER_NAME_CONSTANT = "constant";
+    private static final String PARAMETER_NAME_CODE = "code";
+    private static final String PARAMETER_NAME_A_DATE = "aDate";
+
+    public CustomCode create(CustomCode daoRecord) {
+        em.persist(daoRecord);
+        return daoRecord;
     }
 
     public CustomCode get(CustomCodesPK primaryKey) {
         try {
-            CustomCode customCodes = em.find(CustomCode.class, primaryKey);
-            return customCodes;
+            return em.find(CustomCode.class, primaryKey);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -35,19 +38,17 @@ public class CustomCodeDao {
     public CustomCode update(CustomCodesPK primaryKey, String newDescription) {
 
         CustomCode customCode = get(primaryKey);
-        if (customCode != null) {
-            if (newDescription != null) {
-                customCode.setDescription(newDescription);
-            }
+        if (customCode != null && newDescription != null) {
+            customCode.setDescription(newDescription);
         }
         return customCode;
     }
 
     public void delete(CustomCodesPK primaryKey) {
 
-        CustomCode record = get(primaryKey);
-        if (record != null) {
-            em.remove(record);
+        CustomCode daoRecord = get(primaryKey);
+        if (daoRecord != null) {
+            em.remove(daoRecord);
         }
     }
 
@@ -63,7 +64,7 @@ public class CustomCodeDao {
 
     public List<CustomCode> getAllFor(String constant) {
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETALLFOR, CustomCode.class);
-        query.setParameter("constant", constant);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
         return query.getResultList();
     }
 
@@ -89,18 +90,18 @@ public class CustomCodeDao {
     public List<CustomCode> getForDate(String constant, String code, Instant aDate) {
 
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-        query.setParameter("constant", constant);
-        query.setParameter("code", code);
-        query.setParameter("aDate", aDate);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
+        query.setParameter(PARAMETER_NAME_CODE, code);
+        query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
         return customCodes;
     }
 
     public Boolean verify(String constant, String code, Instant aDate) {
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-        query.setParameter("constant", constant);
-        query.setParameter("code", code);
-        query.setParameter("aDate", aDate);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
+        query.setParameter(PARAMETER_NAME_CODE, code);
+        query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
         return customCodes.size() > 0;
     }
