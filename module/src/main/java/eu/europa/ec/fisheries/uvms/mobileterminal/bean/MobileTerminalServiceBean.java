@@ -34,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +135,7 @@ public class MobileTerminalServiceBean {
                     }
                 });
         // if mobilterminal is changed to "Active = false"
-        if(mobileTerminal.getActive() == false && oldTerminal.getActive() == true) {
+        if(!mobileTerminal.getActive() && oldTerminal.getActive()) {
             channels.stream()
             .forEach( channel -> {
                 if (channel.getEndDate() == null) {
@@ -145,7 +144,7 @@ public class MobileTerminalServiceBean {
             });
         }
         // if mobilterminal is changed to "Active = true"
-        if(mobileTerminal.getActive() == true && oldTerminal.getActive() == false) {
+        if(mobileTerminal.getActive() && !oldTerminal.getActive()) {
             channels.stream()
             .forEach( channel -> {
                 if (channel.getStartDate() == null) {
