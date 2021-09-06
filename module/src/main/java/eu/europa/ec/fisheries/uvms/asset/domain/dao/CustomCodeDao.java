@@ -18,6 +18,10 @@ public class CustomCodeDao {
     @PersistenceContext
     private EntityManager em;
 
+    private static final String PARAMETER_NAME_CONSTANT = "constant";
+    private static final String PARAMETER_NAME_CODE = "code";
+    private static final String PARAMETER_NAME_A_DATE = "aDate";
+
     public CustomCode create(CustomCode record) {
         em.persist(record);
         return record;
@@ -62,7 +66,7 @@ public class CustomCodeDao {
 
     public List<CustomCode> getAllFor(String constant) {
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETALLFOR, CustomCode.class);
-        query.setParameter("constant", constant);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
         return query.getResultList();
     }
 
@@ -88,18 +92,18 @@ public class CustomCodeDao {
     public List<CustomCode> getForDate(String constant, String code, Instant aDate) {
 
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-        query.setParameter("constant", constant);
-        query.setParameter("code", code);
-        query.setParameter("aDate", aDate);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
+        query.setParameter(PARAMETER_NAME_CODE, code);
+        query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
         return customCodes;
     }
 
     public Boolean verify(String constant, String code, Instant aDate) {
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-        query.setParameter("constant", constant);
-        query.setParameter("code", code);
-        query.setParameter("aDate", aDate);
+        query.setParameter(PARAMETER_NAME_CONSTANT, constant);
+        query.setParameter(PARAMETER_NAME_CODE, code);
+        query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
         return customCodes.size() > 0;
     }
