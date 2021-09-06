@@ -14,8 +14,6 @@ package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,8 +23,6 @@ public class AssetModuleRequestMapper {
 
     private AssetModuleRequestMapper() { }
 
-    private final static Logger LOG = LoggerFactory.getLogger(AssetModuleRequestMapper.class);
-
     public static String createGetAssetModuleRequest(String value, AssetIdType type) throws AssetException {
         GetAssetModuleRequest request = new GetAssetModuleRequest();
         request.setMethod(AssetModuleMethod.GET_ASSET);
@@ -34,7 +30,7 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    private static AssetId createAssetId(String value, AssetIdType type) throws AssetException {
+    private static AssetId createAssetId(String value, AssetIdType type) {
     	if(value == null) {
     		throw new NullPointerException("Id value is null");
     	}
