@@ -31,7 +31,9 @@ import static eu.europa.ec.fisheries.uvms.mobileterminal.exception.ErrorCode.UNM
 
 public class MobileTerminalDataSourceResponseMapper {
 
-    private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
+    private MobileTerminalDataSourceResponseMapper() {}
+    
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
 
     private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
@@ -61,7 +63,7 @@ public class MobileTerminalDataSourceResponseMapper {
             MobileTerminalResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalResponse.class);
             return unmarshalledResponse.getMobilTerminal();
         } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when mapping response to mobile terminal. ] " + e);
+            LOG.error("[ Error when mapping response to mobile terminal. ] {}", e);
             throw new AssetException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 
@@ -73,7 +75,7 @@ public class MobileTerminalDataSourceResponseMapper {
             MobileTerminalResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalResponse.class);
             return unmarshalledResponse.isDnidListUpdated();
         } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when mapping response to mobile terminal. DNIDList updated] " + e);
+            LOG.error("[ Error when mapping response to mobile terminal. DNIDList updated] {}", e);
             throw new AssetException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
