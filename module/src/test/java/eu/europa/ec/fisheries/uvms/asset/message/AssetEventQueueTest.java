@@ -12,9 +12,7 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,7 +154,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(assetById.getName() == null);
+        assertNull(assetById.getName());
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setMmsi(asset.getMmsiNo());
         newAsset.setName("namebyassetinfo");
@@ -165,8 +163,8 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         jmsHelper.assetInfo(assetList);
         Thread.sleep(2000);
         assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(assetById.getName() != null);
-        assertTrue(assetById.getName().equals("namebyassetinfo"));
+        assertNotNull(assetById.getName());
+        assertEquals("namebyassetinfo", assetById.getName());
 
     }
 
@@ -199,11 +197,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(assetWithsIRCS.getName()));
-        assertTrue(fetchedAsset.getMmsiNo() != null);
-        assertTrue(fetchedAsset.getIrcs() != null);
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), fetchedAsset.getName(), assetWithsIRCS.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
+        assertNotNull(fetchedAsset.getIrcs());
     }
 
     @Test
@@ -240,12 +238,12 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(nationalAsset.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(nationalAsset.getName()));
-        assertTrue(fetchedAsset.getMmsiNo() != null);
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), fetchedAsset.getName(), nationalAsset.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
         assertEquals(fetchedAsset.getMmsiNo(), correctMmsi);
-        assertTrue(fetchedAsset.getIrcs() != null);
+        assertNotNull(fetchedAsset.getIrcs());
         assertEquals(fetchedAsset.getIrcs(), correctIrcs);
     }
 
@@ -274,7 +272,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(mmsi, AssetIdType.MMSI);
-        assertTrue(fetchedAsset == null);
+        assertNull(fetchedAsset);
 
     }
 
@@ -300,11 +298,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(assetWithsIRCS.getName()));
-        assertTrue(fetchedAsset.getIrcs() != null);
-        assertTrue(fetchedAsset.getIrcs().equals(assetWithsIRCS.getIrcs()));
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), assetWithsIRCS.getName());
+        assertNotNull(fetchedAsset.getIrcs());
+        assertEquals(fetchedAsset.getIrcs(), assetWithsIRCS.getIrcs());
 
     }
 
@@ -332,7 +330,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(ircs, AssetIdType.IRCS);
-        assertTrue(fetchedAsset == null);
+        assertNull(fetchedAsset);
 
     }
 
@@ -358,10 +356,10 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() == null);
-        assertTrue(fetchedAsset.getMmsiNo() != null);
-        assertTrue(fetchedAsset.getMmsiNo().equals(assetWithsMMSI.getMmsiNo()));
+        assertNotNull(fetchedAsset);
+        assertNull(fetchedAsset.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
+        assertEquals(fetchedAsset.getMmsiNo(), assetWithsMMSI.getMmsiNo());
 
     }
 
@@ -387,11 +385,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(newAsset.getName()));
-        assertTrue(fetchedAsset.getMmsiNo() != null);
-        assertTrue(fetchedAsset.getMmsiNo().equals(assetWithsMMSI.getMmsiNo()));
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), newAsset.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
+        assertEquals(fetchedAsset.getMmsiNo(), assetWithsMMSI.getMmsiNo());
 
     }
 
@@ -417,10 +415,10 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() == null);
-        assertTrue(fetchedAsset.getIrcs() != null);
-        assertTrue(fetchedAsset.getIrcs().equals(assetWithsIRCS.getIrcs()));
+        assertNotNull(fetchedAsset);
+        assertNull(fetchedAsset.getName());
+        assertNotNull(fetchedAsset.getIrcs());
+        assertEquals(fetchedAsset.getIrcs(), assetWithsIRCS.getIrcs());
 
     }
 
@@ -446,11 +444,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(newAsset.getName()));
-        assertTrue(fetchedAsset.getIrcs() != null);
-        assertTrue(fetchedAsset.getIrcs().equals(assetWithsIRCS.getIrcs()));
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), newAsset.getName());
+        assertNotNull(fetchedAsset.getIrcs());
+        assertEquals(fetchedAsset.getIrcs(), assetWithsIRCS.getIrcs());
 
     }
 
@@ -467,7 +465,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById.getMmsiNo() == null);
+        assertNull(assetById.getMmsiNo());
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setMmsi(AssetTestsHelper.getRandomIntegers(9));
         newAsset.setIrcs(testIrcs);
@@ -476,8 +474,8 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         jmsHelper.assetInfo(assetList);
         Thread.sleep(2000);
         assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById.getMmsiNo() != null);
-        assertTrue(assetById.getMmsiNo().equals(newAsset.getMmsi()));
+        assertNotNull(assetById.getMmsiNo());
+        assertEquals(assetById.getMmsiNo(), newAsset.getMmsi());
     }
 
     @Test
@@ -506,8 +504,8 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         jmsHelper.assetInfo(Arrays.asList(newAsset));
         Thread.sleep(2000);
         Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
-        assertTrue(assetById.getMmsiNo() != null);
-        assertTrue(assetById.getMmsiNo().equals(newAsset.getMmsi()));
+        assertNotNull(assetById.getMmsiNo());
+        assertEquals(assetById.getMmsiNo(), newAsset.getMmsi());
         Asset assetByMmsi = jmsHelper.getAssetById(mmsi, AssetIdType.MMSI);
         assertEquals(assetByMmsi.getAssetId().getGuid(), assetById.getAssetId().getGuid());
     }
@@ -533,11 +531,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(asset.getName()));
-        assertTrue(fetchedAsset.getMmsiNo() != null);
-        assertTrue(fetchedAsset.getIrcs() == null);
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), fetchedAsset.getName(), asset.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
+        assertNull(fetchedAsset.getIrcs());
     }
 
 
@@ -567,18 +565,18 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Thread.sleep(2000);
 
         Asset fetchedAssetNotUpdated = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAssetNotUpdated != null);
-        assertTrue(fetchedAssetNotUpdated.getName() != null);
-        assertTrue(fetchedAssetNotUpdated.getName(), fetchedAssetNotUpdated.getName().equals(asset.getName()));
-        assertTrue(fetchedAssetNotUpdated.getMmsiNo() != null);
-        assertTrue(fetchedAssetNotUpdated.getIrcs() == null);
+        assertNotNull(fetchedAssetNotUpdated);
+        assertNotNull(fetchedAssetNotUpdated.getName());
+        assertEquals(fetchedAssetNotUpdated.getName(), fetchedAssetNotUpdated.getName(), asset.getName());
+        assertNotNull(fetchedAssetNotUpdated.getMmsiNo());
+        assertNull(fetchedAssetNotUpdated.getIrcs());
 
         Asset fetchedAssetUpdated = jmsHelper.getAssetById(asset2.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAssetUpdated != null);
-        assertTrue(fetchedAssetUpdated.getName() != null);
-        assertTrue(fetchedAssetUpdated.getName(), fetchedAssetUpdated.getName().equals(newAsset.getName()));
-        assertTrue(fetchedAssetUpdated.getMmsiNo() != null);
-        assertTrue(fetchedAssetUpdated.getIrcs() == null);
+        assertNotNull(fetchedAssetUpdated);
+        assertNotNull(fetchedAssetUpdated.getName());
+        assertEquals(fetchedAssetUpdated.getName(), fetchedAssetUpdated.getName(), newAsset.getName());
+        assertNotNull(fetchedAssetUpdated.getMmsiNo());
+        assertNull(fetchedAssetUpdated.getIrcs());
     }
 
     @Test
