@@ -33,7 +33,7 @@ public class MobileTerminalDataSourceResponseMapper {
 
     private MobileTerminalDataSourceResponseMapper() {}
     
-    private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
 
     private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
