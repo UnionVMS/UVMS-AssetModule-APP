@@ -93,8 +93,7 @@ public class CustomCodeDao {
         query.setParameter(PARAMETER_NAME_CONSTANT, constant);
         query.setParameter(PARAMETER_NAME_CODE, code);
         query.setParameter(PARAMETER_NAME_A_DATE, aDate);
-        List<CustomCode> customCodes = query.getResultList();
-        return customCodes;
+        return query.getResultList();
     }
 
     public Boolean verify(String constant, String code, Instant aDate) {
