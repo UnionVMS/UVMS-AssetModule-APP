@@ -93,8 +93,7 @@ public class CustomCodeDao {
         query.setParameter(PARAMETER_NAME_CONSTANT, constant);
         query.setParameter(PARAMETER_NAME_CODE, code);
         query.setParameter(PARAMETER_NAME_A_DATE, aDate);
-        List<CustomCode> customCodes = query.getResultList();
-        return customCodes;
+        return query.getResultList();
     }
 
     public Boolean verify(String constant, String code, Instant aDate) {
@@ -103,7 +102,7 @@ public class CustomCodeDao {
         query.setParameter(PARAMETER_NAME_CODE, code);
         query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
-        return customCodes.size() > 0;
+        return !customCodes.isEmpty();
     }
 
     // delets old and adds new
@@ -112,7 +111,6 @@ public class CustomCodeDao {
         if (exists(primaryKey)) {
             delete(primaryKey);
         }
-        CustomCode createdCustomCode = em.merge(customCode);
-        return createdCustomCode;
+        return em.merge(customCode);
     }
 }
