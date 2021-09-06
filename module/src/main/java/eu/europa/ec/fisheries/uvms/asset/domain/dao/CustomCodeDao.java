@@ -102,7 +102,7 @@ public class CustomCodeDao {
         query.setParameter(PARAMETER_NAME_CODE, code);
         query.setParameter(PARAMETER_NAME_A_DATE, aDate);
         List<CustomCode> customCodes = query.getResultList();
-        return customCodes.size() > 0;
+        return !customCodes.isEmpty();
     }
 
     // delets old and adds new
