@@ -1271,7 +1271,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Optional<ChannelChangeHistory> eightChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
                 .filter(list -> list.getChanges().size() == 9).findAny();
         assertTrue(eightChangesChannel.isPresent());
-        assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.CREATED));
+        assertEquals(ChangeType.CREATED, eightChangesChannel.get().getChangeType());
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() == null));
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() != null));
 
@@ -1331,7 +1331,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .filter(list -> list.getChanges().size() == 9).findAny();
         
         assertTrue(eightChangesChannel.isPresent());
-        assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
+        assertEquals(ChangeType.REMOVED, eightChangesChannel.get().getChangeType());
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
         assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
     }
