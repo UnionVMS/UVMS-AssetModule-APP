@@ -25,8 +25,7 @@ public class CustomCodeDao {
 
     public CustomCode get(CustomCodesPK primaryKey) {
         try {
-            CustomCode customCodes = em.find(CustomCode.class, primaryKey);
-            return customCodes;
+            return em.find(CustomCode.class, primaryKey);
         } catch (IllegalArgumentException e) {
             return null;
         }
