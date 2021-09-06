@@ -19,6 +19,8 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 
 public class MobileTerminalDataSourceRequestMapper {
 
+    private MobileTerminalDataSourceRequestMapper() {}
+
     public static String mapGetMobileTerminal(MobileTerminalId mobileTerminalId) throws AssetException {
         GetMobileTerminalRequest request = new GetMobileTerminalRequest();
         request.setMethod(MobileTerminalDataSourceMethod.GET);

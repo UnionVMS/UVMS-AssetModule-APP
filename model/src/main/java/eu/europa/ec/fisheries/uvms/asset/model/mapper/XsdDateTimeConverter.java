@@ -16,6 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class XsdDateTimeConverter {
+
+    private XsdDateTimeConverter() { }
+
     public static Date unmarshal(String dateTime) {
         return DatatypeConverter.parseDate(dateTime).getTime();
     }
