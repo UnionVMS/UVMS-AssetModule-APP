@@ -32,8 +32,8 @@ import static eu.europa.ec.fisheries.uvms.mobileterminal.exception.ErrorCode.UNM
 public class MobileTerminalDataSourceResponseMapper {
 
     private MobileTerminalDataSourceResponseMapper() {}
-
-    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
+    
+    private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
 
     private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
