@@ -63,7 +63,7 @@ public class MobileTerminalDataSourceResponseMapper {
             MobileTerminalResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalResponse.class);
             return unmarshalledResponse.getMobilTerminal();
         } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when mapping response to mobile terminal. ] " + e);
+            LOG.error("[ Error when mapping response to mobile terminal. ] {}", e);
             throw new AssetException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 
@@ -75,7 +75,7 @@ public class MobileTerminalDataSourceResponseMapper {
             MobileTerminalResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalResponse.class);
             return unmarshalledResponse.isDnidListUpdated();
         } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when mapping response to mobile terminal. DNIDList updated] " + e);
+            LOG.error("[ Error when mapping response to mobile terminal. DNIDList updated] {}", e);
             throw new AssetException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
