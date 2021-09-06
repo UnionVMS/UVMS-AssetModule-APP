@@ -74,12 +74,9 @@ public class ContactInfoDao {
 
     private void filterOlderRevisionsByAssetUpdatetime(List<ContactInfo> resultList, Instant updateDate, List<ContactInfo> revisionList) {
         for(ContactInfo ci : revisionList) {
-            if(ci.getAssetUpdateTime().equals(updateDate)) {
+            if(ci.getAssetUpdateTime().equals(updateDate) ||
+                    (ci.getAssetUpdateTime().isBefore(updateDate) && isUnique(ci.getId(), resultList))) {
                 resultList.add(ci);
-            } else if(ci.getAssetUpdateTime().isBefore(updateDate)) {
-                if(isUnique(ci.getId(), resultList)) {
-                    resultList.add(ci);
-                }
             }
         }
     }
