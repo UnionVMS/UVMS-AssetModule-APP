@@ -38,10 +38,8 @@ public class CustomCodeDao {
     public CustomCode update(CustomCodesPK primaryKey, String newDescription) {
 
         CustomCode customCode = get(primaryKey);
-        if (customCode != null) {
-            if (newDescription != null) {
-                customCode.setDescription(newDescription);
-            }
+        if (customCode != null && newDescription != null) {
+            customCode.setDescription(newDescription);
         }
         return customCode;
     }
