@@ -22,9 +22,9 @@ public class CustomCodeDao {
     private static final String PARAMETER_NAME_CODE = "code";
     private static final String PARAMETER_NAME_A_DATE = "aDate";
 
-    public CustomCode create(CustomCode record) {
-        em.persist(record);
-        return record;
+    public CustomCode create(CustomCode daoRecord) {
+        em.persist(daoRecord);
+        return daoRecord;
     }
 
     public CustomCode get(CustomCodesPK primaryKey) {
