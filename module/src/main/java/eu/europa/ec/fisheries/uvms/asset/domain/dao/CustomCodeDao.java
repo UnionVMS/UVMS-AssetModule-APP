@@ -46,9 +46,9 @@ public class CustomCodeDao {
 
     public void delete(CustomCodesPK primaryKey) {
 
-        CustomCode record = get(primaryKey);
-        if (record != null) {
-            em.remove(record);
+        CustomCode daoRecord = get(primaryKey);
+        if (daoRecord != null) {
+            em.remove(daoRecord);
         }
     }
 
