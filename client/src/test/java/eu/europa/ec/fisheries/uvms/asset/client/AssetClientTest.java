@@ -533,8 +533,8 @@ public class AssetClientTest extends AbstractClientTest {
         assertNotNull(response);
         assertNotNull(response.getAssetHistoryId());
         assertNotNull(response.getAssetUUID());
-        assertEquals(response.getAssetName(), response.getAssetName().equals(upsertAssetBo.getAsset().getName()));
-        assertEquals(response.getFlagstate(), upsertAssetBo.getAsset().getFlagStateCode());
+        assertTrue(response.getAssetName(), response.getAssetName().equals(upsertAssetBo.getAsset().getName()));
+        assertTrue(response.getFlagstate().equals(upsertAssetBo.getAsset().getFlagStateCode()));
         assertEquals(upsertAssetBo.getAsset().getMmsi(), response.getMmsi());
 
         assertTrue(response.getParked());
