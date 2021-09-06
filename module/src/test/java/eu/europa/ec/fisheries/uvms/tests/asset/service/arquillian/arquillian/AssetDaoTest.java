@@ -223,7 +223,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(asset1.getMmsi(), null);
         assertEquals(1, fetchedAsset.size());
-        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
+        assertEquals(fetchedAsset.get(0).getId(), asset1.getId());
     }
 
     @Test
@@ -236,7 +236,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(null, asset1.getIrcs().replace("-", ""));
         assertEquals(1, fetchedAsset.size());
-        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
+        assertEquals(fetchedAsset.get(0).getId(), asset1.getId());
     }
 
     @Test
@@ -252,7 +252,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(null, testIrcs);
         assertEquals(1, fetchedAsset.size());
-        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
+        assertEquals(fetchedAsset.get(0).getId(), asset1.getId());
     }
 
     @Test
@@ -265,7 +265,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(null, asset1.getIrcs());
         assertEquals(1, fetchedAsset.size());
-        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
+        assertEquals(fetchedAsset.get(0).getId(), asset1.getId());
     }
 
     @Test
