@@ -15,6 +15,8 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class MTErrorHandler {
+
+    private MTErrorHandler() {}
     
     public static MTResponseDto getFault(Exception ex) {
         return new MTResponseDto<>(ExceptionUtils.getRootCause(ex), MTResponseCode.UNDEFINED_ERROR);
