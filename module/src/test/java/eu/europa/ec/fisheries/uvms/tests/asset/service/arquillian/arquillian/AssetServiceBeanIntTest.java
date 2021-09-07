@@ -275,7 +275,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         UUID historyId3 = changedAsset3.getHistoryId();
 
         List<Asset> assetVersions = assetService.getRevisionsForAsset(asset.getId());
-        assertEquals(assetVersions.size(), 4);
+        assertEquals(4, assetVersions.size());
         commit();
 
         Asset fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(historyId2);
