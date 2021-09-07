@@ -108,7 +108,9 @@ public class CustomCodeDao {
     // delets old and adds new
     public CustomCode replace(CustomCode customCode) {
         CustomCodesPK primaryKey = customCode.getPrimaryKey();
-        if (exists(primaryKey)) {
+        Boolean primaryKeyExists = exists(primaryKey);
+
+        if (primaryKeyExists != null && primaryKeyExists) {
             delete(primaryKey);
         }
         return em.merge(customCode);
