@@ -25,6 +25,9 @@ import java.util.List;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class CustomCodesRestResource {
 
+    private static final String REQUESTID = "requestId";
+    private static final String ERRORGETTINGFIELDS = "Error when getting config search fields.";
+
     private static final Logger LOG = LoggerFactory.getLogger(CustomCodesRestResource.class);
 
     @Inject
@@ -34,9 +37,9 @@ public class CustomCodesRestResource {
     public Response createCustomCode(CustomCode customCode) {
         try {
             CustomCode createdCustomCode = customCodesSvc.create(customCode);
-            return Response.ok(createdCustomCode).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(createdCustomCode).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -46,7 +49,7 @@ public class CustomCodesRestResource {
     public Response replace(CustomCode customCode)  {
         try {
             CustomCode replacedCustomCode = customCodesSvc.replace(customCode);
-            return Response.ok(replacedCustomCode).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(replacedCustomCode).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             throw e;
         }
@@ -64,9 +67,9 @@ public class CustomCodesRestResource {
             Instant fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : DateUtils.stringToDate(validFromDate));
             Instant toDate = (validToDate == null ? CustomCodesPK.STANDARD_END_DATE : DateUtils.stringToDate(validToDate));
             CustomCode customCode = customCodesSvc.get(constant,code,fromDate,toDate);
-            return Response.ok(customCode).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCode).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
+            LOG.error("Error when fetching CustomCode. {} {}", validFromDate, validToDate);
             throw e;
         }
     }
@@ -89,9 +92,9 @@ public class CustomCodesRestResource {
             pk.setValidToDate(toDate);
             Boolean exists = customCodesSvc.exists(constant, code,fromDate,toDate);
 
-            return Response.status(200).entity(exists).header("MDC", MDC.get("requestId")).build();
+            return Response.status(200).entity(exists).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -107,9 +110,9 @@ public class CustomCodesRestResource {
             Instant aDate = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             List<CustomCode> customCodes = customCodesSvc.getForDate(constant, code,aDate);
 
-            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -125,9 +128,9 @@ public class CustomCodesRestResource {
             Instant aDate = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             Boolean exists = customCodesSvc.verify(constant, code, aDate);
 
-            return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(exists).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -137,9 +140,9 @@ public class CustomCodesRestResource {
     public Response getAllConstants(){
         try {
             List<String> constants = customCodesSvc.getAllConstants();
-            return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(constants).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -149,9 +152,9 @@ public class CustomCodesRestResource {
     public Response getCodesForConstant(@PathParam("constant") String constant){
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
-            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
@@ -168,9 +171,9 @@ public class CustomCodesRestResource {
             Instant fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : DateUtils.stringToDate(validFromDate));
             Instant toDate = (validToDate == null ? CustomCodesPK.STANDARD_END_DATE : DateUtils.stringToDate(validToDate));
             customCodesSvc.delete(constant, code,fromDate,toDate);
-            return Response.ok().header("MDC", MDC.get("requestId")).build();
+            return Response.ok().header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error(ERRORGETTINGFIELDS);
             throw e;
         }
     }
