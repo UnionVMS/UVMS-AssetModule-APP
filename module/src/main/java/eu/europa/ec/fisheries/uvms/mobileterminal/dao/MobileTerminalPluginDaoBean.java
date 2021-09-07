@@ -40,8 +40,7 @@ public class MobileTerminalPluginDaoBean  {
 		try {
             TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalPlugin.FIND_BY_SERVICE_NAME, MobileTerminalPlugin.class);
             query.setParameter("serviceName", serviceName);
-			MobileTerminalPlugin result = query.getSingleResult();
-			return result;
+			return query.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
         }
