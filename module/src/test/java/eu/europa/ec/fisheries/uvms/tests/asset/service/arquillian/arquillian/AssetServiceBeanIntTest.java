@@ -543,7 +543,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assertEquals(1, notes.size());
 
         Note toBeUpdated = notes.values().iterator().next();
-        toBeUpdated.setNote("Something completely different");
+        toBeUpdated.setNoteText("Something completely different");
         try {
             assetService.updateNote(toBeUpdated, "Someone else");
             fail();
