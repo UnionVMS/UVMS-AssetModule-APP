@@ -77,8 +77,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	        .request(MediaType.APPLICATION_JSON)
 	        .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 	        .delete();
-        
-        assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
+
+		assertEquals(deleteresp.getStatus(), Status.OK.getStatusCode());
     }
 
 	@Test
@@ -104,7 +104,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 				.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 				.delete();
 
-		assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
+		assertEquals(deleteresp.getStatus(), Status.OK.getStatusCode());
 	}
 
 	
@@ -122,7 +122,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	        .request(MediaType.APPLICATION_JSON)
 	        .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 	        .delete();
-        assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
+		assertEquals(deleteresp.getStatus(), Status.OK.getStatusCode());
     }
 	
 	@Test
@@ -153,8 +153,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .get(Response.class);
-    	
-    	assertTrue(response.getStatus() == Status.OK.getStatusCode() );
+
+		assertEquals(response.getStatus(), Status.OK.getStatusCode());
     }
     
     @Test
@@ -170,7 +170,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .get(Response.class);
         
         assertNotNull(response);
-        assertTrue(response.getStatus() == Status.OK.getStatusCode());
+		assertEquals(response.getStatus(), Status.OK.getStatusCode());
         assertTrue(response.getEntity().toString().length() > 1);
     }
     
@@ -241,7 +241,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 		
 		 assetFilter = jsonb.fromJson(assetFilterResp, AssetFilter.class);
 		 assertNotNull(assetFilter.getId());
-		 assertTrue(new ArrayList<AssetFilterQuery>(assetFilter.getQueries()).get(0).getValues().size() == 2);
+		assertEquals(2, new ArrayList<AssetFilterQuery>(assetFilter.getQueries()).get(0).getValues().size());
 		 assertTrue(assetFilterResp.contains(afId));
 		 assertEquals(assetFilterRespString.getName(), assetFilter.getName());
 		 assertEquals(assetFilterRespString.getOwner(), assetFilter.getOwner());
