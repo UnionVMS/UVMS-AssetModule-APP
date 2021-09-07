@@ -9,6 +9,10 @@ import java.time.Instant;
 
 public class AssetUtil {
 
+    private AssetUtil() {
+        // private constructor because utility class
+    }
+
     public static Asset createNewAssetFromRequest(AssetMTEnrichmentRequest request,int shipNumber){
         Asset asset = new Asset();
         asset.setName((request.getAssetName() == null) ? ("Unknown: " + shipNumber) : request.getAssetName());
