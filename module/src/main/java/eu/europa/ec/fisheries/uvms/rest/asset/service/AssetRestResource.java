@@ -51,6 +51,8 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class AssetRestResource {
 
+    private static final String REQUESTID = "requestId";
+
     private static final Logger LOG = LoggerFactory.getLogger(AssetRestResource.class);
 
     @Context
@@ -88,7 +90,7 @@ public class AssetRestResource {
         try {
             AssetListResponse assetList = assetService.getAssetList(query, page, size, includeInactivated);
             String returnString = jsonb.toJson(assetList);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
             throw e;
@@ -102,7 +104,7 @@ public class AssetRestResource {
         try {
             List<String> vesselTypes = assetDao.getAllAvailableVesselTypes();
             String returnString = jsonb.toJson(vesselTypes);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting vessel types list.", e);
             throw e;
@@ -124,7 +126,7 @@ public class AssetRestResource {
                                           SearchBranch query)  throws Exception  {
         try {
             Long assetListCount = assetService.getAssetListCount(query, includeInactivated);
-            return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(assetListCount).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);
             throw e;
@@ -147,7 +149,7 @@ public class AssetRestResource {
             Asset asset = assetService.getAssetById(id);
             String returnString = jsonb.toJson(asset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+                    .header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. {}",id,e);
             throw e;
@@ -178,7 +180,7 @@ public class AssetRestResource {
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
             String returnString = jsonb.toJson(createdAssetSE);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
-                    .header("MDC", MDC.get("requestId")).build();
+                    .header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset. {}", asset, e);
             throw e;
@@ -202,7 +204,7 @@ public class AssetRestResource {
             Asset updatedAsset = assetService.updateAsset(assetWithMT, remoteUser, asset.getComment());
             String returnString = jsonb.toJson(updatedAsset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
-                    .header("MDC", MDC.get("requestId")).build();
+                    .header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset: {}",asset, e);
             throw e;
@@ -221,7 +223,7 @@ public class AssetRestResource {
             Asset asset = assetService.getAssetById(assetId);
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             String returnString = jsonb.toJson(archivedAsset);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when archiving asset. {}",assetId, e);
             throw e;
@@ -240,7 +242,7 @@ public class AssetRestResource {
             String remoteUser = servletRequest.getRemoteUser();
             Asset unarchivedAsset = assetService.unarchiveAsset(assetId, remoteUser, comment);
             String returnString = jsonb.toJson(unarchivedAsset);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when unarchiving Asset with ID: {}", assetId, e);
             throw e;
@@ -261,7 +263,7 @@ public class AssetRestResource {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             String returnString = jsonb.toJson(assetRevisions);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
             throw e;
@@ -284,7 +286,7 @@ public class AssetRestResource {
             List<ChangeHistoryRow> changeHistory = HistoryMapper.assetChangeHistory(assetRevisions);
             String returnString = jsonb.toJson(changeHistory);
 
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
             throw e;
@@ -312,7 +314,7 @@ public class AssetRestResource {
             Instant instant = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, instant);
             String returnString = jsonb.toJson(assetRevision);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
             throw e;
@@ -333,7 +335,7 @@ public class AssetRestResource {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
             String returnString = jsonb.toJson(asset);
-            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
             throw e;
@@ -346,7 +348,7 @@ public class AssetRestResource {
     public Response getNotesForAsset(@PathParam("id") UUID assetId) {
         try {
             Map<UUID, Note> notes = assetService.getNotesForAsset(assetId);
-            return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(notes).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while getting notes for asset {}. {}] ", assetId, e);
             throw e;
@@ -360,7 +362,7 @@ public class AssetRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             Note createdNote = assetService.createNoteForAsset(note.getAssetId(), note, user);
-            return Response.ok(createdNote).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(createdNote).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while creating notes for asset.", e);
             throw e;
@@ -374,7 +376,7 @@ public class AssetRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             Note updatedNote = assetService.updateNote(note, user);
-            return Response.ok(updatedNote).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(updatedNote).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error updating note.", e);
             throw e;
@@ -387,7 +389,7 @@ public class AssetRestResource {
     public Response getNoteById(@PathParam("id") UUID id) throws Exception  {
         try {
         Note gottenNote = assetService.getNoteById(id);
-        return Response.ok(gottenNote).header("MDC", MDC.get("requestId")).build();
+        return Response.ok(gottenNote).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error getNoteById ", e);
             throw e;
@@ -400,7 +402,7 @@ public class AssetRestResource {
     public Response deleteNote(@PathParam("id") UUID id) throws Exception {
         try {
             assetService.deleteNote(id, servletRequest.getRemoteUser());
-            return Response.ok().header("MDC", MDC.get("requestId")).build();
+            return Response.ok().header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error deleting note.", e);
             throw e;
@@ -415,7 +417,7 @@ public class AssetRestResource {
         try {
             Instant instant = (updatedDate == null ? Instant.now() : DateUtils.stringToDate(updatedDate));
             List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, instant);
-            return Response.ok(resultList).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(resultList).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while getting contact info list for asset history", e);
             throw e;
@@ -427,7 +429,7 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getContact(@PathParam("contactId") UUID contactId) throws Exception {
         try{
-            return Response.ok(assetDao.getContactById(contactId)).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(assetDao.getContactById(contactId)).header("MDC", MDC.get(REQUESTID)).build();
         }catch (Exception e){
             LOG.error("Error while getting contact by id {}.  {}", contactId, e);
             throw e;
@@ -441,7 +443,7 @@ public class AssetRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             ContactInfo createdContactInfo = assetService.createContactInfoForAsset(contactInfo.getAssetId(), contactInfo, user);
-            return Response.ok(createdContactInfo).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(createdContactInfo).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while creating contact info for asset.", e);
             throw e;
@@ -455,7 +457,7 @@ public class AssetRestResource {
         try{
             String username = servletRequest.getRemoteUser();
             ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
-            return Response.ok(updatedContactInfo).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(updatedContactInfo).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while updating contact info.", e);
             throw e;
@@ -468,7 +470,7 @@ public class AssetRestResource {
     public Response deleteContactInfo(@PathParam("id") UUID id) throws Exception {
         try{
             assetService.deleteContactInfo(id);
-            return Response.ok().header("MDC", MDC.get("requestId")).build();
+            return Response.ok().header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while deleting contact info.", e);
             throw e;
@@ -481,7 +483,7 @@ public class AssetRestResource {
     public Response getMicroAssets(List<String> assetIdList)  throws Exception {
         try {
             List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-            return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(assetList).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting microAssets.", e);
             throw e;
@@ -494,7 +496,7 @@ public class AssetRestResource {
     public Response getFishingLicenceForAsset(@PathParam("id") UUID assetId) {
         try {
             FishingLicence licence = assetService.getFishingLicenceByAssetId(assetId);
-            return Response.ok(licence).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(licence).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
             LOG.error("Error while getting fishing licence for asset {}.", assetId, e);
             throw e;
