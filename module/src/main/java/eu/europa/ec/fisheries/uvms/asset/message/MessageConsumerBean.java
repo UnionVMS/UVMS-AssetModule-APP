@@ -59,20 +59,20 @@ public class MessageConsumerBean implements MessageListener {
         try {
             String propertyMethod = textMessage.getStringProperty("METHOD");
             if (propertyMethod != null && propertyMethod.equals("UPSERT_ASSET")) {
-                LOG.info("Message received in AssetModule with METHOD = " + propertyMethod);
+                LOG.info("[ Message received in AssetModule with METHOD = {} ]", propertyMethod);
                 assetJsonBean.upsertAsset(textMessage);
                 return;
             }
             String propertyFunction = textMessage.getStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY);
             if (propertyFunction != null && propertyFunction.equals("ASSET_INFORMATION")) {
-                LOG.info("Message received in AssetModule with FUNCTION = " + propertyFunction);
+                LOG.info("[ Message received in AssetModule with FUNCTION = {} ]", propertyFunction);
                 assetJsonBean.assetInformation(textMessage);
                 return;
             }
 
             AssetModuleRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetModuleRequest.class);
             AssetModuleMethod method = request.getMethod();
-            LOG.info("Message received in AssetModule with unmarshalled method = " + method);
+            LOG.info("[ Message received in AssetModule with unmarshalled method = {} ]", method);
 
             switch (method) {
                 case GET_ASSET:
