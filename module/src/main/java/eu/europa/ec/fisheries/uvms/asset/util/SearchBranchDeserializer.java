@@ -24,7 +24,10 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
     private static final Logger LOG = LoggerFactory.getLogger(SearchBranchDeserializer.class);
     private static final List<String> OPERATOR_WHITE_LIST = new ArrayList<>(Arrays.asList(">=", "<=", "!=", "="));
     private static final Map<String,SearchFields> MAP_OF_SEARCH_FIELDS = SearchFields.getMapOfEnums();
-    
+    private static final String JSON_KEY_SEARCH = "searchValue";
+    private static final String JSON_KEY_OPERATOR = "operator";
+    private static final String JSON_KEY_FIELDS = "fields";
+
     @Override
     public SearchBranch deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
 
@@ -36,10 +39,10 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
         try {
             SearchBranch trunk = new SearchBranch();
             trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
-            JsonArray fields = object.getJsonArray("fields");
+            JsonArray fields = object.getJsonArray(JSON_KEY_FIELDS);
             
             for (JsonValue jsonValue : fields) {
-                if (jsonValue.asJsonObject().containsKey("fields")) {
+                if (jsonValue.asJsonObject().containsKey(JSON_KEY_FIELDS)) {
                     trunk.getFields().add(recurse(jsonValue.asJsonObject()));
                 } else {
                 	
@@ -47,15 +50,15 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                 	SearchFields mappedValue = MAP_OF_SEARCH_FIELDS.get(jsonSerachFieldValue.toLowerCase());
                 	SearchFields key =  mappedValue != null ? mappedValue : SearchFields.valueOf(jsonSerachFieldValue);  	
                 	String value;
-                    if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
-                        value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
+                    if (jsonValue.asJsonObject().get(JSON_KEY_SEARCH).getValueType() == ValueType.STRING) {
+                        value = jsonValue.asJsonObject().getJsonString(JSON_KEY_SEARCH).getString();
                     } else {
-                    	value = jsonValue.asJsonObject().get("searchValue").toString();
+                    	value = jsonValue.asJsonObject().get(JSON_KEY_SEARCH).toString();
                     }
                     
                     String operator = null;
-                    if (jsonValue.asJsonObject().containsKey("operator")) {
-                    	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();
+                    if (jsonValue.asJsonObject().containsKey(JSON_KEY_OPERATOR)) {
+                    	String operatorFromJson = jsonValue.asJsonObject().getJsonString(JSON_KEY_OPERATOR).getString();
                         operator = OPERATOR_WHITE_LIST.contains(operatorFromJson) ? operatorFromJson : "=";
                     }
                     trunk.getFields().add(new SearchLeaf(key, value, operator));
