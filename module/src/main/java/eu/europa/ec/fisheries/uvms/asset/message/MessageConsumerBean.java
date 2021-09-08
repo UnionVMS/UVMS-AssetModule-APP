@@ -92,7 +92,7 @@ public class MessageConsumerBean implements MessageListener {
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
             }
         } catch (Exception e) {
-            LOG.error("[ Error when receiving message in AssetModule. ]", e);
+            LOG.error("[ Error when receiving message in AssetModule: {} ]", e);
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
         }
     }
