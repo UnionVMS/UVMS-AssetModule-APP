@@ -132,13 +132,13 @@ public class PollToCommandRequestMapper {
     private List<String> getOceanRegions(String mobileTerminalId) {
         MobileTerminal entity = terminalServiceBean.getMobileTerminalEntityById(UUID.fromString(mobileTerminalId));
         List<String> oceanRegions = new ArrayList<>();
-        if(entity.getWestAtlanticOceanRegion())
+        if(Boolean.TRUE.equals(entity.getWestAtlanticOceanRegion()))
             oceanRegions.add(String.valueOf(OceanRegionEnum.AOR_W.getCode()));
-        if(entity.getEastAtlanticOceanRegion())
+        if(Boolean.TRUE.equals(entity.getEastAtlanticOceanRegion()))
             oceanRegions.add(String.valueOf(OceanRegionEnum.AOR_E.getCode()));
-        if(entity.getPacificOceanRegion())
+        if(Boolean.TRUE.equals(entity.getPacificOceanRegion()))
             oceanRegions.add(String.valueOf(OceanRegionEnum.POR.getCode()));
-        if(entity.getIndianOceanRegion())
+        if(Boolean.TRUE.equals(entity.getIndianOceanRegion()))
             oceanRegions.add(String.valueOf(OceanRegionEnum.IOR.getCode()));
         return oceanRegions;
     }
