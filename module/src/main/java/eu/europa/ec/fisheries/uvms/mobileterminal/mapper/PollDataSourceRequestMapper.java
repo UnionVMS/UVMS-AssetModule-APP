@@ -13,11 +13,15 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
+
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 
 public class PollDataSourceRequestMapper {
+
+    private PollDataSourceRequestMapper () {
+        
+    }
 
     public static PollRequestType createPollFromProgram(ProgramPoll pollProgram) {
         PollRequestType poll = new PollRequestType();

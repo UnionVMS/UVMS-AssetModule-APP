@@ -13,6 +13,8 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal;
 
 public class MTRestConstants {
 
+    private MTRestConstants () {}
+
     public static final String REST_URL = "/rest";
     public static final String MODULE_NAME = "Mobileterminal";
 
