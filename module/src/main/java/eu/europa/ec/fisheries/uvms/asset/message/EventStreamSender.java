@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
@@ -22,7 +21,7 @@ import javax.json.bind.Jsonb;
 @Stateless
 public class EventStreamSender {
 
-    private final static Logger LOG = LoggerFactory.getLogger(EventStreamSender.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EventStreamSender.class);
 
     @Resource(mappedName = "java:/" + MessageConstants.EVENT_STREAM_TOPIC)
     private Destination destination;
