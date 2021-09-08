@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.json.bind.Jsonb;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +41,16 @@ public class AssetMessageJSONBean {
         jsonb =  new JsonBConfigurator().getContext(null);
     }
     
-    public void upsertAsset(TextMessage message) throws IOException, JMSException {
+    public void upsertAsset(TextMessage message) throws JMSException {
         AssetBO assetBo = jsonb.fromJson(message.getText(), AssetBO.class);
         assetService.upsertAssetBO(assetBo, assetBo.getAsset().getUpdatedBy() == null ? "UVMS (JMS)" : assetBo.getAsset().getUpdatedBy());
     }
 
-    public void assetInformation(TextMessage message) throws IOException, JMSException {
+    public void assetInformation(TextMessage message) throws JMSException {
         List<Asset> assetBos = jsonb.fromJson(message.getText(), new ArrayList<Asset>(){}.getClass().getGenericSuperclass());
         for(Asset oneAsset : assetBos){
             assetService.assetInformation(oneAsset, oneAsset.getUpdatedBy() == null ? "UVMS (JMS)" : oneAsset.getUpdatedBy());
         }
-        LOG.info("Processed update asset list of size: " + assetBos.size());
+        LOG.info("[ Processed update asset list of size: {} ]", assetBos.size());
     }
 }
