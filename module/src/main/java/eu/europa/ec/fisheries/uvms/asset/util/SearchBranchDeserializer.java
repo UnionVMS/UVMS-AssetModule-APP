@@ -22,7 +22,7 @@ import java.util.Map;
 public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchBranchDeserializer.class);
-    private static final List<String> OPERATOR_WHITE_LIST = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
+    private static final List<String> OPERATOR_WHITE_LIST = new ArrayList<>(Arrays.asList(">=", "<=", "!=", "="));
     private static final Map<String,SearchFields> MAP_OF_SEARCH_FIELDS = SearchFields.getMapOfEnums();
     
     @Override
