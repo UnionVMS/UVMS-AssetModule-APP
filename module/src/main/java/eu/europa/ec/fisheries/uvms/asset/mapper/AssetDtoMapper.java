@@ -8,6 +8,8 @@ import java.util.List;
 
 public class AssetDtoMapper {
 
+    private AssetDtoMapper() {}
+
     public static List<AssetDto> mapToAssetDtos(List<Asset> assets){
         List<AssetDto> dtos = new ArrayList<>(assets.size());
         for (Asset asset : assets) {

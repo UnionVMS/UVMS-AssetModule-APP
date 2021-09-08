@@ -67,7 +67,7 @@ public class Note implements Serializable {
     private Instant createdOn;
 
     @Column(name = "note")
-    private String note;
+    private String noteText;
 
     @Size(max = 60)
     @Column(name = "created_by")
@@ -99,12 +99,12 @@ public class Note implements Serializable {
         this.createdOn = createdOn;
     }
 
-    public String getNote() {
-        return note;
+    public String getNoteText() {
+        return noteText;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setNoteText(String note) {
+        this.noteText = note;
     }
 
 
@@ -122,7 +122,7 @@ public class Note implements Serializable {
                 "id=" + id +
                 ", assetId=" + assetId +
                 ", createdOn=" + createdOn +
-                ", note='" + note + '\'' +
+                ", note='" + noteText + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 '}';
     }

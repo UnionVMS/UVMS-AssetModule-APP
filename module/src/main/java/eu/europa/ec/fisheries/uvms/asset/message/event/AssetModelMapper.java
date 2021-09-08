@@ -181,7 +181,7 @@ public class AssetModelMapper {
             if (note.getCreatedOn() != null) {
                 assetNote.setDate(DateUtils.dateToEpochMilliseconds(note.getCreatedOn()));
             }
-            assetNote.setNotes(note.getNote());
+            assetNote.setNotes(note.getNoteText());
             assetModel.getNotes().add(assetNote);
         }
 
@@ -259,7 +259,7 @@ public class AssetModelMapper {
             if (assetNote.getDate() != null) {
                 note.setCreatedOn(DateUtils.stringToDate(assetNote.getDate()));
             }
-            note.setNote(assetNote.getNotes());
+            note.setNoteText(assetNote.getNotes());
             notes.add(note);
         }
         return notes;

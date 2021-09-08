@@ -122,7 +122,7 @@ public class AssetTestsHelper {
 
     public static Note createBasicNote() {
         Note note = new Note();
-        note.setNote("Notes: " + getRandomIntegers(10));
+        note.setNoteText("Notes: " + getRandomIntegers(10));
         note.setCreatedBy("Test");
         return note;
     }
