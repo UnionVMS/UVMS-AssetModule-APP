@@ -83,14 +83,9 @@ public class SearchFieldMapper {
         }
 
         SearchKeyValue searchKeyValue = getSearchKeyValue(getSearchFields(pair.getKey()), searchKeys);
-        String value = prepareSearchValue(searchKeyValue.getSearchField(), pair.getValue());
+        String value = pair.getValue();
         searchKeyValue.getSearchValues().add(value);
         return searchKeyValue;
-    }
-
-    private static String prepareSearchValue(SearchFields searchField, String searchValue) {
-    	String value = searchValue;
-        return value;
     }
 
     public static List<SearchKeyValue> createSearchFields(List<AssetListCriteriaPair> criterias) {
