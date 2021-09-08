@@ -52,6 +52,6 @@ public class AssetMessageJSONBean {
         for(Asset oneAsset : assetBos){
             assetService.assetInformation(oneAsset, oneAsset.getUpdatedBy() == null ? "UVMS (JMS)" : oneAsset.getUpdatedBy());
         }
-        LOG.info("Processed update asset list of size: " + assetBos.size());
+        LOG.info("[ Processed update asset list of size: {} ]", assetBos.size());
     }
 }
