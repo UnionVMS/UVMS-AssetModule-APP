@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class HistoryMapper {
 
+    private HistoryMapper() {}
 
     public static final String ASSET_UPDATER_FIELD = "updatedBy";
     public static final String ASSET_UPDATE_TIME_FIELD = "updateTime";
