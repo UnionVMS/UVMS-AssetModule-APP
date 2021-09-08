@@ -46,7 +46,7 @@ public class AuditServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was updated ",
-                    asset.getId().toString());
+                    asset.getId());
         }
     }
 
@@ -58,7 +58,7 @@ public class AuditServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
-                    asset.getId().toString());
+                    asset.getId());
         }
     }
 
@@ -70,7 +70,7 @@ public class AuditServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
-                    asset.getId().toString());
+                    asset.getId());
         }
     }
 }
