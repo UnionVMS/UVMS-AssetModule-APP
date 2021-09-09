@@ -34,7 +34,7 @@ public class PollTimerTask implements Runnable{
 
     @Override
     public void run() {
-        LOG.debug("PollProgram collected from DB at " + DateUtils.dateToEpochMilliseconds(Instant.now()));
+        LOG.debug("PollProgram collected from DB at {} ", DateUtils.dateToEpochMilliseconds(Instant.now()));
         try {
             List<ProgramPoll> pollPrograms = pollService.getPollProgramRunningAndStarted();
             pollPrograms = filterOutProgramPollsThatAreOverdue(pollPrograms);
@@ -53,7 +53,7 @@ public class PollTimerTask implements Runnable{
                 }
             }
         } catch (Exception e) {
-            LOG.error("[ Poll scheduler failed. ] " + e);
+            LOG.error("[ Poll scheduler failed. ] ", e);
         }
     }
 
