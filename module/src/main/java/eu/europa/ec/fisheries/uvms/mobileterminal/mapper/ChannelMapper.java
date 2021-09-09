@@ -26,6 +26,8 @@ import java.util.Set;
 
 public class ChannelMapper {
 
+    private ChannelMapper () {}
+
     static List<ComChannelType> mapChannels(MobileTerminal entity) {
 
         Set<Channel> channels = entity.getChannels();
@@ -67,32 +69,20 @@ public class ChannelMapper {
         ComChannelCapability pollCapability = new ComChannelCapability();
         pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
 
-        if (channel.isPollChannel()) {
-            pollCapability.setValue(true);
-        } else {
-            pollCapability.setValue(false);
-        }
+        pollCapability.setValue(channel.isPollChannel());
         comChannel.getCapabilities().add(pollCapability);
 
         ComChannelCapability configCapability = new ComChannelCapability();
         configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
 
-        if (channel.isConfigChannel()) {
-            configCapability.setValue(true);
-        } else {
-            configCapability.setValue(false);
-        }
+        configCapability.setValue(channel.isConfigChannel());
 
         comChannel.getCapabilities().add(configCapability);
 
         ComChannelCapability defaultCapability = new ComChannelCapability();
         defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
 
-        if (channel.isDefaultChannel()) {
-            defaultCapability.setValue(true);
-        } else {
-            defaultCapability.setValue(false);
-        }
+        defaultCapability.setValue(channel.isDefaultChannel());
         comChannel.getCapabilities().add(defaultCapability);
     }
 
