@@ -22,6 +22,8 @@ import java.util.List;
 
 public class ServiceToPluginMapper {
 
+	private ServiceToPluginMapper () {}
+
 	public static List<PluginService> mapToPluginList(List<ServiceResponseType> serviceList) {
 		List<PluginService> pluginList = new ArrayList<>();
 		for(ServiceResponseType service : serviceList) {
