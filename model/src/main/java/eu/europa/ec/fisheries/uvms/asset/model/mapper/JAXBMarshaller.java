@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 public class JAXBMarshaller {
 
+    private JAXBMarshaller () {}
+
     private static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private static Map<String, JAXBContext> contexts = new HashMap<>();
