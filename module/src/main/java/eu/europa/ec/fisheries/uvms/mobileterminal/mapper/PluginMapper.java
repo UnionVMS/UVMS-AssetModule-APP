@@ -23,12 +23,11 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.OceanRegionEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapability;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class PluginMapper {
+
+    private PluginMapper () {}
 
     static Plugin mapEntityToModel(MobileTerminalPlugin entity) {
         Plugin model = new Plugin();
@@ -180,7 +179,7 @@ public class PluginMapper {
             case PLUGIN:
                 return mapLandEarthStation(lesList);
             default:
-                return null;
+                return Collections.emptyList();
         }
     }
 
