@@ -63,7 +63,7 @@ public class VmsBillingTest extends AbstractAssetRestTest{
             assertEquals(1, created.getChannels().size());
             created.getChannels().clear();
             MobileTerminal updated = updateMobileTerminal(created);
-            assertTrue(updated.getChannels().size() == 0);
+            assertEquals(0, updated.getChannels().size());
             
             List<VmsBillingDto> vmsResponse = getVmsBillingResultList();
             assertTrue(vmsResponse.stream().anyMatch(vms -> vms.getVesselId().equals(createdAsset.getNationalId())));
