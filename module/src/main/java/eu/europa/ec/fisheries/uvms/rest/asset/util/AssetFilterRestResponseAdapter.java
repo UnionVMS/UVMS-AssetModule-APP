@@ -15,6 +15,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 
 public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter, JsonObject> {
 
+	
+
     @Override
     public JsonObject adaptToJson(AssetFilter assetFilter) throws Exception {
 
