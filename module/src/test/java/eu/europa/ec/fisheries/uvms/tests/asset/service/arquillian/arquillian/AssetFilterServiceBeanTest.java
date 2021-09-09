@@ -163,7 +163,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     	fetchedAssetFilterValue.setValueString("CHANGEDVALUE");
         assetFilterService.updateAssetFilterValue(fetchedAssetFilterValue, "TEST");
         AssetFilterValue fetchedAssetFilterValue2 = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());
-        assertEquals(fetchedAssetFilterValue2.getValueString(), "CHANGEDVALUE");
+        assertEquals("CHANGEDVALUE", fetchedAssetFilterValue2.getValueString());
     }
 
     @Test
