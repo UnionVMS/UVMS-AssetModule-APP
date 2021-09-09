@@ -47,6 +47,8 @@ import java.util.*;
 @LocalBean
 public class PollServiceBean {
 
+    private static final String FAILED_TO_SEND_AUDIT_LOG = "Failed to send audit log message due tue: ";
+
     private static final Logger LOG = LoggerFactory.getLogger(PollServiceBean.class);
 
     @Inject

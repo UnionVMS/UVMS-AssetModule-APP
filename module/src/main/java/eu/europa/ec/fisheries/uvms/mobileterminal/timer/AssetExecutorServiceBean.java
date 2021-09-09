@@ -79,7 +79,7 @@ public class AssetExecutorServiceBean {
             pluginTimerTask.syncPlugins();
             LOG.info("PluginTimerTask initialized.");
         } catch (Exception e) {
-            LOG.error("[ Error when initializing PluginTimerTask. ] {}", e);
+            LOG.error("[ Error when initializing PluginTimerTask. ]", e);
         }
     }
 
@@ -92,7 +92,7 @@ public class AssetExecutorServiceBean {
             LOG.info("PollTimerTask initialized.");
             pollTimerTask.run();
         } catch (Exception e) {
-            LOG.error("[ Error when initializing PollTimerTask. ] {}", e);
+            LOG.error("[ Error when initializing PollTimerTask. ]", e);
         }
     }
 
