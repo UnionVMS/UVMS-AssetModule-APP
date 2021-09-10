@@ -57,6 +57,8 @@ public class AssetServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
+    private static final String ERROR_COULD_NOT_FIND_ASSET_ID = "Could not find any asset with id: ";
+
     @Resource(name = "java:global/movement_endpoint")
     private String movementEndpoint;
 
@@ -313,13 +315,12 @@ public class AssetServiceBean {
 
     public Map<UUID, Note> getNotesForAsset(UUID assetId) {
         List<Note> notesByAsset = noteDao.getNotesByAsset(assetId);
-        Map<UUID, Note> noteMap = notesByAsset.stream().collect(Collectors.toMap(Note::getId, Function.identity()));
-        return noteMap;
+        return notesByAsset.stream().collect(Collectors.toMap(Note::getId, Function.identity()));
     }
 
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         note.setAssetId(asset.getId());
         note.setCreatedBy(username);
         note.setCreatedOn(Instant.now());
@@ -347,13 +348,13 @@ public class AssetServiceBean {
 
     public List<ContactInfo> getContactInfoForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         return contactDao.getContactInfoByAssetId(asset.getId());
     }
 
     public ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
         if (contactInfo.getId() == null) {
@@ -365,7 +366,7 @@ public class AssetServiceBean {
 
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(contactInfo.getAssetId());
-        nullValidation(asset, "Could not find any asset with id: " + contactInfo.getAssetId());
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + contactInfo.getAssetId());
         ContactInfo old = contactDao.findContactInfo(contactInfo.getId());
         contactInfo.setCreateTime(old.getCreateTime());
         contactInfo.setUpdatedBy(username);
@@ -502,8 +503,8 @@ public class AssetServiceBean {
         boolean correctMemberNumber = false;
         Set<Channel> channels = mobileTerminal.getChannels();
         for (Channel channel : channels) {
-            correctDnid = channel.getDnid().equals(dnid);
-            correctMemberNumber = channel.getMemberNumber().equals(memberNumber);
+            correctDnid = channel.getDnid().toString().equals(dnid);
+            correctMemberNumber = channel.getMemberNumber().toString().equals(memberNumber);
 
             if (correctDnid && correctMemberNumber) {
                 channelGuid = channel.getId().toString();
@@ -512,31 +513,38 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
+    private static boolean stringLengthMoreThanZero(String text) {
+        if(text != null && text.length() > 0)
+            return true;
+        else
+            return false;
+    }
+
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (asset.getCfr() != null && asset.getCfr().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getCfr())) {
             assetId.put(AssetIdentifier.CFR, asset.getCfr());
         }
         if (asset.getId() != null) {
             assetId.put(AssetIdentifier.GUID, asset.getId().toString());
         }
-        if (asset.getImo() != null && asset.getImo().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getImo())) {
             assetId.put(AssetIdentifier.IMO, asset.getImo());
         }
-        if (asset.getIrcs() != null && asset.getIrcs().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getIrcs())) {
             assetId.put(AssetIdentifier.IRCS, asset.getIrcs());
         }
-        if (asset.getMmsi() != null && asset.getMmsi().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getMmsi())) {
             assetId.put(AssetIdentifier.MMSI, asset.getMmsi());
         }
-        if (asset.getGfcm() != null && asset.getGfcm().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getGfcm())) {
             assetId.put(AssetIdentifier.GFCM, asset.getGfcm());
         }
-        if (asset.getUvi() != null && asset.getUvi().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getUvi())) {
             assetId.put(AssetIdentifier.UVI, asset.getUvi());
         }
-        if (asset.getIccat() != null && asset.getIccat().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getIccat())) {
             assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
         if (asset.getNationalId() != null ) {
@@ -548,28 +556,28 @@ public class AssetServiceBean {
     private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (request.getCfrValue() != null && request.getCfrValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getCfrValue())) {
             assetId.put(AssetIdentifier.CFR, request.getCfrValue());
         }
         if (request.getIdValue() != null) {
             assetId.put(AssetIdentifier.GUID, request.getIdValue().toString());
         }
-        if (request.getImoValue() != null && request.getImoValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getImoValue())) {
             assetId.put(AssetIdentifier.IMO, request.getImoValue());
         }
-        if (request.getIrcsValue() != null && request.getIrcsValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getIrcsValue())) {
             assetId.put(AssetIdentifier.IRCS, request.getIrcsValue());
         }
-        if (request.getMmsiValue() != null && request.getMmsiValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getMmsiValue())) {
             assetId.put(AssetIdentifier.MMSI, request.getMmsiValue());
         }
-        if (request.getGfcmValue() != null && request.getGfcmValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getGfcmValue())) {
             assetId.put(AssetIdentifier.GFCM, request.getGfcmValue());
         }
-        if (request.getUviValue() != null && request.getUviValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getUviValue())) {
             assetId.put(AssetIdentifier.UVI, request.getUviValue());
         }
-        if (request.getIccatValue() != null && request.getIccatValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getIccatValue())) {
             assetId.put(AssetIdentifier.ICCAT, request.getIccatValue());
         }
         return assetId;
