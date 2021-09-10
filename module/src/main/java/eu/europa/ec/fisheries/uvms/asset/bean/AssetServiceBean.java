@@ -185,22 +185,29 @@ public class AssetServiceBean {
         return updatedAsset;
     }
 
+    private static boolean isEmpty(String text) {
+        if (text == null || text.isEmpty())
+            return true;
+        else
+            return false;
+    }
+
     private void checkIdentifierNullValues(Asset asset) {
-        if (asset.getCfr() == null || asset.getCfr().isEmpty())
+        if (isEmpty(asset.getCfr()))
             asset.setCfr(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty())
+        if (isEmpty(asset.getImo()))
             asset.setImo(null);
-        if (asset.getMmsi() == null || asset.getMmsi().isEmpty())
+        if (isEmpty(asset.getMmsi()))
             asset.setMmsi(null);
-        if (asset.getIrcs() == null || asset.getIrcs().isEmpty())
+        if (isEmpty(asset.getIrcs()))
             asset.setIrcs(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty())
+        if (isEmpty(asset.getImo()))
             asset.setImo(null);
-        if (asset.getGfcm() == null || asset.getGfcm().isEmpty())
+        if (isEmpty(asset.getGfcm()))
             asset.setGfcm(null);
-        if (asset.getIccat() == null || asset.getIccat().isEmpty())
+        if (isEmpty(asset.getIccat()))
             asset.setIccat(null);
-        if (asset.getUvi() == null || asset.getUvi().isEmpty())
+        if (isEmpty(asset.getUvi()))
             asset.setUvi(null);
     }
 
