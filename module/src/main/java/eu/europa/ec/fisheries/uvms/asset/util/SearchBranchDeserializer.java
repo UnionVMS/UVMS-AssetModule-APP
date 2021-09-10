@@ -67,7 +67,7 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
             return trunk;
         }catch (Exception e){
             LOG.error("Unparsable input string for asset list: {}", object);
-            throw new RuntimeException("Unparsable input string for asset list: " + object, e);
+            throw new IllegalArgumentException("Unparsable input string for asset list: " + object, e);
         }
     }
 }
