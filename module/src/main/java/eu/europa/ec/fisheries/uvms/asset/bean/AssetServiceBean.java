@@ -513,31 +513,38 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
+    private static boolean stringLengthMoreThanZero(String text) {
+        if(text != null && text.length() > 0)
+            return true;
+        else
+            return false;
+    }
+
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (asset.getCfr() != null && asset.getCfr().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getCfr())) {
             assetId.put(AssetIdentifier.CFR, asset.getCfr());
         }
         if (asset.getId() != null) {
             assetId.put(AssetIdentifier.GUID, asset.getId().toString());
         }
-        if (asset.getImo() != null && asset.getImo().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getImo())) {
             assetId.put(AssetIdentifier.IMO, asset.getImo());
         }
-        if (asset.getIrcs() != null && asset.getIrcs().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getIrcs())) {
             assetId.put(AssetIdentifier.IRCS, asset.getIrcs());
         }
-        if (asset.getMmsi() != null && asset.getMmsi().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getMmsi())) {
             assetId.put(AssetIdentifier.MMSI, asset.getMmsi());
         }
-        if (asset.getGfcm() != null && asset.getGfcm().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getGfcm())) {
             assetId.put(AssetIdentifier.GFCM, asset.getGfcm());
         }
-        if (asset.getUvi() != null && asset.getUvi().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getUvi())) {
             assetId.put(AssetIdentifier.UVI, asset.getUvi());
         }
-        if (asset.getIccat() != null && asset.getIccat().length() > 0) {
+        if (stringLengthMoreThanZero(asset.getIccat())) {
             assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
         if (asset.getNationalId() != null ) {
@@ -549,28 +556,28 @@ public class AssetServiceBean {
     private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (request.getCfrValue() != null && request.getCfrValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getCfrValue())) {
             assetId.put(AssetIdentifier.CFR, request.getCfrValue());
         }
         if (request.getIdValue() != null) {
             assetId.put(AssetIdentifier.GUID, request.getIdValue().toString());
         }
-        if (request.getImoValue() != null && request.getImoValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getImoValue())) {
             assetId.put(AssetIdentifier.IMO, request.getImoValue());
         }
-        if (request.getIrcsValue() != null && request.getIrcsValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getIrcsValue())) {
             assetId.put(AssetIdentifier.IRCS, request.getIrcsValue());
         }
-        if (request.getMmsiValue() != null && request.getMmsiValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getMmsiValue())) {
             assetId.put(AssetIdentifier.MMSI, request.getMmsiValue());
         }
-        if (request.getGfcmValue() != null && request.getGfcmValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getGfcmValue())) {
             assetId.put(AssetIdentifier.GFCM, request.getGfcmValue());
         }
-        if (request.getUviValue() != null && request.getUviValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getUviValue())) {
             assetId.put(AssetIdentifier.UVI, request.getUviValue());
         }
-        if (request.getIccatValue() != null && request.getIccatValue().length() > 0) {
+        if (stringLengthMoreThanZero(request.getIccatValue())) {
             assetId.put(AssetIdentifier.ICCAT, request.getIccatValue());
         }
         return assetId;
