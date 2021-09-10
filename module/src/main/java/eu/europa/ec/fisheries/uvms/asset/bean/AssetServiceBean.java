@@ -57,6 +57,8 @@ public class AssetServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
+    private static final String ERROR_COULD_NOT_FIND_ASSET_ID = "Could not find any asset with id: ";
+
     @Resource(name = "java:global/movement_endpoint")
     private String movementEndpoint;
 
@@ -319,7 +321,7 @@ public class AssetServiceBean {
 
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         note.setAssetId(asset.getId());
         note.setCreatedBy(username);
         note.setCreatedOn(Instant.now());
@@ -347,13 +349,13 @@ public class AssetServiceBean {
 
     public List<ContactInfo> getContactInfoForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         return contactDao.getContactInfoByAssetId(asset.getId());
     }
 
     public ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + assetId);
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
         if (contactInfo.getId() == null) {
@@ -365,7 +367,7 @@ public class AssetServiceBean {
 
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(contactInfo.getAssetId());
-        nullValidation(asset, "Could not find any asset with id: " + contactInfo.getAssetId());
+        nullValidation(asset, ERROR_COULD_NOT_FIND_ASSET_ID + contactInfo.getAssetId());
         ContactInfo old = contactDao.findContactInfo(contactInfo.getId());
         contactInfo.setCreateTime(old.getCreateTime());
         contactInfo.setUpdatedBy(username);
