@@ -520,7 +520,7 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
-    private static boolean stringLengthMoreThanZero(String text) {
+    private static boolean notEmpty(String text) {
         if(text != null && text.length() > 0)
             return true;
         else
@@ -530,28 +530,28 @@ public class AssetServiceBean {
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (stringLengthMoreThanZero(asset.getCfr())) {
+        if (notEmpty(asset.getCfr())) {
             assetId.put(AssetIdentifier.CFR, asset.getCfr());
         }
         if (asset.getId() != null) {
             assetId.put(AssetIdentifier.GUID, asset.getId().toString());
         }
-        if (stringLengthMoreThanZero(asset.getImo())) {
+        if (notEmpty(asset.getImo())) {
             assetId.put(AssetIdentifier.IMO, asset.getImo());
         }
-        if (stringLengthMoreThanZero(asset.getIrcs())) {
+        if (notEmpty(asset.getIrcs())) {
             assetId.put(AssetIdentifier.IRCS, asset.getIrcs());
         }
-        if (stringLengthMoreThanZero(asset.getMmsi())) {
+        if (notEmpty(asset.getMmsi())) {
             assetId.put(AssetIdentifier.MMSI, asset.getMmsi());
         }
-        if (stringLengthMoreThanZero(asset.getGfcm())) {
+        if (notEmpty(asset.getGfcm())) {
             assetId.put(AssetIdentifier.GFCM, asset.getGfcm());
         }
-        if (stringLengthMoreThanZero(asset.getUvi())) {
+        if (notEmpty(asset.getUvi())) {
             assetId.put(AssetIdentifier.UVI, asset.getUvi());
         }
-        if (stringLengthMoreThanZero(asset.getIccat())) {
+        if (notEmpty(asset.getIccat())) {
             assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
         if (asset.getNationalId() != null ) {
@@ -563,28 +563,28 @@ public class AssetServiceBean {
     private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
         Map<AssetIdentifier, String> assetId = new HashMap<>();
 
-        if (stringLengthMoreThanZero(request.getCfrValue())) {
+        if (notEmpty(request.getCfrValue())) {
             assetId.put(AssetIdentifier.CFR, request.getCfrValue());
         }
         if (request.getIdValue() != null) {
             assetId.put(AssetIdentifier.GUID, request.getIdValue().toString());
         }
-        if (stringLengthMoreThanZero(request.getImoValue())) {
+        if (notEmpty(request.getImoValue())) {
             assetId.put(AssetIdentifier.IMO, request.getImoValue());
         }
-        if (stringLengthMoreThanZero(request.getIrcsValue())) {
+        if (notEmpty(request.getIrcsValue())) {
             assetId.put(AssetIdentifier.IRCS, request.getIrcsValue());
         }
-        if (stringLengthMoreThanZero(request.getMmsiValue())) {
+        if (notEmpty(request.getMmsiValue())) {
             assetId.put(AssetIdentifier.MMSI, request.getMmsiValue());
         }
-        if (stringLengthMoreThanZero(request.getGfcmValue())) {
+        if (notEmpty(request.getGfcmValue())) {
             assetId.put(AssetIdentifier.GFCM, request.getGfcmValue());
         }
-        if (stringLengthMoreThanZero(request.getUviValue())) {
+        if (notEmpty(request.getUviValue())) {
             assetId.put(AssetIdentifier.UVI, request.getUviValue());
         }
-        if (stringLengthMoreThanZero(request.getIccatValue())) {
+        if (notEmpty(request.getIccatValue())) {
             assetId.put(AssetIdentifier.ICCAT, request.getIccatValue());
         }
         return assetId;
