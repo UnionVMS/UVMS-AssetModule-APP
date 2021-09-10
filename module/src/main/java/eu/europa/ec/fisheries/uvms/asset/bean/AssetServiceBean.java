@@ -503,8 +503,8 @@ public class AssetServiceBean {
         boolean correctMemberNumber = false;
         Set<Channel> channels = mobileTerminal.getChannels();
         for (Channel channel : channels) {
-            correctDnid = channel.getDnid().equals(dnid);
-            correctMemberNumber = channel.getMemberNumber().equals(memberNumber);
+            correctDnid = channel.getDnid().toString().equals(dnid);
+            correctMemberNumber = channel.getMemberNumber().toString().equals(memberNumber);
 
             if (correctDnid && correctMemberNumber) {
                 channelGuid = channel.getId().toString();
