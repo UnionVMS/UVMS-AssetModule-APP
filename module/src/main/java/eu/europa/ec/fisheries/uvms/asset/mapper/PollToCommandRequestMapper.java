@@ -34,12 +34,16 @@ public class PollToCommandRequestMapper {
     @Inject
     private MobileTerminalServiceBean terminalServiceBean;
 
-    public enum PollReceiverInmarsatC {
+    private interface PollReceiver {
+        String name();
+    }
+
+    public enum PollReceiverInmarsatC implements PollReceiver {
         MOBILE_TERMINAL_ID, CONNECT_ID, SERIAL_NUMBER, DNID, MEMBER_NUMBER,
         LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER, OCEAN_REGION
     }
 
-    public enum PollReceiverIridium {
+    public enum PollReceiverIridium implements PollReceiver {
         MOBILE_TERMINAL_ID, CONNECT_ID,
         SERIAL_NUMBER, OCEAN_REGION
     }
@@ -89,7 +93,7 @@ public class PollToCommandRequestMapper {
     }
 
     private String addMobileTerminalAndConnectIds(PollType pollType, MobileTerminalType mobTerm,
-                                                  Enum receiverMobTermId, Enum receiverConnectId) {
+                                                  PollReceiver receiverMobTermId, PollReceiver receiverConnectId) {
         String connectId = mobTerm.getConnectId();
         String mobileTerminalId = mobTerm.getMobileTerminalId() == null ? null : mobTerm.getMobileTerminalId().getGuid();
 
@@ -182,7 +186,7 @@ public class PollToCommandRequestMapper {
         return keyValue;
     }
 
-    private KeyValueType mapReceiverToKeyValue(Enum key, String value) {
+    private KeyValueType mapReceiverToKeyValue(PollReceiver key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
         keyValue.setValue(value);
