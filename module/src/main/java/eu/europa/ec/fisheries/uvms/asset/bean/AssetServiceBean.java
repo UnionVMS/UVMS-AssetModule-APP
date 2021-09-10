@@ -192,23 +192,23 @@ public class AssetServiceBean {
             return false;
     }
 
-    private void checkIdentifierNullValues(Asset asset) {
-        if (isEmpty(asset.getCfr()))
-            asset.setCfr(null);
-        if (isEmpty(asset.getImo()))
-            asset.setImo(null);
-        if (isEmpty(asset.getMmsi()))
-            asset.setMmsi(null);
-        if (isEmpty(asset.getIrcs()))
-            asset.setIrcs(null);
-        if (isEmpty(asset.getImo()))
-            asset.setImo(null);
-        if (isEmpty(asset.getGfcm()))
-            asset.setGfcm(null);
-        if (isEmpty(asset.getIccat()))
-            asset.setIccat(null);
-        if (isEmpty(asset.getUvi()))
-            asset.setUvi(null);
+    private void checkIdentifierNullValues(Asset a) {
+        if (isEmpty(a.getCfr()))
+            a.setCfr(null);
+        if (isEmpty(a.getImo()))
+            a.setImo(null);
+        if (isEmpty(a.getMmsi()))
+            a.setMmsi(null);
+        if (isEmpty(a.getIrcs()))
+            a.setIrcs(null);
+        if (isEmpty(a.getImo()))
+            a.setImo(null);
+        if (isEmpty(a.getGfcm()))
+            a.setGfcm(null);
+        if (isEmpty(a.getIccat()))
+            a.setIccat(null);
+        if (isEmpty(a.getUvi()))
+            a.setUvi(null);
     }
 
     public Asset upsertAsset(Asset asset, String username) {
