@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 
 public class PollEntityToModelMapper {
 
+    private PollEntityToModelMapper () {}
+
     public static PollResponseType mapToPollResponseType(ProgramPoll program) {
         PollResponseType response = mapEntityToPollResponseType(program, program.getMobileterminal());
         response.setPollType(PollType.PROGRAM_POLL);
