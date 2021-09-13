@@ -523,11 +523,14 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
+    /**
+     * Check if String that String is not empty.
+     *
+     * @param text String to analyze.
+     * @return true if String is not null and its length > zero.
+     */
     private static boolean notEmpty(String text) {
-        if(text != null && text.length() > 0)
-            return true;
-        else
-            return false;
+        return text != null && text.length() > 0;
     }
 
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
