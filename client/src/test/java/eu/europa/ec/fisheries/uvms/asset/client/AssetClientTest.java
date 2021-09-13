@@ -419,6 +419,7 @@ public class AssetClientTest extends AbstractClientTest {
         assetClient.replace(customCode);
         customCode.setDescription("replaced");
         assetClient.replace(customCode);
+        assertEquals("replaced", customCode.getDescription());
     }
 
     @Test
