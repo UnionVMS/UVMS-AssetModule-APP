@@ -528,10 +528,11 @@ public class AssetServiceBean {
     }
 
     private static boolean notEmpty(String text) {
+        boolean empty = true;
         if(text != null && text.length() > 0)
-            return true;
-        else
-            return false;
+            empty = false;
+
+        return empty;
     }
 
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
