@@ -533,8 +533,8 @@ public class AssetServiceBean {
         return text != null && text.length() > 0;
     }
 
-    private Map<AssetIdentifier, String> createAssetId(Asset asset) {
-        Map<AssetIdentifier, String> assetId = new HashMap<>();
+    private EnumMap<AssetIdentifier, String> createAssetId(Asset asset) {
+        EnumMap<AssetIdentifier, String> assetId = new EnumMap<>(AssetIdentifier.class);
 
         if (notEmpty(asset.getCfr())) {
             assetId.put(AssetIdentifier.CFR, asset.getCfr());
@@ -566,8 +566,8 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
-        Map<AssetIdentifier, String> assetId = new HashMap<>();
+    private EnumMap<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
+        EnumMap<AssetIdentifier, String> assetId = new EnumMap<>(AssetIdentifier.class);
 
         if (notEmpty(request.getCfrValue())) {
             assetId.put(AssetIdentifier.CFR, request.getCfrValue());
