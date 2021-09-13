@@ -469,7 +469,13 @@ public class AssetServiceBean {
         resp.setMmsi(asset.getMmsi());
         resp.setImo(asset.getImo());
         resp.setVesselType(asset.getVesselType());
-        resp.setParked(asset.getParked() != null ? asset.getParked() : false);
+
+        if(asset.getParked() != null) {
+            resp.setParked(asset.getParked());
+        }
+        else {
+            resp.setParked(false);
+        }
         return resp;
     }
 
