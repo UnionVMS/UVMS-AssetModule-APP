@@ -634,7 +634,7 @@ public class AssetServiceBean {
 
     // if more than 1 hit put data from ais into fartyg2record
     // remove the duplicate
-    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs, String updatedBy) {
+    private Asset normalizeAssetOnMMSIIRCS(String mmsi, String ircs, String updatedBy) {
 
         List<Asset> assets = assetDao.getAssetByMmsiOrIrcs(mmsi, ircs);
 
@@ -742,7 +742,7 @@ public class AssetServiceBean {
             return;
         }
 
-        Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs(), user);
+        Asset assetFromDB = normalizeAssetOnMMSIIRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs(), user);
 
         boolean shouldUpdate = false;
 
