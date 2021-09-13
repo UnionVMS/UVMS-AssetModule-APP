@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 
 public class EnumMapper {
 
+    private EnumMapper () {}
+
     public static PollType getPollModelFromType(PollTypeEnum type) {
         if (type != null) {
             switch (type) {
