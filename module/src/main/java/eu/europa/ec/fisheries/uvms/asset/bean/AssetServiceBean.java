@@ -185,11 +185,14 @@ public class AssetServiceBean {
         return updatedAsset;
     }
 
+    /**
+     * Check if String is empty.
+     *
+     * @param text String to analyze.
+     * @return true if String is null or its length is zero.
+     */
     private static boolean isEmpty(String text) {
-        if (text == null || text.isEmpty())
-            return true;
-        else
-            return false;
+        return text == null || text.isEmpty();
     }
 
     private void checkIdentifierNullValues(Asset a) {
