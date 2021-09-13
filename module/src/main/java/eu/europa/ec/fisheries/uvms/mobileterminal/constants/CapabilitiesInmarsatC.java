@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapabilit
 
 public class CapabilitiesInmarsatC {
 
+    private CapabilitiesInmarsatC () {}
+
     public static boolean getCapability(TerminalCapability capability) {
         if(capability != null) {
             switch(capability) {
