@@ -23,8 +23,8 @@ public class MobileTerminalDataSourceRequestValidator {
 
     private MobileTerminalDataSourceRequestValidator() {}
 
-    private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceRequestValidator.class);
-    private static String IRIDIUM = "IRIDIUM";
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceRequestValidator.class);
+    private static final String IRIDIUM = "IRIDIUM";
 
     public static void validateCreateMobileTerminalType(MobileTerminalType mobTermType) {
         if(mobTermType.isInactive()){
