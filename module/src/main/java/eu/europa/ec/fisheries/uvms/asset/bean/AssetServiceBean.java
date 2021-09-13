@@ -186,10 +186,11 @@ public class AssetServiceBean {
     }
 
     private static boolean isEmpty(String text) {
-        if (text == null || text.isEmpty())
-            return true;
-        else
-            return false;
+        boolean isEmptyOrNull = false;
+        if (text == null || text.isEmpty()) {
+            isEmptyOrNull = true;
+        }
+        return isEmptyOrNull;
     }
 
     private void checkIdentifierNullValues(Asset a) {
@@ -466,7 +467,13 @@ public class AssetServiceBean {
         resp.setMmsi(asset.getMmsi());
         resp.setImo(asset.getImo());
         resp.setVesselType(asset.getVesselType());
-        resp.setParked(asset.getParked() != null ? asset.getParked() : false);
+
+        if(asset.getParked() != null) {
+            resp.setParked(asset.getParked());
+        }
+        else {
+            resp.setParked(false);
+        }
         return resp;
     }
 
@@ -521,10 +528,11 @@ public class AssetServiceBean {
     }
 
     private static boolean notEmpty(String text) {
+        boolean empty = true;
         if(text != null && text.length() > 0)
-            return true;
-        else
-            return false;
+            empty = false;
+
+        return empty;
     }
 
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
