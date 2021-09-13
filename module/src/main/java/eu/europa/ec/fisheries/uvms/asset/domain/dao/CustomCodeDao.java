@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -83,7 +84,7 @@ public class CustomCodeDao {
             TypedQuery<String> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETALLCONSTANTS, String.class);
             return query.getResultList();
         } catch (NoResultException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 
