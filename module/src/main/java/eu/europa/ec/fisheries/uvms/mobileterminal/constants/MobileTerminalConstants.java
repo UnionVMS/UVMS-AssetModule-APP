@@ -13,6 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.constants;
 
 public class MobileTerminalConstants {
 
+    private MobileTerminalConstants () {}
+
     public static final String CREATE_COMMENT = "Automatic create comment";
 
     public static final String UPDATE_USER = "UVMS";
