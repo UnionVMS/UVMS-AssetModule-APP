@@ -186,10 +186,11 @@ public class AssetServiceBean {
     }
 
     private static boolean isEmpty(String text) {
-        if (text == null || text.isEmpty())
-            return true;
-        else
-            return false;
+        boolean isEmptyOrNull = false;
+        if (text == null || text.isEmpty()) {
+            isEmptyOrNull = true;
+        }
+        return isEmptyOrNull;
     }
 
     private void checkIdentifierNullValues(Asset a) {
