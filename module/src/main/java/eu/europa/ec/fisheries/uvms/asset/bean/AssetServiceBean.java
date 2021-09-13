@@ -185,12 +185,14 @@ public class AssetServiceBean {
         return updatedAsset;
     }
 
+    /**
+     * Check if String is empty.
+     *
+     * @param text String to analyze.
+     * @return true if String is null or its length is zero.
+     */
     private static boolean isEmpty(String text) {
-        boolean emptyOrNot = false;
-        if (text == null || text.isEmpty()) {
-            emptyOrNot = true;
-        }
-        return emptyOrNot;
+        return text == null || text.isEmpty();
     }
 
     private void checkIdentifierNullValues(Asset a) {
@@ -521,16 +523,18 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
+    /**
+     * Check if String that String is not empty.
+     *
+     * @param text String to analyze.
+     * @return true if String is not null and its length > zero.
+     */
     private static boolean notEmpty(String text) {
-        boolean emptyOrNot = false;
-        if(text != null && text.length() > 0) {
-            emptyOrNot = true;
-        }
-        return emptyOrNot;
+        return text != null && text.length() > 0;
     }
 
-    private Map<AssetIdentifier, String> createAssetId(Asset asset) {
-        Map<AssetIdentifier, String> assetId = new HashMap<>();
+    private EnumMap<AssetIdentifier, String> createAssetId(Asset asset) {
+        EnumMap<AssetIdentifier, String> assetId = new EnumMap<>(AssetIdentifier.class);
 
         if (notEmpty(asset.getCfr())) {
             assetId.put(AssetIdentifier.CFR, asset.getCfr());
@@ -562,8 +566,8 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
-        Map<AssetIdentifier, String> assetId = new HashMap<>();
+    private EnumMap<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
+        EnumMap<AssetIdentifier, String> assetId = new EnumMap<>(AssetIdentifier.class);
 
         if (notEmpty(request.getCfrValue())) {
             assetId.put(AssetIdentifier.CFR, request.getCfrValue());
@@ -713,6 +717,18 @@ public class AssetServiceBean {
         }
     }
 
+    /**
+     *
+     * Check if asset field value is not the same in both AIS and DB.
+     *
+     * @param fieldValueDb Asset field value in database
+     * @param fieldValueAis Asset field value in AIS
+     * @return true if AIS field contains value (is not null) and it is not the same value as contained in DB.
+     */
+    private boolean assetFieldValuesNotEqual(String fieldValueDb, String fieldValueAis) {
+        return (fieldValueDb == null || !fieldValueDb.equals(fieldValueAis)) && (fieldValueAis != null);
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void assetInformation(Asset assetFromAIS, String user) {
 
@@ -728,19 +744,19 @@ public class AssetServiceBean {
             return;
         }
 
-        if ((assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
+        if (assetFieldValuesNotEqual(assetFromDB.getMmsi(), assetFromAIS.getMmsi())) {
             shouldUpdate = true;
             assetFromDB.setMmsi(assetFromAIS.getMmsi());
         }
-        if ((assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs())) && (assetFromAIS.getIrcs() != null)) {
+        if (assetFieldValuesNotEqual(assetFromDB.getIrcs(), assetFromAIS.getIrcs())) {
             shouldUpdate = true;
             assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
         }
-        if ((assetFromDB.getVesselType() == null || !assetFromDB.getVesselType().equals(assetFromAIS.getVesselType())) && (assetFromAIS.getVesselType() != null)) {
+        if (assetFieldValuesNotEqual(assetFromDB.getVesselType(), assetFromAIS.getVesselType())) {
             shouldUpdate = true;
             assetFromDB.setVesselType(assetFromAIS.getVesselType());
         }
-        if ((assetFromDB.getImo() == null || !assetFromDB.getImo().equals(assetFromAIS.getImo())) && (assetFromAIS.getImo() != null)) {
+        if (assetFieldValuesNotEqual(assetFromDB.getImo(), assetFromAIS.getImo())) {
             shouldUpdate = true;
             assetFromDB.setImo(assetFromAIS.getImo());
         }
