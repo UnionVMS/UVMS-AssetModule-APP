@@ -796,8 +796,7 @@ public class AssetServiceBean {
 
     public Note getNoteById(UUID id) {
         nullValidation(id, "Cant search for noteId: " + id);
-        Note note = noteDao.findNote(id);
-        return note;
+        return  noteDao.findNote(id);
     }
 
     public void addLicenceToAsset(UUID assetId, FishingLicence fishingLicence) {
