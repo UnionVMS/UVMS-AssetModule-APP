@@ -522,10 +522,11 @@ public class AssetServiceBean {
     }
 
     private static boolean notEmpty(String text) {
-        if(text != null && text.length() > 0)
-            return true;
-        else
-            return false;
+        boolean emptyOrNot = false;
+        if(text != null && text.length() > 0) {
+            emptyOrNot = true;
+        }
+        return emptyOrNot;
     }
 
     private Map<AssetIdentifier, String> createAssetId(Asset asset) {
