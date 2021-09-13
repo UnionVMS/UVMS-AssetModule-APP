@@ -53,10 +53,8 @@ public class MobileTerminalDataSourceRequestValidator {
     public static void validateMobileTerminalAttributes(List<MobileTerminalAttribute> attributes) {
         Set<String> uniqueFields = new HashSet<>();
         for (MobileTerminalAttribute attr : attributes) {
-        	if(!"MULTIPLE_OCEAN".equalsIgnoreCase(attr.getType())) {
-        		if (!uniqueFields.add(attr.getType())) {
-                    throw new IllegalArgumentException("Non unique attribute field " + attr.getType());
-                }
+        	if(!"MULTIPLE_OCEAN".equalsIgnoreCase(attr.getType()) && !uniqueFields.add(attr.getType())) {
+                throw new IllegalArgumentException("Non unique attribute field " + attr.getType());
         	}
         }
     }
