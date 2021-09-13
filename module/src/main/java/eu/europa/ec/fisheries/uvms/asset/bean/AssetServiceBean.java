@@ -719,7 +719,7 @@ public class AssetServiceBean {
 
     /**
      *
-     * Check if asset field value is not the same if AIS and DB
+     * Check if asset field value is not the same in both AIS and DB.
      *
      * @param fieldValueDb Asset field value in database
      * @param fieldValueAis Asset field value in AIS
