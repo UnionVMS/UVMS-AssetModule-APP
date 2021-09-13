@@ -28,7 +28,7 @@ public class MobileTerminalDataSourceRequestValidator {
 
     public static void validateCreateMobileTerminalType(MobileTerminalType mobTermType) {
         if(mobTermType.isInactive()){
-            throw new RuntimeException("Cannot create a Mobile Terminal with status set to inactive");
+            throw new IllegalArgumentException("Cannot create a Mobile Terminal with status set to inactive");
         }
         validateMobileTerminalAttributes(mobTermType.getAttributes());
         if(!IRIDIUM.equalsIgnoreCase(mobTermType.getType())) {
