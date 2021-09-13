@@ -68,7 +68,6 @@ public class MobileTerminalDataSourceRequestValidator {
         	else {
         	    LOG.debug("Channel name is not VMS. Will not validate further, and will probably fail validation in the future.");
         	}
-        	//	throw new MobileTerminalModelValidationException("ComChannel with SystemType " + type.getType() + " validation not implemented");
         }
     }
 
