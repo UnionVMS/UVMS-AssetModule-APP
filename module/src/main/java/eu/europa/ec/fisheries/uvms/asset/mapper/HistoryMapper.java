@@ -56,8 +56,13 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(ASSET_UPDATER_FIELD) || field.getName().equals(ASSET_UPDATE_TIME_FIELD)
-                            || field.getName().equals(ASSET_MOBILE_TERMINALS_FIELD)) {
+
+                    Set<String> assetUpdaterFields = new HashSet<>();
+                    assetUpdaterFields.add(ASSET_UPDATER_FIELD);
+                    assetUpdaterFields.add(ASSET_UPDATE_TIME_FIELD);
+                    assetUpdaterFields.add(ASSET_MOBILE_TERMINALS_FIELD);
+
+                    if (assetUpdaterFields.contains(field.getName())) {
                         if(!field.getName().equals(ASSET_MOBILE_TERMINALS_FIELD)) {
                             continue;
                         }
