@@ -75,7 +75,6 @@ public class MobileTerminalServiceBean {
         mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         sortChannels(createdMobileTerminal);
-        String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
 
         //send stuff to audit
         try {
