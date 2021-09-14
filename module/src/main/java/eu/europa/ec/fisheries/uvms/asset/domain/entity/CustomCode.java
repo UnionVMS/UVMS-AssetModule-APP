@@ -7,7 +7,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.*;
 
 @Entity
-@Table(name = "customcode"/*, indexes = { @Index(columnList = "id", name = "customcodes00", unique = true),}*/)
+@Table(name = "customcode")
 @NamedQueries({
         @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m WHERE UPPER(m.primaryKey.constant) LIKE UPPER(:constant)"),
         @NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m "),
