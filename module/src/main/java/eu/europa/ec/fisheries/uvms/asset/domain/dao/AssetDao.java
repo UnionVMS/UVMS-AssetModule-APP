@@ -33,6 +33,8 @@ import java.util.*;
 @Stateless
 public class AssetDao {
 
+    private static final String ASSET_ACTIVE = "active";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -184,7 +186,7 @@ public class AssetDao {
         Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
 
         if (!includeInactivated) {
-            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get(ASSET_ACTIVE), true);
             if (predicateQuery != null) {
                 cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
             } else {
@@ -234,7 +236,7 @@ public class AssetDao {
         Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
 
         if (!includeInactivated) {
-            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get(ASSET_ACTIVE), true);
             if (predicateQuery != null) {
                 cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
             } else {
@@ -354,7 +356,7 @@ public class AssetDao {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
             if (!includeInactivated) {
-                query.add(AuditEntity.property("active").eq(true));
+                query.add(AuditEntity.property(ASSET_ACTIVE).eq(true));
             }
         }
 
