@@ -213,6 +213,11 @@ public class AssetModelMapper {
         }
     }
 
+    /**
+     * Add a List of contacts to an asset model.
+     * @param contacts Contacts to be added.
+     * @param assetModel Notes will be added to this asset model.
+     */
     private static void addContactsToAsset(List<ContactInfo> contacts, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         for (ContactInfo contactInfo : contacts) {
             AssetContact contact = new AssetContact();
