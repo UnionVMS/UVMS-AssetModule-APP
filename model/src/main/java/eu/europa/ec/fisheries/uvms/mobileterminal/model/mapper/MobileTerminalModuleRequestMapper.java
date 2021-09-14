@@ -22,6 +22,8 @@ import java.util.List;
 
 public class MobileTerminalModuleRequestMapper {
 
+    private MobileTerminalModuleRequestMapper () {}
+
     public static String createMobileTerminalResponse(MobileTerminalType mobTerm) throws AssetException {
         MobileTerminalResponse response = new MobileTerminalResponse();
         response.setMobilTerminal(mobTerm);

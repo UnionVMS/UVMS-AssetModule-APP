@@ -27,7 +27,9 @@ import java.util.List;
 
 public class AssetModuleResponseMapper {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AssetModuleResponseMapper.class);
+    private AssetModuleResponseMapper () {}
+
+    private static final Logger LOG = LoggerFactory.getLogger(AssetModuleResponseMapper.class);
 
     private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
@@ -58,7 +60,7 @@ public class AssetModuleResponseMapper {
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetException | JMSException ex) {
-            LOG.error("[ Error when mapping response to single asset response. ] {}", ex);
+            LOG.error("[ Error when mapping response to single asset response. ] ", ex);
             throw new AssetException(ErrorCode.ASSET_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_MAPPING_ERROR.getCode());
         }
     }
@@ -69,7 +71,7 @@ public class AssetModuleResponseMapper {
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetException | JMSException ex) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", ex);
+            LOG.error("[ Error when mapping response to list asset response. ] ", ex);
             throw new AssetException(ErrorCode.ASSET_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_LIST_MAPPING_ERROR.getCode());
         }
     }

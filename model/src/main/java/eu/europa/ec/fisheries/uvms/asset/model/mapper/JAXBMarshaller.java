@@ -33,7 +33,7 @@ public class JAXBMarshaller {
 
     private JAXBMarshaller () {}
 
-    private static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
+    private static Logger log = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private static Map<String, JAXBContext> contexts = new HashMap<>();
 
@@ -52,8 +52,8 @@ public class JAXBMarshaller {
                 long before = System.currentTimeMillis();
                 jaxbContext = JAXBContext.newInstance(data.getClass());
                 contexts.put(data.getClass().getName(), jaxbContext);
-                LOG.debug("Stored contexts: {}", contexts.size());
-                LOG.debug("JAXBContext creation time: {}", (System.currentTimeMillis() - before));
+                log.debug("Stored contexts: {}", contexts.size());
+                log.debug("JAXBContext creation time: {}", (System.currentTimeMillis() - before));
             }
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -61,7 +61,7 @@ public class JAXBMarshaller {
             marshaller.marshal(data, sw);
             long before = System.currentTimeMillis();
             String marshalled = sw.toString();
-            LOG.debug("StringWriter time: {}", (System.currentTimeMillis() - before));
+            log.debug("StringWriter time: {}", (System.currentTimeMillis() - before));
             return marshalled;
         } catch (JAXBException ex) {
             throw new AssetException(ErrorCode.MARSHALLING_ERROR.getMessage() + data.getClass().getName(), ex, ErrorCode.MARSHALLING_ERROR.getCode());
@@ -85,15 +85,15 @@ public class JAXBMarshaller {
                 long before = System.currentTimeMillis();
                 jc = JAXBContext.newInstance(clazz);
                 contexts.put(clazz.getName(), jc);
-                LOG.debug("Stored contexts: {}", contexts.size());
-                LOG.debug("JAXBContext creation time: {}", (System.currentTimeMillis() - before));
+                log.debug("Stored contexts: {}", contexts.size());
+                log.debug("JAXBContext creation time: {}", (System.currentTimeMillis() - before));
             }
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             StringReader sr = new StringReader(textMessage.getText());
             StreamSource source = new StreamSource(sr);
             long before = System.currentTimeMillis();
             R object = (R) unmarshaller.unmarshal(source);
-            LOG.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
+            log.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
             return object;
         } catch (JMSException | JAXBException ex) {
             throw new AssetException(ErrorCode.UNMARSHALLING_ERROR.getMessage(), ex,  ErrorCode.UNMARSHALLING_ERROR.getCode());
