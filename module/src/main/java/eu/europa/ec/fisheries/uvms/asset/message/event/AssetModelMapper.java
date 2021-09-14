@@ -184,15 +184,7 @@ public class AssetModelMapper {
         assetModel.setProducer(prodOrg);
         
         Collection<Note> notes = assetService.getNotesForAsset(assetEntity.getId()).values();
-        for (Note note : notes) {
-            AssetNotes assetNote = new AssetNotes();
-            assetNote.setId(note.getId().toString());
-            if (note.getCreatedOn() != null) {
-                assetNote.setDate(DateUtils.dateToEpochMilliseconds(note.getCreatedOn()));
-            }
-            assetNote.setNotes(note.getNoteText());
-            assetModel.getNotes().add(assetNote);
-        }
+        addNotesToAsset(notes, assetModel);
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetEntity.getId());
         addContactsToAsset(contacts, assetModel);
@@ -204,6 +196,11 @@ public class AssetModelMapper {
         return assetModel;
     }
 
+    /**
+     * Add a Collection of notes to an asset model.
+     * @param notes Notes to be added.
+     * @param assetModel Notes will be added to this asset model.
+     */
     private static void addNotesToAsset(Collection<Note> notes, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         for (Note note : notes) {
             AssetNotes assetNote = new AssetNotes();
