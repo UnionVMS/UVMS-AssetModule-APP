@@ -82,7 +82,7 @@ public class MobileTerminalServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId());
         }
         return createdMobileTerminal;
     }
@@ -178,7 +178,7 @@ public class MobileTerminalServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUpdated(updatedTerminal.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", updatedTerminal.getId().toString());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", updatedTerminal.getId());
         }
 
         return updatedTerminal;
@@ -205,7 +205,7 @@ public class MobileTerminalServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId().toString());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId());
         }
         return terminalAssign;
     }
@@ -216,7 +216,7 @@ public class MobileTerminalServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId().toString());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId());
         }
         return terminalUnAssign;
     }
@@ -248,7 +248,7 @@ public class MobileTerminalServiceBean {
             }
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId().toString(), status);
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId(), status);
         }
         return terminalStatus;
     }
