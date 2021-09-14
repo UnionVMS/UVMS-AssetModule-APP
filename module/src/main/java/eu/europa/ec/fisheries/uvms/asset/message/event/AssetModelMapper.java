@@ -104,7 +104,16 @@ public class AssetModelMapper {
         assetBo.setNotes(toAssetNotes(assetModel.getNotes()));
         return assetBo;
     }
-    
+
+    /**
+     * Check if String contains text.
+     * @param text
+     * @return true if this string is not null and has length > 0.
+     */
+    private static boolean hasText(String text) {
+        return text !=  null && !text.isEmpty();
+    }
+
     public eu.europa.ec.fisheries.wsdl.asset.types.Asset toAssetModel(Asset assetEntity) {
         if (assetEntity == null) {
             return null;
@@ -119,7 +128,7 @@ public class AssetModelMapper {
         
         assetModel.setAssetId(assetId);
         assetModel.setActive(assetEntity.getActive());
-        if (assetEntity.getSource() !=  null && !assetEntity.getSource().isEmpty()) {
+        if ( hasText(assetEntity.getSource())) {
             assetModel.setSource(CarrierSource.fromValue(assetEntity.getSource()));
         }
         AssetHistoryId assetHistory = new AssetHistoryId();
@@ -128,7 +137,7 @@ public class AssetModelMapper {
             Date d = Date.from(assetEntity.getUpdateTime());
             assetHistory.setEventDate(d);
         }
-        if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
+        if ( hasText(assetEntity.getEventCode()) ) {
             assetHistory.setEventCode(getEventCode(assetEntity));
         }
         assetModel.setEventHistory(assetHistory);
@@ -186,12 +195,39 @@ public class AssetModelMapper {
         }
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetEntity.getId());
+        addContactsToAsset(contacts, assetModel);
+        
+        assetModel.setIccat(assetEntity.getIccat());
+        assetModel.setUvi(assetEntity.getUvi());
+        assetModel.setGfcm(assetEntity.getGfcm());
+        
+        return assetModel;
+    }
+
+    private static void addNotesToAsset(Collection<Note> notes, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
+        for (Note note : notes) {
+            AssetNotes assetNote = new AssetNotes();
+            assetNote.setId(note.getId().toString());
+            if (note.getCreatedOn() != null) {
+                assetNote.setDate(DateUtils.dateToEpochMilliseconds(note.getCreatedOn()));
+            }
+            assetNote.setNotes(note.getNoteText());
+            assetModel.getNotes().add(assetNote);
+        }
+    }
+
+    /**
+     * Add a List of contacts to an asset model.
+     * @param contacts Contacts to be added.
+     * @param assetModel Notes will be added to this asset model.
+     */
+    private static void addContactsToAsset(List<ContactInfo> contacts, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         for (ContactInfo contactInfo : contacts) {
             AssetContact contact = new AssetContact();
             contact.setName(contactInfo.getName());
             contact.setNumber(contactInfo.getPhoneNumber());
             contact.setEmail(contactInfo.getEmail());
-            if (contactInfo.getOwner() != null) { 
+            if (contactInfo.getOwner() != null) {
                 contact.setOwner(contactInfo.getOwner());
             }
             if (contactInfo.getSource() != null) {
@@ -199,12 +235,6 @@ public class AssetModelMapper {
             }
             assetModel.getContact().add(contact);
         }
-        
-        assetModel.setIccat(assetEntity.getIccat());
-        assetModel.setUvi(assetEntity.getUvi());
-        assetModel.setGfcm(assetEntity.getGfcm());
-        
-        return assetModel;
     }
 
     private EventCode getEventCode(Asset assetEntity) {
