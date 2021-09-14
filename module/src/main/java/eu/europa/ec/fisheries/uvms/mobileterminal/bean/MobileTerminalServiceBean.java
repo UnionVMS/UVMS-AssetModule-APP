@@ -436,7 +436,7 @@ public class MobileTerminalServiceBean {
 
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
-        LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
+        LOG.debug("page: {}, listSize: {}, startIndex: {}", page, listSize, startIndex);
 
         List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived);
 
@@ -444,7 +444,7 @@ public class MobileTerminalServiceBean {
         terminals.forEach(this::sortChannels);
 
         int totalMatches = terminals.size();
-        LOG.debug("totalMatches: " + totalMatches);
+        LOG.debug("totalMatches: {}", totalMatches);
 
         int numberOfPages = totalMatches / listSize;
         if (totalMatches % listSize != 0) {
@@ -456,7 +456,7 @@ public class MobileTerminalServiceBean {
             if (stopIndex >= totalMatches) {
                 stopIndex = totalMatches;
             }
-            LOG.debug("stopIndex: " + stopIndex);
+            LOG.debug("stopIndex: {}", stopIndex);
             response.setMobileTerminalList(new ArrayList<>(MobileTerminalDtoMapper.mapToMobileTerminalDtos(terminals.subList(startIndex, stopIndex))));
         }
         response.setTotalNumberOfPages(numberOfPages);
@@ -513,7 +513,7 @@ public class MobileTerminalServiceBean {
     
     public MobileTerminal getMobileTerminalAtDateWithMemberNumberAndDnid(Integer memberNumber,Integer dnid, Instant date){
         if(memberNumber == null || dnid == null || date == null ) {
-            LOG.error("Null value in getTerminalAtDateWithMemberNumberAndDnid  \n memberNumber: " + memberNumber + " dnid: " + dnid+ " date: " + date);
+            LOG.error("Null value in getTerminalAtDateWithMemberNumberAndDnid  \n memberNumber: {} dnid: {} date: {}", memberNumber, dnid, date);
             return null;
         }
         return terminalDao.getMobileTerminalAtDateWithMemberNumberAndDnid(memberNumber, dnid, date);
