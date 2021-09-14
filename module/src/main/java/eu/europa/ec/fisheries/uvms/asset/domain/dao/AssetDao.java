@@ -160,7 +160,7 @@ public class AssetDao {
     }
 
     public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
-        if (isHistoricSearch(queryTree) == true) {
+        if (isHistoricSearch(queryTree)) {
             return getAssetCountHistoric(queryTree, includeInactivated);
         }
         return getAssetCountCB(queryTree, includeInactivated);
