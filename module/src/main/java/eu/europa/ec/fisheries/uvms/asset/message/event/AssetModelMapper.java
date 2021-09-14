@@ -195,12 +195,34 @@ public class AssetModelMapper {
         }
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetEntity.getId());
+        addContactsToAsset(contacts, assetModel);
+        
+        assetModel.setIccat(assetEntity.getIccat());
+        assetModel.setUvi(assetEntity.getUvi());
+        assetModel.setGfcm(assetEntity.getGfcm());
+        
+        return assetModel;
+    }
+
+    private static void addNotesToAsset(Collection<Note> notes, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
+        for (Note note : notes) {
+            AssetNotes assetNote = new AssetNotes();
+            assetNote.setId(note.getId().toString());
+            if (note.getCreatedOn() != null) {
+                assetNote.setDate(DateUtils.dateToEpochMilliseconds(note.getCreatedOn()));
+            }
+            assetNote.setNotes(note.getNoteText());
+            assetModel.getNotes().add(assetNote);
+        }
+    }
+
+    private static void addContactsToAsset(List<ContactInfo> contacts, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         for (ContactInfo contactInfo : contacts) {
             AssetContact contact = new AssetContact();
             contact.setName(contactInfo.getName());
             contact.setNumber(contactInfo.getPhoneNumber());
             contact.setEmail(contactInfo.getEmail());
-            if (contactInfo.getOwner() != null) { 
+            if (contactInfo.getOwner() != null) {
                 contact.setOwner(contactInfo.getOwner());
             }
             if (contactInfo.getSource() != null) {
@@ -208,12 +230,6 @@ public class AssetModelMapper {
             }
             assetModel.getContact().add(contact);
         }
-        
-        assetModel.setIccat(assetEntity.getIccat());
-        assetModel.setUvi(assetEntity.getUvi());
-        assetModel.setGfcm(assetEntity.getGfcm());
-        
-        return assetModel;
     }
 
     private EventCode getEventCode(Asset assetEntity) {
