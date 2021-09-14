@@ -104,7 +104,16 @@ public class AssetModelMapper {
         assetBo.setNotes(toAssetNotes(assetModel.getNotes()));
         return assetBo;
     }
-    
+
+    /**
+     * Check if String contains text.
+     * @param text
+     * @return true if this string is not null and has length > 0.
+     */
+    private static boolean hasText(String text) {
+        return text !=  null && !text.isEmpty();
+    }
+
     public eu.europa.ec.fisheries.wsdl.asset.types.Asset toAssetModel(Asset assetEntity) {
         if (assetEntity == null) {
             return null;
@@ -119,7 +128,7 @@ public class AssetModelMapper {
         
         assetModel.setAssetId(assetId);
         assetModel.setActive(assetEntity.getActive());
-        if (assetEntity.getSource() !=  null && !assetEntity.getSource().isEmpty()) {
+        if ( hasText(assetEntity.getSource())) {
             assetModel.setSource(CarrierSource.fromValue(assetEntity.getSource()));
         }
         AssetHistoryId assetHistory = new AssetHistoryId();
@@ -128,7 +137,7 @@ public class AssetModelMapper {
             Date d = Date.from(assetEntity.getUpdateTime());
             assetHistory.setEventDate(d);
         }
-        if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
+        if ( hasText(assetEntity.getEventCode()) ) {
             assetHistory.setEventCode(getEventCode(assetEntity));
         }
         assetModel.setEventHistory(assetHistory);
