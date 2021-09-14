@@ -252,7 +252,7 @@ public class AssetDao {
     }
     
     private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset) {
-        if (query.getFields() == null || query.getFields().isEmpty() || query.getFields().isEmpty()) {
+        if (query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1) {
             return null;
         }
         List<Predicate> predicates = new ArrayList<>();
