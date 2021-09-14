@@ -22,7 +22,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PollDataSourceRequestValidator {
-    final static Logger LOG = LoggerFactory.getLogger(PollDataSourceRequestValidator.class);
+
+    private PollDataSourceRequestValidator () {}
+
+    static final Logger LOG = LoggerFactory.getLogger(PollDataSourceRequestValidator.class);
 
     private static final int CONFIGURATION_POLL_MAX_SIZE = 1;
     private static final int SAMPLING_POLL_MAX_SIZE = 1;
