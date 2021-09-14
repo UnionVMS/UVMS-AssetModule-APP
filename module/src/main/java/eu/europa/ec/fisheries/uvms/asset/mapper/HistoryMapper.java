@@ -124,10 +124,14 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(MOBILE_TERMINAL_UPDATER_FIELD)
-                            || field.getName().equals(MOBILE_TERMINAL_UPDATE_TIME_FIELD)
-                            || field.getName().equals(MOBILE_TERMINAL_PLUGIN_FIELD)
-                            || field.getName().equals(MOBILE_TERMINAL_HISTORY_ID)) {
+
+                    Set<String> terminalUpdaterFields = new HashSet<>();
+                    terminalUpdaterFields.add(MOBILE_TERMINAL_UPDATER_FIELD);
+                    terminalUpdaterFields.add(MOBILE_TERMINAL_UPDATE_TIME_FIELD);
+                    terminalUpdaterFields.add(MOBILE_TERMINAL_PLUGIN_FIELD);
+                    terminalUpdaterFields.add(MOBILE_TERMINAL_HISTORY_ID);
+
+                    if (terminalUpdaterFields.contains(field.getName())) {
                         continue;
                     }else {
                         oldValue = FieldUtils.readDeclaredField(previousMt, field.getName(), true);
