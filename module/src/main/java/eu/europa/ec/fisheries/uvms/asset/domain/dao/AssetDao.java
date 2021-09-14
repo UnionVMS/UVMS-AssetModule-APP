@@ -221,10 +221,7 @@ public class AssetDao {
     private boolean isHistoricSearch(SearchBranch queryTree) {
         SearchLeaf dateSearchField = getDateSearchField(queryTree);
         SearchLeaf historySearchField = getHistoryIdSearchField(queryTree);
-        if (dateSearchField != null || historySearchField != null) {
-            return true;
-        }
-        return false;
+        return dateSearchField != null || historySearchField != null;
     }
 
     private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
