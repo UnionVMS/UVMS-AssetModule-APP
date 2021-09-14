@@ -8,11 +8,10 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.*;
 
 @Entity
 @Table(name = "customcode")
-@NamedQueries({
-        @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m WHERE UPPER(m.primaryKey.constant) LIKE UPPER(:constant)"),
-        @NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m "),
-        @NamedQuery(name = CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, query = "SELECT  m FROM CustomCode m where m.primaryKey.constant = :constant and  m.primaryKey.code = :code and ( :aDate Between m.primaryKey.validFromDate and m.primaryKey.validToDate)"),
-})
+@NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m WHERE UPPER(m.primaryKey.constant) LIKE UPPER(:constant)")
+@NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m ")
+@NamedQuery(name = CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, query = "SELECT  m FROM CustomCode m where m.primaryKey.constant = :constant and  m.primaryKey.code = :code and ( :aDate Between m.primaryKey.validFromDate and m.primaryKey.validToDate)")
+
 public class CustomCode {
 
     public static final String CUSTOMCODES_GETALLFOR = "CUSTOMCODES.GETALLFOR";
