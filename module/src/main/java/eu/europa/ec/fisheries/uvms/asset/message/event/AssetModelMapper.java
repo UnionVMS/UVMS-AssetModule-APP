@@ -178,20 +178,8 @@ public class AssetModelMapper {
         addNotesToAsset(notes, assetModel);
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetEntity.getId());
-        for (ContactInfo contactInfo : contacts) {
-            AssetContact contact = new AssetContact();
-            contact.setName(contactInfo.getName());
-            contact.setNumber(contactInfo.getPhoneNumber());
-            contact.setEmail(contactInfo.getEmail());
-            if (contactInfo.getOwner() != null) { 
-                contact.setOwner(contactInfo.getOwner());
-            }
-            if (contactInfo.getSource() != null) {
-                contact.setSource(ContactSource.fromValue(contactInfo.getSource()));
-            }
-            assetModel.getContact().add(contact);
-        }
-        
+        addContactsToAsset(contacts, assetModel);
+
         assetModel.setIccat(assetEntity.getIccat());
         assetModel.setUvi(assetEntity.getUvi());
         assetModel.setGfcm(assetEntity.getGfcm());
@@ -213,6 +201,27 @@ public class AssetModelMapper {
             }
             assetNote.setNotes(note.getNoteText());
             assetModel.getNotes().add(assetNote);
+        }
+    }
+
+    /**
+     * Add a List of contacts to an asset model.
+     * @param contacts Contacts to be added.
+     * @param assetModel Notes will be added to this asset model.
+     */
+    private static void addContactsToAsset(List<ContactInfo> contacts, eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
+        for (ContactInfo contactInfo : contacts) {
+            AssetContact contact = new AssetContact();
+            contact.setName(contactInfo.getName());
+            contact.setNumber(contactInfo.getPhoneNumber());
+            contact.setEmail(contactInfo.getEmail());
+            if (contactInfo.getOwner() != null) {
+                contact.setOwner(contactInfo.getOwner());
+            }
+            if (contactInfo.getSource() != null) {
+                contact.setSource(ContactSource.fromValue(contactInfo.getSource()));
+            }
+            assetModel.getContact().add(contact);
         }
     }
 
