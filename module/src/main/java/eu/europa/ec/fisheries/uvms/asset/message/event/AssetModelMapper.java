@@ -119,7 +119,7 @@ public class AssetModelMapper {
         
         assetModel.setAssetId(assetId);
         assetModel.setActive(assetEntity.getActive());
-        if (assetEntity.getSource() !=  null && !assetEntity.getSource().isEmpty()) {
+        if ( hasText(assetEntity.getSource()) ) {
             assetModel.setSource(CarrierSource.fromValue(assetEntity.getSource()));
         }
         AssetHistoryId assetHistory = new AssetHistoryId();
@@ -128,7 +128,7 @@ public class AssetModelMapper {
             Date d = Date.from(assetEntity.getUpdateTime());
             assetHistory.setEventDate(d);
         }
-        if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
+        if ( hasText(assetEntity.getEventCode()) ) {
             assetHistory.setEventCode(getEventCode(assetEntity));
         }
         assetModel.setEventHistory(assetHistory);
@@ -223,6 +223,15 @@ public class AssetModelMapper {
             }
             assetModel.getContact().add(contact);
         }
+    }
+
+    /**
+     * Check if String contains text.
+     * @param text
+     * @return true if this string is not null and has length > 0.
+     */
+    private static boolean hasText(String text) {
+        return text !=  null && !text.isEmpty();
     }
 
     private EventCode getEventCode(Asset assetEntity) {
