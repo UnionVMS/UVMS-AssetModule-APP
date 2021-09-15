@@ -141,7 +141,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
         assertNotNull(fetchedAssetFilter);
         assertEquals(fetchedAssetFilterJsonAdapter.getId(), assetFilter.getId());
         assertEquals(fetchedAssetFilterJsonAdapter.getName(), assetFilter.getName());
-    }  
+    }
     
     @Test
     @OperateOnDeployment("normal")
@@ -182,7 +182,9 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
         assetQuery.setType("GUID");
         assetQuery.setValueType(AssetFilterValueType.STRING);
         assetQuery.setAssetFilter(assetFilter);
-        
+
+		assertNotNull(assetQuery.getAssetFilter());
+
         assetQuery = getWebTargetExternal()
             .path("filter")
             .path(assetFilter.getId().toString())
@@ -190,9 +192,9 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .post(Entity.json(assetQuery), AssetFilterQuery.class);
-        
+
         assertNotNull(assetQuery.getId());
-        
+
         getWebTargetExternal()
         .path("filter")
         .path(assetQuery.getId().toString())
