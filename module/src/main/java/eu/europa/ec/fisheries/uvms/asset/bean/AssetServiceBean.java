@@ -715,7 +715,7 @@ public class AssetServiceBean {
             shouldUpdate = true;
             assetFromDB.setMmsi(assetFromAIS.getMmsi());
         }
-        if ((assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs())) && (assetFromAIS.getIrcs() != null)) {
+        if ((assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs().replace(" ", ""))) && (assetFromAIS.getIrcs() != null)) {
             shouldUpdate = true;
             assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
         }
