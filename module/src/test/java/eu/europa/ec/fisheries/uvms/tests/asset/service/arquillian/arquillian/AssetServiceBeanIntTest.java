@@ -465,6 +465,25 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getAssetListTestUVIQuery() throws Exception {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        asset.setUvi("testUVI");
+        asset = assetService.createAsset(asset, "test");
+        commit();
+
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.UVI, asset.getUvi()));
+
+        List<Asset> assets = assetService.getAssetList(trunk, 1, 100,  false).getAssetList();
+
+        assertFalse(assets.isEmpty());
+        assertEquals(asset.getCfr(), assets.get(0).getCfr());
+        assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createNotesTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
