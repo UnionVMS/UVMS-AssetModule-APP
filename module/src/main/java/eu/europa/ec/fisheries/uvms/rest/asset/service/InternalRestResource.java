@@ -136,7 +136,7 @@ public class InternalRestResource {
         List<Asset> assetList = assetService.getAssetList(assetIdList);
         return Response.ok(assetList).build();
         } catch (Exception e) {
-            LOG.error("getAssetListFromListOfIDs", e);
+            LOG.error("Error in getAssetList Internal with arg. assetIdList: ", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }

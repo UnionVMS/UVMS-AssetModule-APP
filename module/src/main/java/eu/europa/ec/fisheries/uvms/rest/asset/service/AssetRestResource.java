@@ -105,7 +105,7 @@ public class AssetRestResource {
         List<Asset> assetList = assetService.getAssetList(assetIdList);
         return Response.ok(assetList).build();
         } catch (Exception e) {
-            LOG.error("getAssetListFromListOfIDs", e);
+            LOG.error("Error in getAssetList with arg assetIdList: ", e);
             throw e;
         }
     }
