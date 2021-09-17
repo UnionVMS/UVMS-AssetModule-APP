@@ -1249,4 +1249,13 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertEquals("updated", changeHistoryRow.getUpdatedBy());
         assertNotNull(changeHistoryRow.getUpdateTime());
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void changeHistoryItemTest () {
+        ChangeHistoryItem changeHistoryItem = new ChangeHistoryItem("field", "oldvalue", "newvalue");
+        assertEquals("field", changeHistoryItem.getField());
+        assertEquals("oldvalue", changeHistoryItem.getOldValue());
+        assertEquals("newvalue", changeHistoryItem.getNewValue());
+    }
 }
