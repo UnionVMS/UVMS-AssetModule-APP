@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryItem;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -1241,4 +1242,11 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         return mtList;
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void changeHistoryRowTest () {
+        ChangeHistoryRow changeHistoryRow = new ChangeHistoryRow("updated", Instant.now());
+        assertEquals("updated", changeHistoryRow.getUpdatedBy());
+        assertNotNull(changeHistoryRow.getUpdateTime());
+    }
 }
