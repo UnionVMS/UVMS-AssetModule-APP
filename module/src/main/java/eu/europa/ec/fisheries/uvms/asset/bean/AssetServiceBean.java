@@ -754,7 +754,7 @@ public class AssetServiceBean {
             shouldUpdate = true;
             assetFromDB.setMmsi(assetFromAIS.getMmsi());
         }
-        if (assetFieldValuesNotEqual(assetFromDB.getIrcs(), assetFromAIS.getIrcs())) {
+        if (assetFromAIS.getIrcs() != null && (assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs().replace(" ", "")))) {
             shouldUpdate = true;
             assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
         }
