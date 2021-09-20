@@ -606,12 +606,4 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(codes);
         assertTrue(codes.size() > 0);
     }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void CustomCodesPKTest () {
-        CustomCodesPK customcodespk = new CustomCodesPK("TEST","testing");
-        assertEquals("TEST", customcodespk.getConstant());
-        assertEquals("testing", customcodespk.getCode());
-    }
 }
