@@ -613,26 +613,6 @@ public class AssetClientTest extends AbstractClientTest {
         List<eu.europa.ec.fisheries.uvms.asset.client.model.mt.VmsBillingDto> vmsBillingList = assetClient.getVmsBillingList();
         assertNotNull(vmsBillingList);
     }
-    
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetListFromIDsTest(){
-        List<String> assetIdList = new ArrayList<>();
-        for (int i = 0; i < 9 ; i++){
-            assetIdList.add(createAsset());
-        }
-        String output = assetClient.getAssetList(assetIdList);
-        assertEquals(10, output.split("externalMarking").length);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetListFromIDsWithEmptyInputListTest(){
-        List<String> assetIdList = new ArrayList<>();
-        String output = assetClient.getAssetList(assetIdList);
-
-        assertEquals("[]", output);
-    }
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();
