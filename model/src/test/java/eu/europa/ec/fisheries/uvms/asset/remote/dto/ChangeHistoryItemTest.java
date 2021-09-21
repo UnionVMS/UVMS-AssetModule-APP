@@ -7,7 +7,7 @@ import java.time.Instant;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class ChangeHistoryTest {
+public class ChangeHistoryItemTest {
 
     @Test
     public void changeHistoryRowTest () {
