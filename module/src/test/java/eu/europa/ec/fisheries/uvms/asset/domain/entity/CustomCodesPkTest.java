@@ -12,6 +12,8 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import static org.junit.Assert.assertEquals;
+
 public class CustomCodesPkTest {
 
     @Test
@@ -51,5 +53,12 @@ public class CustomCodesPkTest {
         primaryKey1 = new CustomCodesPK(constant, code, from, to);
         primaryKey2 = new CustomCodesPK(constant, code, from, to.plus(1, ChronoUnit.DAYS));
         Assert.assertNotEquals(primaryKey1, primaryKey2);
+    }
+
+    @Test
+    public void CustomCodesPKTest () {
+        CustomCodesPK customcodespk = new CustomCodesPK("TEST","testing");
+        assertEquals("TEST", customcodespk.getConstant());
+        assertEquals("testing", customcodespk.getCode());
     }
 }
