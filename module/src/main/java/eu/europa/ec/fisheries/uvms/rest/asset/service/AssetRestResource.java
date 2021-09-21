@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -486,19 +485,6 @@ public class AssetRestResource {
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while deleting contact info.", e);
-            throw e;
-        }
-    }
-
-    @POST
-    @Path("microAssets")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMicroAssets(List<String> assetIdList)  throws Exception {
-        try {
-            List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-            return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when getting microAssets.", e);
             throw e;
         }
     }

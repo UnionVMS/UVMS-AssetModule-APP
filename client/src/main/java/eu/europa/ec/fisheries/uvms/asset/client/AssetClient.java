@@ -328,18 +328,6 @@ public class AssetClient {
         checkForErrorResponse(response);
         return response.readEntity(AssetMTEnrichmentResponse.class);
     }
-
-    public String getMicroAssetList(List<String> assetIdList){
-        Response response = webTarget
-                .path("microAssets")
-                .request(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(assetIdList), Response.class);
-
-        checkForErrorResponse(response);
-        return response.readEntity(String.class);
-    }
     
     public String getAssetList(List<String> assetIdList){
         Response response = webTarget

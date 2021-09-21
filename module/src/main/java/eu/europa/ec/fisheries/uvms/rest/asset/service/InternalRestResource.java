@@ -231,19 +231,6 @@ public class InternalRestResource {
         }
     }
 
-    @POST
-    @Path("microAssets")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMicroAssets(List<String> assetIdList) {
-        try {
-        List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-        return Response.ok(assetList).build();
-        } catch (Exception e) {
-            LOG.error("getMicroAssets", e);
-            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
-        }
-    }
-
     @GET
     @Path("ping")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)

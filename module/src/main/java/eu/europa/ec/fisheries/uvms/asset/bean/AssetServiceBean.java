@@ -755,12 +755,12 @@ public class AssetServiceBean {
         }
     }
 
-    public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList) {
+    public List<Asset> getInitialDataForRealtime(List<String> assetIdList) {
         List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
         for (String s : assetIdList) {
             assetUuidList.add(UUID.fromString(s));
         }
-        return assetDao.getMicroAssetListByAssetGuids(assetUuidList);
+        return assetDao.getAssetListByAssetGuids(assetUuidList);
     }
 
     public Note getNoteById(UUID id) {

@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -489,15 +488,6 @@ public class AssetDao {
             return new ArrayList<>();
         }
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
-        query.setParameter("idList", idList);
-        return query.getResultList();
-    }
-
-    public List<MicroAsset> getMicroAssetListByAssetGuids(List<UUID> idList) {
-        if (idList.isEmpty()) {
-            return new ArrayList<>();
-        }
-        TypedQuery<MicroAsset> query = em.createNamedQuery(Asset.ASSET_MICRO_ASSET_BY_LIST, MicroAsset.class);
         query.setParameter("idList", idList);
         return query.getResultList();
     }
