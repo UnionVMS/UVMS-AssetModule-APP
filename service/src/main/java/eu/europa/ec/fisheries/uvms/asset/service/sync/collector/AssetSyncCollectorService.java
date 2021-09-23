@@ -89,6 +89,7 @@ public class AssetSyncCollectorService {
 
         results = new ArrayList<>();
         Integer pageSize = userPageSize <=0 ? defaultPageSize : userPageSize;
+        log.info("Asset synchronization collection started with page size {}.", pageSize);
         if (getSinglePage) {
             getSinglePageFromFleet(startPageIndex, pageSize);
         } else {

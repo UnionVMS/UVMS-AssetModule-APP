@@ -71,7 +71,7 @@ public class AssetSyncProcessorService {
         processedAssetsCount = 0;
         final List<String> existingCfrs = assetRawHistoryDao.getAllCfrsSorted();
         final List<String> incomingCfrs = assetRawHistoryDao.getAllDistinctRawCfrs();
-        log.info("FLEET SYNC: Start processing raw history records in batches of {}. Existing CFRs: {}. Incoming CFRs {}",
+        log.info("FLEET SYNC: Asset synchronization processing started with batches of {}. Existing CFRs: {}. Incoming CFRs {}",
                 BATCH_PROC_SIZE, existingCfrs.size(), incomingCfrs.size());
 
         Arrays.stream(partition(incomingCfrs, BATCH_PROC_SIZE))
