@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -27,6 +26,8 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -91,6 +92,19 @@ public class AssetRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
+            throw e;
+        }
+    }
+    
+    @POST
+    @Path("assetList")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getAssetList(List<String> assetIdList) throws Exception{
+        try {
+        List<Asset> assetList = assetService.getAssetList(assetIdList);
+        return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("Error in getAssetList with arg assetIdList: ", e);
             throw e;
         }
     }
@@ -475,19 +489,6 @@ public class AssetRestResource {
         }
     }
 
-    @POST
-    @Path("microAssets")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMicroAssets(List<String> assetIdList)  throws Exception {
-        try {
-            List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-            return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when getting microAssets.", e);
-            throw e;
-        }
-    }
-
     @GET
     @Path("{id}/licence")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -500,4 +501,5 @@ public class AssetRestResource {
             throw e;
         }
     }
+    
 }

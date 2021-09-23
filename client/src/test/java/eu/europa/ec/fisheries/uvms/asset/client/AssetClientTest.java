@@ -539,24 +539,23 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMicroAssetInformation(){
+    public void getAssetInformation(){
         List<String> assetIdList = new ArrayList<>();
 
-        for (int i = 0; i < 50 ; i++){
+        for (int i = 0; i < 41 ; i++){
             assetIdList.add(createAsset());
         }
-        String output = assetClient.getMicroAssetList(assetIdList);
+        String output = assetClient.getAssetList(assetIdList);
 
-        assertEquals(51, output.split("assetName").length);
-        assertEquals(8901, output.length());
+        assertEquals(42, output.split("externalMarking").length);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMicroAssetInformationEmptyInputList(){
+    public void getAssetInformationEmptyInputList(){
         List<String> assetIdList = new ArrayList<>();
 
-        String output = assetClient.getMicroAssetList(assetIdList);
+        String output = assetClient.getAssetList(assetIdList);
 
         assertEquals("[]", output);
     }

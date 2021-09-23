@@ -127,6 +127,19 @@ public class InternalRestResource {
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
+    
+    @POST
+    @Path("assetList")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getAssetList(List<String> assetIdList) {
+        try {
+        List<Asset> assetList = assetService.getAssetList(assetIdList);
+        return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("Error in getAssetList Internal with arg. assetIdList: ", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
 
     @POST
     @Path("queryIdOnly")
@@ -214,19 +227,6 @@ public class InternalRestResource {
             return Response.ok(upsertedAsset).build();
         } catch (Exception e) {
             LOG.error("upsertAsset", e);
-            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
-        }
-    }
-
-    @POST
-    @Path("microAssets")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMicroAssets(List<String> assetIdList) {
-        try {
-        List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-        return Response.ok(assetList).build();
-        } catch (Exception e) {
-            LOG.error("getMicroAssets", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
@@ -475,4 +475,5 @@ public class InternalRestResource {
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
+    
 }

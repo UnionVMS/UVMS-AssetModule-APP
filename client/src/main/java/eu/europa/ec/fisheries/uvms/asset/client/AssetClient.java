@@ -328,10 +328,10 @@ public class AssetClient {
         checkForErrorResponse(response);
         return response.readEntity(AssetMTEnrichmentResponse.class);
     }
-
-    public String getMicroAssetList(List<String> assetIdList){
+    
+    public String getAssetList(List<String> assetIdList){
         Response response = webTarget
-                .path("microAssets")
+                .path("assetList")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))

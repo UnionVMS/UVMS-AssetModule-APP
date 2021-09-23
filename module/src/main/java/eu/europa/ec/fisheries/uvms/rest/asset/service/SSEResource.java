@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -46,8 +45,7 @@ public class SSEResource {
     public void updatedAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
         try {
             if (asset != null) {
-                MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll(), asset.getHasLicence());
-                String outboundJson = jsonb.toJson(micro);
+                String outboundJson = jsonb.toJson(asset);
                 OutboundSseEvent sseEvent = eventBuilder
                         .name("Updated Asset")
                         .id("" + System.currentTimeMillis())
