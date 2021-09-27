@@ -223,45 +223,7 @@ public class TerminalDaoBean {
         //due to how traverseRelation works, we start out in mobile terminal
         boolean operatorUsed = false;
         for (MTSearchKeyValue searchKeyValue : searchFields) {
-            if (useLike(searchKeyValue)) {
-                AuditDisjunction op = AuditEntity.disjunction();
-                for (String value : searchKeyValue.getSearchValues()) {
-                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(value.replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
-                }
-                operatorUsed = true;
-                operatorMT.add(op);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                operatorUsed = true;
-                operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                operatorUsed = true;
-                operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                operatorUsed = true;
-                AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
-                for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
-                    if(searchKeyValue.getSearchField().equals(MTSearchFields.ASSET_ID)){
-                        disjunctionOperator.add(AuditEntity.relatedId(searchKeyValue.getSearchField().getFieldName()).eq(UUID.fromString(v)));
-                    }else {
-                        disjunctionOperator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
-                    }
-                }
-                operatorMT.add(disjunctionOperator);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
-                List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
-                operatorUsed = true;
-                operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(intValues));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
-                List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
-                operatorUsed = true;
-                operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
-                    searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
-                operatorUsed = true;
-                operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.CHILD)) {
-
-            }
+            operatorUsed = addMobileTerminalSearchOperator(searchKeyValue, operatorMT, operatorUsed);
         }
         if (operatorUsed) {
             aaQuery.add((AuditCriterion) operatorMT);
@@ -306,6 +268,49 @@ public class TerminalDaoBean {
         }
 
         return query;
+    }
+
+    boolean addMobileTerminalSearchOperator(MTSearchKeyValue searchKeyValue, ExtendableCriterion operatorMT, boolean operatorUsed) {
+        if (useLike(searchKeyValue)) {
+            AuditDisjunction op = AuditEntity.disjunction();
+            for (String value : searchKeyValue.getSearchValues()) {
+                op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(value.replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
+            }
+            operatorUsed = true;
+            operatorMT.add(op);
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+            operatorUsed = true;
+            operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+            operatorUsed = true;
+            operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+            operatorUsed = true;
+            AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
+            for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
+                if(searchKeyValue.getSearchField().equals(MTSearchFields.ASSET_ID)){
+                    disjunctionOperator.add(AuditEntity.relatedId(searchKeyValue.getSearchField().getFieldName()).eq(UUID.fromString(v)));
+                }else {
+                    disjunctionOperator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                }
+            }
+            operatorMT.add(disjunctionOperator);
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
+            List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
+            operatorUsed = true;
+            operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(intValues));
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
+            List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
+            operatorUsed = true;
+            operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
+                searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
+            operatorUsed = true;
+            operatorMT.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
+        } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.CHILD)) {
+
+        }
+        return operatorUsed;
     }
 
     private AuditAssociationQuery createAuditAssociationQuery(AuditReader auditReader, List<MTSearchKeyValue> searchFields, boolean includeArchived) {
