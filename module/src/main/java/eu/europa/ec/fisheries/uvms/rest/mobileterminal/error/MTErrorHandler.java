@@ -18,7 +18,7 @@ public class MTErrorHandler {
 
     private MTErrorHandler() {}
     
-    public static MTResponseDto getFault(Exception ex) {
+    public static MTResponseDto <Object> getFault(Exception ex) {
         return new MTResponseDto<>(ExceptionUtils.getRootCause(ex), MTResponseCode.UNDEFINED_ERROR);
     }
 }
