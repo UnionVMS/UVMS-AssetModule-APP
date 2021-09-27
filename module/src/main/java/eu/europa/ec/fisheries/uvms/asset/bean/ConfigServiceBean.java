@@ -12,8 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitLength;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,26 +42,5 @@ public class ConfigServiceBean {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetServiceException("Couldn't get parameters");
 		}
-	}
-
-	private  List<String> getGearTypes() {
-		List<String> values = new ArrayList<>();
-		return values;
-	}
-
-	private  List<String> getLengthUnit() {
-		List<String> values = new ArrayList<>();
-		for (UnitLength unit : UnitLength.values()) {
-			values.add(unit.name());
-		}
-		return values;
-	}
-
-	private  List<String> getTonnageUnit() {
-		List<String> values = new ArrayList<>();
-		for (UnitTonnage unit : UnitTonnage.values()) {
-			values.add(unit.name());
-		}
-		return values;
 	}
 }
