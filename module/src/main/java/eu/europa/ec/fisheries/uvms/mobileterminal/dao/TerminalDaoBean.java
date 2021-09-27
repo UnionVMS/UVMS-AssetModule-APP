@@ -211,23 +211,8 @@ public class TerminalDaoBean {
         searchFields.removeAll(channelSearchValues);
 
 
-        AuditAssociationQuery aaQuery;
-        MTSearchKeyValue dateSearchField = getDateSearchField(searchFields);
-        if (dateSearchField != null) {
-            Instant date = Instant.parse(dateSearchField.getSearchValues().get(0));
-            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
-            aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
-        } else {
-            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(new Date());
-            aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
-
-            if (!searchRevisions(searchFields)) {
-                aaQuery.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
-            }
-            if(!includeArchived) {
-                aaQuery.add(AuditEntity.property("archived").eq(false));
-            }
-        }
+        AuditAssociationQuery aaQuery = null;
+        initializeAuditAssociationQuery(aaQuery, auditReader, searchFields, includeArchived);
 
         ExtendableCriterion operatorMT;
         if (isDynamic) {
@@ -322,6 +307,25 @@ public class TerminalDaoBean {
         }
 
         return query;
+    }
+
+    private void initializeAuditAssociationQuery(AuditAssociationQuery aaQuery, AuditReader auditReader, List<MTSearchKeyValue> searchFields, boolean includeArchived) {
+        MTSearchKeyValue dateSearchField = getDateSearchField(searchFields);
+        if (dateSearchField != null) {
+            Instant date = Instant.parse(dateSearchField.getSearchValues().get(0));
+            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
+            aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
+        } else {
+            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(new Date());
+            aaQuery = auditReader.createQuery().forEntitiesAtRevision(Channel.class, revisionNumberForDate).traverseRelation("mobileTerminal", JoinType.INNER);
+
+            if (!searchRevisions(searchFields)) {
+                aaQuery.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
+            }
+            if(!includeArchived) {
+                aaQuery.add(AuditEntity.property("archived").eq(false));
+            }
+        }
     }
 
     private boolean useLike(MTSearchKeyValue entry) {
