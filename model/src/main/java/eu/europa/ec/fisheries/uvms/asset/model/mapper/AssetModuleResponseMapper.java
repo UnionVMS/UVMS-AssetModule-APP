@@ -119,12 +119,6 @@ public class AssetModuleResponseMapper {
         return response;
     }
 
-    public static UpsertAssetModuleResponse createUpsertAssetListModuleResponse(Asset asset){
-        UpsertAssetModuleResponse response = new UpsertAssetModuleResponse();
-        response.setAsset(asset);
-        return response;
-    }
-
     public static String createUpsertFishingGearModuleResponse(FishingGear fishingGear) throws AssetException {
             UpsertFishingGearModuleResponse upsertResponse = new UpsertFishingGearModuleResponse();
             upsertResponse.setFishingGear(fishingGear);
