@@ -47,7 +47,7 @@ public class AssetMessageJSONBean {
     }
 
     public void assetInformation(TextMessage message) throws JMSException {
-        List<Asset> assetBos = jsonb.fromJson(message.getText(), ArrayList.class.getGenericSuperclass());
+        List<Asset> assetBos = jsonb.fromJson(message.getText(), new ArrayList<Asset>(){}.getClass().getGenericSuperclass());
         for(Asset oneAsset : assetBos){
             assetService.assetInformation(oneAsset, oneAsset.getUpdatedBy() == null ? "UVMS (JMS)" : oneAsset.getUpdatedBy());
         }
