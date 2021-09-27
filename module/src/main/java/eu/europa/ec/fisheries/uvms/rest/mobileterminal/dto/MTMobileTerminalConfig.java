@@ -30,34 +30,39 @@ public class MTMobileTerminalConfig {
       
         for (TerminalSystemType system : list) {
 
-            MTMobileTerminalDeviceConfig transponder = new MTMobileTerminalDeviceConfig();
-            transponder.setTerminalSystemType(system.getType());
-
-            if (system.getTerminalConfiguration() != null) {
-                transponder.setTerminalFieldList(system.getTerminalConfiguration().getAttribute());
-            }
-            if (system.getComchannelConfiguration() != null) {
-                transponder.setChannelFieldList(system.getComchannelConfiguration().getAttribute());
-            }
-
-            if (system.getCapabilityConfiguration() != null) {
-                CapabilityConfiguration configuration = system.getCapabilityConfiguration();
-                if (configuration != null && configuration.getCapability() != null) {
-                    List<MTCapabilityDto> capabilityList = new ArrayList<>();
-                    for (Capability capability : configuration.getCapability()) {
-                        MTCapabilityDto dto = new MTCapabilityDto();
-                        dto.setName(capability.getName());
-                        if (capability.getOptions() != null) {
-                            dto.setOptionList(capability.getOptions());
-                        }
-                        capabilityList.add(dto);
-                    }
-                    transponder.setCapabilityList(capabilityList);
-                }
-            }
-            transponders.add(transponder);
+            transponders.add(createTronsponder(system));
         }
         return transponders;
+    }
+
+    private static MTMobileTerminalDeviceConfig createTronsponder(TerminalSystemType system) {
+        MTMobileTerminalDeviceConfig transponder = new MTMobileTerminalDeviceConfig();
+        transponder.setTerminalSystemType(system.getType());
+
+        if (system.getTerminalConfiguration() != null) {
+            transponder.setTerminalFieldList(system.getTerminalConfiguration().getAttribute());
+        }
+        if (system.getComchannelConfiguration() != null) {
+            transponder.setChannelFieldList(system.getComchannelConfiguration().getAttribute());
+        }
+
+        if (system.getCapabilityConfiguration() != null) {
+            CapabilityConfiguration configuration = system.getCapabilityConfiguration();
+            if (configuration != null && configuration.getCapability() != null) {
+                List<MTCapabilityDto> capabilityList = new ArrayList<>();
+                for (Capability capability : configuration.getCapability()) {
+                    MTCapabilityDto dto = new MTCapabilityDto();
+                    dto.setName(capability.getName());
+                    if (capability.getOptions() != null) {
+                        dto.setOptionList(capability.getOptions());
+                    }
+                    capabilityList.add(dto);
+                }
+                transponder.setCapabilityList(capabilityList);
+            }
+        }
+
+        return transponder;
     }
 
     public static Map<String, List<String>> mapConfigList(List<ConfigList> config) {
