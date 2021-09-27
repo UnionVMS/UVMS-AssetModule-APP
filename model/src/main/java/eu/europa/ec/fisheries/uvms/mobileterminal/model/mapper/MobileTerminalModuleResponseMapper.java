@@ -50,12 +50,6 @@ public class MobileTerminalModuleResponseMapper {
         }
     }
 
-    private static String createMobileTerminalResponse(MobileTerminalType data) throws  AssetException {
-        MobileTerminalResponse response = new MobileTerminalResponse();
-        response.setMobilTerminal(data);
-        return JAXBMarshaller.marshallJaxBObjectToString(data);
-    }
-
     public static String createPingResponse(String responseMessage) throws  AssetException {
 		PingResponse pingResponse = new PingResponse();
 		pingResponse.setResponse(responseMessage);
