@@ -47,6 +47,8 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class AssetFilterRestResource {
 
+    private static final String REQUSTID = "requestId";
+
     private static final Logger LOG = LoggerFactory.getLogger(AssetFilterRestResource.class);
 
     @Context
@@ -78,7 +80,7 @@ public class AssetFilterRestResource {
         	}
             List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
             String response =  jsonb.toJson(assetFilterList);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", user, e);
             throw e;
@@ -97,7 +99,7 @@ public class AssetFilterRestResource {
         try {
             AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
             String response = jsonb.toJson(assetFilter);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
             throw e;
@@ -116,7 +118,7 @@ public class AssetFilterRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
-            return Response.ok(createdAssetFilter).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(createdAssetFilter).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetFilter: {}", assetFilter, e);
             throw e;
@@ -135,7 +137,7 @@ public class AssetFilterRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             assetFilterService.deleteAssetFilterById(id, user);
-            return Response.ok().header("MDC", MDC.get("requestId")).build();
+            return Response.ok().header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when deleting asset filter by id: {}", id, e);
             throw e;
@@ -149,9 +151,9 @@ public class AssetFilterRestResource {
         try {
             List<AssetFilter> assetFilters = assetFilterService.getAssetFilterListByAssetId(assetId);
             String response = jsonb.toJson(assetFilters);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting assetFilters list by user. {}", assetId, toString(), e);
+            LOG.error("Error when getting assetFilters list by user. {}", assetId, e);
             throw e;
         }
     }
@@ -164,7 +166,7 @@ public class AssetFilterRestResource {
         try {
             AssetFilterQuery createdAssetFilterQuery = assetFilterService.createAssetFilterQuery(parentAssetFilterId, assetFilterQuery);//  createAssetFilterQuery(parentAssetFilterId, assetFilterQuery, user);
             String response = jsonb.toJson(createdAssetFilterQuery);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating createdAssetFilterQuery. ", e);
             throw e;
@@ -180,7 +182,7 @@ public class AssetFilterRestResource {
             AssetFilterValue createdAssetFilterValue = assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, assetFilterValue);
             
             String response = jsonb.toJson(createdAssetFilterValue);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating createdAssetFilterValue. ", e);
             throw e;
@@ -196,7 +198,7 @@ public class AssetFilterRestResource {
             String user = servletRequest.getRemoteUser();
             AssetFilterValue updatedAssetFilterValue = assetFilterService.updateAssetFilterValue(assetFilterValue, user);
             String response = jsonb.toJson(updatedAssetFilterValue);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetFilterValue. ", e);
             throw e;
@@ -211,7 +213,7 @@ public class AssetFilterRestResource {
         try {
         	AssetFilterValue fetchedAssetFilterValue = assetFilterService.getAssetFilterValue(id);
             String response = jsonb.toJson(fetchedAssetFilterValue);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when getting AssetFilterValue. ", e);
             throw e;
@@ -227,7 +229,7 @@ public class AssetFilterRestResource {
             String user = servletRequest.getRemoteUser();
             AssetFilterValue fetchedAssetGroupField = assetFilterService.deleteAssetFilterValue(assetFilterValueId, user);
             String response = jsonb.toJson(fetchedAssetGroupField);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when delete AssetFilterValue. ", e);
             throw e;
@@ -247,7 +249,7 @@ public class AssetFilterRestResource {
             AssetFilter assetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
             AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
             String resp = jsonb.toJson(createdAssetFilter);
-            return Response.ok(resp).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(resp).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetFilter from json: {}", jsonAssetFilter, e);
             throw e;
@@ -263,7 +265,7 @@ public class AssetFilterRestResource {
             String user = servletRequest.getRemoteUser();
             AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user); 
             String response = jsonb.toJson(updatedAssetFilter);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when updating AssetFilter. ", e);
             throw e;
@@ -287,7 +289,7 @@ public class AssetFilterRestResource {
             assetFilterListresp.setSavedFilters(filterMap);
             String response =  jsonb.toJson(assetFilterListresp);
             
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", e);
             throw e;
