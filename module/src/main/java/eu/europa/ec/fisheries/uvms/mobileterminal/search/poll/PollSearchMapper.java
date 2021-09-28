@@ -99,10 +99,6 @@ public class PollSearchMapper {
 
 	private static String createSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic, SearchTable searchTable) {
 		StringBuilder builder = new StringBuilder();
-		String OPERATOR = " OR ";
-		if (isDynamic) {
-			OPERATOR = " AND ";
-		}
 
 		final List<String> searchFields = new ArrayList<>();
 
@@ -113,6 +109,19 @@ public class PollSearchMapper {
 				searchFields.add(tableName);
 		}
 
+		appendJoinClauseSql(builder, searchTable, searchFields);
+		appendWhereConditionSql(builder, searchTable, searchKeys, isDynamic);
+
+		return builder.toString();
+	}
+
+	/**
+	 * Create the JOIN clause of the SQL statement and append it to the StringBuilder.
+	 * @param builder Resulting SQL is appended to this object.
+	 * @param searchTable Search table to use in constructing SQL.
+	 * @param searchFields Searchfields to use in constructing SQL.
+	 */
+	private static void appendJoinClauseSql(StringBuilder builder, SearchTable searchTable, List<String> searchFields) {
 		String terminalTypeTableName = PollSearchField.TERMINAL_TYPE.getTable().getTableName();
 		String connectIdTableName = PollSearchField.CONNECT_ID.getTable().getTableName();
 
@@ -124,6 +133,20 @@ public class PollSearchMapper {
 			if (!searchFields.contains(terminalTypeTableName))
 				builder.append(" INNER JOIN ").append(searchTable.getTableAlias()).append(".mobileterminal mt ");
 			builder.append(" INNER JOIN mt.asset a ");
+		}
+	}
+
+	/**
+	 * Create the WHERE condition of the SQL statement and append it to the StringBuilder.
+	 * @param builder Resulting SQL is appended to this object.
+	 * @param searchTable Search table to use in constructing SQL.
+	 * @param searchKeys Search keys to use in constructing SQL.
+	 * @param isDynamic
+	 */
+	private static void appendWhereConditionSql(StringBuilder builder, SearchTable searchTable, List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
+		String OPERATOR = " OR ";
+		if (isDynamic) {
+			OPERATOR = " AND ";
 		}
 
 		if (!searchKeys.isEmpty()) {
@@ -149,7 +172,6 @@ public class PollSearchMapper {
 				builder.append(" IN (:").append(keyValue.getSearchField().getSqlReplaceToken()).append(") ");
 			}
 		}
-		return builder.toString();
 	}
 
 	public static String createPollableSearchSql(List<String> idList) {
