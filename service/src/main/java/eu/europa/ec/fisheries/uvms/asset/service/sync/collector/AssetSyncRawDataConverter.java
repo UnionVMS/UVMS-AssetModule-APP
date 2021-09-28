@@ -20,7 +20,7 @@ public class AssetSyncRawDataConverter {
     public AssetRawHistory rawConvert(VesselEventType vesselEventType) {
 
         VesselTransportMeansType relatedVesselTransportMeans =
-                                    vesselEventType.getRelatedVesselTransportMeans();
+                vesselEventType.getRelatedVesselTransportMeans();
         AssetRawHistory assetRawHistory = new AssetRawHistory();
 
         //Event info
@@ -104,22 +104,22 @@ public class AssetSyncRawDataConverter {
     private void mapPhysicalVesselCharacteristics(VesselTransportMeansType relatedVesselTransportMeans,
                                                   AssetRawHistory assetRawHistory) {
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getLOA())
+                        .getLOA())
                 .ifPresent(v -> assetRawHistory.setLengthOverAll(v.getValue()));
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getLBP())
+                        .getLBP())
                 .ifPresent(v -> assetRawHistory.setLengthBetweenPerpendiculars(v.getValue()));
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getTonnageGT())
+                        .getTonnageGT())
                 .ifPresent(v -> assetRawHistory.setGrossTonnageUnit(DEFAULT_UNIT_TONNAGE));
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getTonnageGT())
+                        .getTonnageGT())
                 .ifPresent(v -> assetRawHistory.setGrossTonnage(v.getValue()));
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getOtherTonnage())
+                        .getOtherTonnage())
                 .ifPresent(v -> assetRawHistory.setOtherTonnage(v.getValue()));
         Optional.ofNullable(relatedVesselTransportMeans.getSpecifiedVesselDimensions()
-                .getGTS())
+                        .getGTS())
                 .ifPresent(v -> assetRawHistory.setSafteyGrossTonnage(v.getValue()));
         Optional.ofNullable(relatedVesselTransportMeans.getApplicableVesselTechnicalCharacteristics())
                 .ifPresent(v ->
@@ -133,7 +133,7 @@ public class AssetSyncRawDataConverter {
         relatedVesselTransportMeans.getOnBoardFishingGear().forEach(f -> {
             if (FluxGearRoleType.MAIN.equals(f.getGearRole())) {
                 Optional.ofNullable(f.getGearCharacteristic()).ifPresent(c ->
-                    assetRawHistory.setMainFishingGearCharacteristics(c.toString())
+                        assetRawHistory.setMainFishingGearCharacteristics(c.toString())
                 );
                 Optional.ofNullable(f.getGearRole()).ifPresent(r ->
                         assetRawHistory.setMainFishingGearRole(r.name())
@@ -153,9 +153,9 @@ public class AssetSyncRawDataConverter {
     }
 
     private void mapAdministrativeCharacteristics(VesselTransportMeansType relatedVesselTransportMeans,
-                                             AssetRawHistory assetRawHistory) {
+                                                  AssetRawHistory assetRawHistory) {
         Optional.ofNullable(
-                relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics())
+                        relatedVesselTransportMeans.getApplicableVesselAdministrativeCharacteristics())
                 .ifPresent(v -> {
                     assetRawHistory.setHasLicence(BooleanType.Y.equals(v.getLicenceIndicator()));
                     assetRawHistory.setSegment(v.getSegment());
@@ -200,7 +200,13 @@ public class AssetSyncRawDataConverter {
                 emailCommunicationTypes.stream().findFirst()
                         .ifPresent(e->assetRawHistory.setOwnerEmailAddress(e.getEmailAddress()));
                 universalCommunication.stream().findFirst()
-                        .ifPresent(p->assetRawHistory.setOwnerPhoneNumber(p.getPhoneNumber()));
+                        .ifPresent(p-> {
+                            String phoneNumber = p.getPhoneNumber();
+                            if (phoneNumber.length() > 20) {
+                                phoneNumber = phoneNumber.substring(0,20);
+                            }
+                            assetRawHistory.setOwnerPhoneNumber(phoneNumber);
+                        });
             } else if (FluxContactRoleType.AGENT.equals(fluxContactRoleType) ||
                     FluxContactRoleType.OPERATOR.equals(fluxContactRoleType)) {
                 if (Optional.ofNullable(contactParty.getName()).isPresent()) {
@@ -213,7 +219,13 @@ public class AssetSyncRawDataConverter {
                 emailCommunicationTypes.stream().findFirst()
                         .ifPresent(e->assetRawHistory.setAgentEmailAddress(e.getEmailAddress()));
                 universalCommunication.stream().findFirst()
-                        .ifPresent(p->assetRawHistory.setAgentPhoneNumber(p.getPhoneNumber()));
+                        .ifPresent(p->{
+                            String phoneNumber = p.getPhoneNumber();
+                            if (phoneNumber.length() > 20) {
+                                phoneNumber = phoneNumber.substring(0,20);
+                            }
+                            assetRawHistory.setAgentPhoneNumber(phoneNumber);
+                        });
             }
         });
     }
@@ -240,7 +252,7 @@ public class AssetSyncRawDataConverter {
                 .findFirst()
                 .ifPresent(e ->
                         Optional.ofNullable(e.getRelatedRegistrationLocation())
-                        .ifPresent(l -> assetRawHistory.setCountryOfImportOrExport(l.getCountryOfImpExpID())));
+                                .ifPresent(l -> assetRawHistory.setCountryOfImportOrExport(l.getCountryOfImpExpID())));
 
         if (vesselAdministrativeCharacteristicsType != null) {
             String typeOfExport = vesselAdministrativeCharacteristicsType.getTypeOfExport();
