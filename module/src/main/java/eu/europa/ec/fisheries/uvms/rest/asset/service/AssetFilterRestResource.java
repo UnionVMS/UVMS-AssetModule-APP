@@ -101,7 +101,7 @@ public class AssetFilterRestResource {
             String response = jsonb.toJson(assetFilter);
             return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset by ID. ", id, e);
+            LOG.error("Error when getting asset by ID. {} ", id, e);
             throw e;
         }
     }
@@ -291,7 +291,7 @@ public class AssetFilterRestResource {
             
             return Response.ok(response).header("MDC", MDC.get(REQUSTID)).build();
         } catch (Exception e) {
-            LOG.error("Error when retrieving assetFilter list {}", e);
+            LOG.error("Error when retrieving assetFilter list", e);
             throw e;
         }
     }
