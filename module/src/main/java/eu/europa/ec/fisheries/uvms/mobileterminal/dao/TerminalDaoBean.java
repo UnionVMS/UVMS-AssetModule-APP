@@ -180,7 +180,6 @@ public class TerminalDaoBean {
             List<Channel> channelList = query.getResultList();
             Map<UUID, MobileTerminal> returnMap = new HashMap<>();
             for (Channel channel : channelList) {
-                // loaderTest(channel.getMobileTerminal());
                 forceLoad(channel.getMobileTerminal().getPlugin());
                 for (MobileTerminalPluginCapability capability : channel.getMobileTerminal().getPlugin().getCapabilities()) {
                     forceLoad(capability);
