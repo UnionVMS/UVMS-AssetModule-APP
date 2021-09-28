@@ -140,13 +140,10 @@ public class PollServiceBean {
                 unsentPolls.add(createdPoll.getPollId().getGuid());
             } else {
                 AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll);
-                switch (ack) {
-                    case NOK:
-                        unsentPolls.add(createdPoll.getPollId().getGuid());
-                        break;
-                    case OK:
-                        sentPolls.add(createdPoll.getPollId().getGuid());
-                        break;
+                if (ack == AcknowledgeTypeType.NOK ) {
+                    unsentPolls.add(createdPoll.getPollId().getGuid());
+                } else if (ack == AcknowledgeTypeType.OK) {
+                    sentPolls.add(createdPoll.getPollId().getGuid());
                 }
             }
             try {
