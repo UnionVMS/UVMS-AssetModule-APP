@@ -142,7 +142,6 @@ public class MobileTerminalRestResource {
         try {
             terminal.setSource(TerminalSourceEnum.INTERNAL);
             mobileTerminalService.assertTerminalHasSerialNumber(terminal);
-            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(terminal.getPlugin().getPluginServiceName());
             terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, terminal.getComment(), request.getRemoteUser());
