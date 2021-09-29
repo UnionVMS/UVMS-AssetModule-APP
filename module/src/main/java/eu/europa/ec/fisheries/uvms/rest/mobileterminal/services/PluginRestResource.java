@@ -39,7 +39,7 @@ public class PluginRestResource {
             List<MobileTerminalPlugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, request.getRemoteUser());
             return Response.ok(pluginList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error while upserting plugins ] {}", ex);
+            LOG.error("[ Error while upserting plugins ]", ex);
             throw ex;
         }
     }
@@ -51,7 +51,7 @@ public class PluginRestResource {
             List<MobileTerminalPlugin> list = configServiceMT.getMobileTerminalPlugins();
             return Response.ok(list).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting plugins ] {}", ex);
+            LOG.error("[ Error when getting plugins ]", ex);
             throw ex;
         }
     }
