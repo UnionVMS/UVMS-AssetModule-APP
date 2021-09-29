@@ -14,10 +14,7 @@ import javax.json.bind.serializer.DeserializationContext;
 import javax.json.bind.serializer.JsonbDeserializer;
 import javax.json.stream.JsonParser;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
@@ -40,28 +37,17 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
             SearchBranch trunk = new SearchBranch();
             trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
             JsonArray fields = object.getJsonArray(JSON_KEY_FIELDS);
-            
             for (JsonValue jsonValue : fields) {
                 if (jsonValue.asJsonObject().containsKey(JSON_KEY_FIELDS)) {
                     trunk.getFields().add(recurse(jsonValue.asJsonObject()));
                 } else {
-                	
-                	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
-                	SearchFields mappedValue = MAP_OF_SEARCH_FIELDS.get(jsonSerachFieldValue.toLowerCase());
-                	SearchFields key =  mappedValue != null ? mappedValue : SearchFields.valueOf(jsonSerachFieldValue);  	
-                	String value;
-                    if (jsonValue.asJsonObject().get(JSON_KEY_SEARCH).getValueType() == ValueType.STRING) {
-                        value = jsonValue.asJsonObject().getJsonString(JSON_KEY_SEARCH).getString();
-                    } else {
-                    	value = jsonValue.asJsonObject().get(JSON_KEY_SEARCH).toString();
-                    }
-                    
+                    AbstractMap.SimpleEntry<SearchFields, String> searchKeyValuePair = getSearchKeyValuePair(jsonValue);
                     String operator = null;
                     if (jsonValue.asJsonObject().containsKey(JSON_KEY_OPERATOR)) {
                     	String operatorFromJson = jsonValue.asJsonObject().getJsonString(JSON_KEY_OPERATOR).getString();
                         operator = OPERATOR_WHITE_LIST.contains(operatorFromJson) ? operatorFromJson : "=";
                     }
-                    trunk.getFields().add(new SearchLeaf(key, value, operator));
+                    trunk.getFields().add(new SearchLeaf(searchKeyValuePair.getKey(), searchKeyValuePair.getValue(), operator));
                 }
             }
             return trunk;
@@ -70,4 +56,18 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
             throw new IllegalArgumentException("Unparsable input string for asset list: " + object, e);
         }
     }
+
+    private AbstractMap.SimpleEntry<SearchFields, String> getSearchKeyValuePair(JsonValue jsonValue) {
+        String jsonSearchFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
+        SearchFields mappedValue = MAP_OF_SEARCH_FIELDS.get(jsonSearchFieldValue.toLowerCase());
+        SearchFields key =  mappedValue != null ? mappedValue : SearchFields.valueOf(jsonSearchFieldValue);
+        String value;
+        if (jsonValue.asJsonObject().get(JSON_KEY_SEARCH).getValueType() == ValueType.STRING) {
+            value = jsonValue.asJsonObject().getJsonString(JSON_KEY_SEARCH).getString();
+        } else {
+            value = jsonValue.asJsonObject().get(JSON_KEY_SEARCH).toString();
+        }
+        return new AbstractMap.SimpleEntry<>(key, value);
+    }
+
 }
