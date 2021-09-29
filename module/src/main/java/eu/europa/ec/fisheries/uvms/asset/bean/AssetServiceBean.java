@@ -731,7 +731,7 @@ public class AssetServiceBean {
      * @param fieldValueAis Asset field value in AIS
      * @return true if AIS field contains value (is not null) and it is not the same value as contained in DB.
      */
-    private boolean assetFieldValuesNotEqual(String fieldValueDb, String fieldValueAis) {
+    private boolean unequalFieldValues(String fieldValueDb, String fieldValueAis) {
         return (fieldValueDb == null || !fieldValueDb.equals(fieldValueAis)) && (fieldValueAis != null);
     }
 
@@ -750,33 +750,25 @@ public class AssetServiceBean {
             return;
         }
 
-        if (assetFieldValuesNotEqual(assetFromDB.getMmsi(), assetFromAIS.getMmsi())) {
+        if (dbReplaceMmsi(assetFromDB, assetFromAIS)) {
             shouldUpdate = true;
-            assetFromDB.setMmsi(assetFromAIS.getMmsi());
         }
-        if (assetFromAIS.getIrcs() != null && (assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs().replace(" ", "")))) {
+        if (dbReplaceIrcs(assetFromDB, assetFromAIS)) {
             shouldUpdate = true;
-            assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
         }
-        if (assetFieldValuesNotEqual(assetFromDB.getVesselType(), assetFromAIS.getVesselType())) {
+        if (dbReplaceVesselType(assetFromDB, assetFromAIS)) {
             shouldUpdate = true;
-            assetFromDB.setVesselType(assetFromAIS.getVesselType());
         }
-        if (assetFieldValuesNotEqual(assetFromDB.getImo(), assetFromAIS.getImo())) {
+        if (dbReplaceImo(assetFromDB, assetFromAIS)) {
             shouldUpdate = true;
-            assetFromDB.setImo(assetFromAIS.getImo());
+        }
+        if (dbReplaceName(assetFromDB, assetFromAIS)) {
+            shouldUpdate = true;
+        }
+        if (dbReplaceFlagStateCode(assetFromDB, assetFromAIS)) {
+            shouldUpdate = true;
         }
 
-        if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null)) {
-            if (!assetFromAIS.getName().isEmpty()) {
-                shouldUpdate = true;
-                assetFromDB.setName(assetFromAIS.getName());
-            }
-        }
-        if ((assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK") || !assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode())) && (assetFromAIS.getFlagStateCode() != null)) {
-            shouldUpdate = true;
-            assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
-        }
         if (shouldUpdate) {
             assetFromDB.setUpdatedBy(user);
             assetFromDB.setUpdateTime(Instant.now());
@@ -784,6 +776,56 @@ public class AssetServiceBean {
             em.merge(assetFromDB);
             updatedAssetEvent.fire(assetFromDB);
         }
+    }
+
+    private boolean dbReplaceFlagStateCode(Asset assetFromDB, Asset assetFromAIS) {
+        if ((assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK") || !assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode())) && (assetFromAIS.getFlagStateCode() != null)) {
+            assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean dbReplaceName(Asset assetFromDB, Asset assetFromAIS) {
+        if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null)) {
+            if (!assetFromAIS.getName().isEmpty()) {
+                assetFromDB.setName(assetFromAIS.getName());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dbReplaceIrcs(Asset assetFromDB, Asset assetFromAIS) {
+        if (assetFromAIS.getIrcs() != null && (assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs().replace(" ", "")))) {
+            assetFromDB.setIrcs(assetFromAIS.getIrcs().replace(" ", ""));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean dbReplaceImo(Asset assetFromDB, Asset assetFromAIS) {
+        if (unequalFieldValues(assetFromDB.getImo(), assetFromAIS.getImo())) {
+            assetFromDB.setImo(assetFromAIS.getImo());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean dbReplaceVesselType(Asset assetFromDB, Asset assetFromAIS) {
+        if (unequalFieldValues(assetFromDB.getVesselType(), assetFromAIS.getVesselType())) {
+            assetFromDB.setVesselType(assetFromAIS.getVesselType());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean dbReplaceMmsi(Asset assetFromDB, Asset assetFromAIS) {
+        if (unequalFieldValues(assetFromDB.getMmsi(), assetFromAIS.getMmsi())) {
+            assetFromDB.setMmsi(assetFromAIS.getMmsi());
+            return true;
+        }
+        return false;
     }
 
     public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList) {
