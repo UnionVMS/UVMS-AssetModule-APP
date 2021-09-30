@@ -171,14 +171,15 @@ public class ConfigModelTest {
 		String serviceName = "serviceName";
 		when(pluginType.getServiceName()).thenReturn(serviceName);
 
+		MobileTerminalPlugin resEntity = null;
 		try{
 			MobileTerminalPlugin fetched  = mobileTerminalPluginDao.getPluginByServiceName(serviceName);
-			MobileTerminalPlugin resEntity = testModelBean.updatePlugin(pluginType);
-			assertNull(resEntity);
+			resEntity = testModelBean.updatePlugin(pluginType);
 		}
 		catch (Throwable t) {
 			Assert.fail();
 		}
+		assertNull(resEntity);
 	}
 
 	@Test
