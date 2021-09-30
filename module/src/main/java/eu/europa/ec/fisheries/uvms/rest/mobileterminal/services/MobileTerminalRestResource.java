@@ -83,7 +83,7 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response createMobileTerminal(MobileTerminal terminal) {
         LOG.info("Create mobile terminal invoked in rest layer.");
-        LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE {}", terminal.toString());
+        LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE {}", terminal);
         try {
             if(terminal.getId() != null) {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Given MobileTerminal is already persisted in DB.").build();
@@ -142,7 +142,6 @@ public class MobileTerminalRestResource {
         try {
             terminal.setSource(TerminalSourceEnum.INTERNAL);
             mobileTerminalService.assertTerminalHasSerialNumber(terminal);
-            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(terminal.getPlugin().getPluginServiceName());
             terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, terminal.getComment(), request.getRemoteUser());

@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ProgramPollStatus;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -19,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -97,13 +99,10 @@ public class PollModelToEntityMapper {
 
         for (PollAttribute attr : attributes) {
             try {
-                switch (attr.getKey()) {
-                    case START_DATE:
-                        samplingPoll.setStartDate(DateUtils.stringToDate(attr.getValue()));
-                        break;
-                    case END_DATE:
-                        samplingPoll.setStopDate(DateUtils.stringToDate(attr.getValue()));
-                        break;
+                if (attr.getKey() == PollAttributeType.START_DATE) {
+                    samplingPoll.setStartDate(DateUtils.stringToDate(attr.getValue()));
+                } else if (attr.getKey() == PollAttributeType.END_DATE) {
+                    samplingPoll.setStopDate(DateUtils.stringToDate(attr.getValue()));
                 }
             } catch (UnsupportedOperationException | IllegalArgumentException e) {
                 throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
@@ -114,7 +113,7 @@ public class PollModelToEntityMapper {
 
     public static <T extends PollBase> T createPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType, Class<T> clazz) {
         try {
-            T poll = clazz.newInstance();
+            T poll = clazz.getDeclaredConstructor().newInstance();
             poll.setChannelId(UUID.fromString(channelGuid));
             poll.setMobileterminal(terminal);
             poll.setAssetId(terminal.getAsset() != null ? terminal.getAsset().getId() : null);
@@ -124,7 +123,7 @@ public class PollModelToEntityMapper {
             poll.setPollTypeEnum(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
             poll.setCreateTime(Instant.now());
             return poll;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException("Error when creating Poll instance of type: " + clazz.getTypeName(), e);
         }
     }

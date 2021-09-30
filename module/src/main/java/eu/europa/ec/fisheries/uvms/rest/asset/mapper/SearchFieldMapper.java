@@ -21,50 +21,53 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SearchFieldMapper {
-    
+
     private SearchFieldMapper() {}
-    
+
 
     public static List<MTSearchKeyValue> createSearchFields(MTQuery query) {
         List<MTSearchKeyValue> searchValues = new ArrayList<>();
-        if(query.getAntennas() != null && !query.getAntennas().isEmpty()){
-                searchValues.add(new MTSearchKeyValue(MTSearchFields.ANTENNA, query.getAntennas()));
+        if (hasElements(query.getAntennas())) {
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.ANTENNA, query.getAntennas()));
         }
-        if(query.getAssetIds() != null && !query.getAssetIds().isEmpty()){
+        if (hasElements(query.getAssetIds())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.ASSET_ID, query.getAssetIds()));
         }
-        if(query.getDate() != null){
+        if (query.getDate() != null) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.DATE, Arrays.asList(query.getDate().toString())));
         }
-        if(query.getDnids() != null && !query.getDnids().isEmpty()){
+        if (hasElements(query.getDnids())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.DNID, query.getDnids().stream().map(String::valueOf).collect(Collectors.toList())));
         }
-        if(query.getHistoryIds() != null && !query.getHistoryIds().isEmpty()){
+        if (hasElements(query.getHistoryIds())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.HIST_GUID, query.getHistoryIds()));
         }
-        if(query.getMemberNumbers() != null && !query.getMemberNumbers().isEmpty()){
+        if (hasElements(query.getMemberNumbers())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.MEMBER_NUMBER, query.getMemberNumbers().stream().map(String::valueOf).collect(Collectors.toList())));
         }
-        if(query.getMobileterminalIds() != null && !query.getMobileterminalIds().isEmpty()){
+        if (hasElements(query.getMobileterminalIds())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.MOBILETERMINAL_ID, query.getMobileterminalIds()));
         }
-        if(query.getMobileterminalTypes() != null && !query.getMobileterminalTypes().isEmpty()){
+        if (hasElements(query.getMobileterminalTypes())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.TERMINAL_TYPE, query.getMobileterminalTypes()));
         }
-        if(query.getSateliteNumbers() != null && !query.getSateliteNumbers().isEmpty()){
+        if (hasElements(query.getSateliteNumbers())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.SATELLITE_NUMBER, query.getSateliteNumbers()));
         }
-        if(query.getSerialNumbers() != null && !query.getSerialNumbers().isEmpty()){
+        if (hasElements(query.getSerialNumbers())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.SERIAL_NUMBER, query.getSerialNumbers()));
         }
-        if(query.getSoftwareVersions() != null && !query.getSoftwareVersions().isEmpty()){
+        if (hasElements(query.getSoftwareVersions())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.SOFTWARE_VERSION, query.getSoftwareVersions()));
         }
-        if(query.getTranceiverTypes() != null && !query.getTranceiverTypes().isEmpty()){
+        if (hasElements(query.getTranceiverTypes())) {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.TRANSCEIVER_TYPE, query.getTranceiverTypes()));
         }
 
-
         return searchValues;
+    }
+
+    private static <T> boolean hasElements(List<T> list) {
+        return (list != null && !list.isEmpty());
     }
 }
