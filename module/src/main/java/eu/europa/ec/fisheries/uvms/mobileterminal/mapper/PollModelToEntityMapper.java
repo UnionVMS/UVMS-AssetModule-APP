@@ -26,6 +26,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class PollModelToEntityMapper {
+
+    private PollModelToEntityMapper() {
+        // private constructor because utility class
+    }
+
     private static Logger LOG = LoggerFactory.getLogger(PollModelToEntityMapper.class);
 
     public static ProgramPoll mapToProgramPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
