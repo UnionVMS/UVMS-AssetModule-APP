@@ -199,7 +199,7 @@ public class AssetRawHistory {
     @Column(name = "assetrawhist_nameowner")
     @Getter @Setter private String ownerName;
 
-    @Size(max = 100)
+    @Size(max = 200)
     @Column(name = "assetrawhist_addressowner")
     @Getter @Setter private String ownerAddress;
 
@@ -207,7 +207,7 @@ public class AssetRawHistory {
     @Column(name = "assetrawhist_emailowner")
     @Getter @Setter private String ownerEmailAddress;
 
-    @Size(max = 20)
+    @Size(max = 40)
     @Column(name = "assetrawhist_phoneowner")
     @Getter @Setter private String ownerPhoneNumber;
 
@@ -222,7 +222,7 @@ public class AssetRawHistory {
     @Column(name = "assetrawhist_nameagent")
     @Getter @Setter private String agentName;
 
-    @Size(max = 100)
+    @Size(max = 200)
     @Column(name = "assetrawhist_addressagent")
     @Getter @Setter private String agentAddress;
 
@@ -230,7 +230,7 @@ public class AssetRawHistory {
     @Column(name = "assetrawhist_emailagent")
     @Getter @Setter private String agentEmailAddress;
 
-    @Size(max = 20)
+    @Size(max = 40)
     @Column(name = "assetrawhist_phoneagent")
     @Getter @Setter private String agentPhoneNumber;
 

@@ -51,7 +51,9 @@ public class AssetSyncMessageConsumerBean implements MessageListener {
                     assetSyncService.syncFleet(pageSize);
                 }).start();
             } else {
-                assetSyncService.syncFleet(pageNumber, pageSize);
+                new Thread(() -> {
+                    assetSyncService.syncFleet(pageNumber, pageSize);
+                }).start();
             }
         } catch (JMSException e) {
             log.error("error while handling asset sync data message", e);

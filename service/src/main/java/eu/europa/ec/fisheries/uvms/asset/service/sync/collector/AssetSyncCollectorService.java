@@ -89,7 +89,7 @@ public class AssetSyncCollectorService {
 
         results = new ArrayList<>();
         Integer pageSize = userPageSize <=0 ? defaultPageSize : userPageSize;
-        log.info("Asset synchronization collection started with page size {}.", pageSize);
+        log.info("FLEET SYNC: Asset synchronization collection started with page size {}.", pageSize);
         if (getSinglePage) {
             getSinglePageFromFleet(startPageIndex, pageSize);
         } else {
@@ -164,7 +164,7 @@ public class AssetSyncCollectorService {
         while (moreAssetsExist) {
             Integer retrievedRecordsCount = getSinglePageFromFleet(startPageIndex, pageSize);
             moreAssetsExist = pageSize.equals(retrievedRecordsCount);
-            log.debug("FLEET SYNC: Collected page {}", startPageIndex);
+            log.info("FLEET SYNC: Collected page {}", startPageIndex);
             startPageIndex++;
         }
     }
@@ -173,7 +173,7 @@ public class AssetSyncCollectorService {
         try {
             return assetSyncClient.getRawAssetsPage(pageNumber, pageSize);
         } catch (AssetSyncException ase) {
-            log.error("Error syncing raw assets page " + pageNumber + " with page size " + pageSize, ase);
+            log.error("FLEET SYNC: Error syncing raw assets page " + pageNumber + " with page size " + pageSize, ase);
             return Collections.emptyList();
         }
     }

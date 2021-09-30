@@ -106,7 +106,13 @@ public class AssetSyncService {
                 processorService.syncRawRecordsWithExisting();
             }
         } else {
-            processorService.syncRawRecordsWithExisting();
+            if (pageNumber == -1000) {
+                processorService.syncRawRecordsWithExisting();
+            } else if (pageNumber == -100) {
+                collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
+            } else {
+                log.info("FLEET SYNC: Use 0 as page number to retrieve all, or a positive # to retrieve just that.");
+            }
         }
     }
 }

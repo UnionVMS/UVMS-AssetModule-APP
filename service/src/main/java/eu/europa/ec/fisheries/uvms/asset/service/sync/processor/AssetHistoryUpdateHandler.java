@@ -45,6 +45,7 @@ public class AssetHistoryUpdateHandler {
             updateAssetToFullHistory(cfr);
             log.debug("Asset {} processed for update.", cfr);
         }
+        log.info("FLEET SYNC: Updates of current batch completed. Size {} ", assetsCfrToUpdate.size());
     }
 
     /**

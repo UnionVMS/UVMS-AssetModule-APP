@@ -198,15 +198,9 @@ public class AssetSyncRawDataConverter {
                         .ifPresent(a -> assetRawHistory.setOwnerAddress(a.getStreetName()));
                 assetRawHistory.setImo(contactParty.getIMOCompanyNumber());
                 emailCommunicationTypes.stream().findFirst()
-                        .ifPresent(e->assetRawHistory.setOwnerEmailAddress(e.getEmailAddress()));
+                        .ifPresent(e -> assetRawHistory.setOwnerEmailAddress(e.getEmailAddress()));
                 universalCommunication.stream().findFirst()
-                        .ifPresent(p-> {
-                            String phoneNumber = p.getPhoneNumber();
-                            if (phoneNumber.length() > 20) {
-                                phoneNumber = phoneNumber.substring(0,20);
-                            }
-                            assetRawHistory.setOwnerPhoneNumber(phoneNumber);
-                        });
+                        .ifPresent(p -> assetRawHistory.setOwnerPhoneNumber(p.getPhoneNumber()));
             } else if (FluxContactRoleType.AGENT.equals(fluxContactRoleType) ||
                     FluxContactRoleType.OPERATOR.equals(fluxContactRoleType)) {
                 if (Optional.ofNullable(contactParty.getName()).isPresent()) {
@@ -217,15 +211,9 @@ public class AssetSyncRawDataConverter {
                 Optional.of(contactParty.getSpecifiedStructuredAddress())
                         .ifPresent(a -> assetRawHistory.setAgentAddress(a.getStreetName()));
                 emailCommunicationTypes.stream().findFirst()
-                        .ifPresent(e->assetRawHistory.setAgentEmailAddress(e.getEmailAddress()));
+                        .ifPresent(e -> assetRawHistory.setAgentEmailAddress(e.getEmailAddress()));
                 universalCommunication.stream().findFirst()
-                        .ifPresent(p->{
-                            String phoneNumber = p.getPhoneNumber();
-                            if (phoneNumber.length() > 20) {
-                                phoneNumber = phoneNumber.substring(0,20);
-                            }
-                            assetRawHistory.setAgentPhoneNumber(phoneNumber);
-                        });
+                        .ifPresent(p -> assetRawHistory.setAgentPhoneNumber(p.getPhoneNumber()));
             }
         });
     }
