@@ -39,7 +39,7 @@ public class MobileTerminalEntityToModelMapper {
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(!entity.getActive());
         model.setArchived(entity.getArchived());
-        model.setId(Long.valueOf(entity.getCreateTime().getEpochSecond()).intValue());
+        model.setId(((int)entity.getCreateTime().getEpochSecond()));
 
         model.getChannels().addAll(ChannelMapper.mapChannels(entity));
 
