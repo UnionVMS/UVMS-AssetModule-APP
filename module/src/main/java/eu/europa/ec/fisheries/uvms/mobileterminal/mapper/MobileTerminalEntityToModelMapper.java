@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MobileTerminalEntityToModelMapper {
+
+    private MobileTerminalEntityToModelMapper () {}
+
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalEntityToModelMapper.class);
 
     public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) {
@@ -25,7 +28,7 @@ public class MobileTerminalEntityToModelMapper {
             String value = entity.getSource().value();
             model.setSource(MobileTerminalSource.valueOf(value));
         } catch (RuntimeException e) {
-            LOG.error("[ Error when setting mobile terminal source. ] {}", e);
+            LOG.error("[ Error when setting mobile terminal source. ]", e);
             throw new RuntimeException(e);
         }
 
