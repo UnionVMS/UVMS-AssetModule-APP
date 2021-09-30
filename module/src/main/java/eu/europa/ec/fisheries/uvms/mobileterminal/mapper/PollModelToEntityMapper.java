@@ -27,6 +27,7 @@ import java.util.UUID;
 
 public class PollModelToEntityMapper {
 
+
     private PollModelToEntityMapper() {
         // private constructor because utility class
     }
@@ -86,6 +87,8 @@ public class PollModelToEntityMapper {
                     case IN_PORT_GRACE:
                         configurationPoll.setInPortGrace(Integer.parseInt(attr.getValue()));
                         break;
+                    default:
+                        throw new IllegalArgumentException("Unexpected value: " + attr.getKey());
                 }
             } catch (UnsupportedOperationException | IllegalArgumentException e) {
                 throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
