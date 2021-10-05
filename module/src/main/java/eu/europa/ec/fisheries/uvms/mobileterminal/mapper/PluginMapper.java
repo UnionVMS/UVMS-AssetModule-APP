@@ -83,24 +83,29 @@ public class PluginMapper {
             return false;
         }
         if (plugin.getCapability() != null && entity.getCapabilities() != null) {
-            if (plugin.getCapability().size() != entity.getCapabilities().size()) {
-                return false;
-            }
-            for (PluginCapability capability : plugin.getCapability()) {
-                for (MobileTerminalPluginCapability entityCapability : entity.getCapabilities()) {
-                    if (entityCapability.getName().equalsIgnoreCase(capability.getName().name())) {
-                        if (!entityCapability.getValue().equalsIgnoreCase(capability.getValue())) {
-                            return false;
-                        }
-                    }
-                }
-            }
+            return equalsNotNull(entity, plugin);
         } else if (plugin.getCapability() == null && entity.getCapabilities() != null) {
             return false;
         } else if (entity.getCapabilities() == null && plugin.getCapability() != null) {
             return false;
         }
         return true;
+    }
+
+    private static boolean equalsNotNull(MobileTerminalPlugin entity, PluginService plugin) {
+        boolean equals = true;
+        if (plugin.getCapability().size() != entity.getCapabilities().size()) {
+            equals = false;
+        }
+        for (PluginCapability capability : plugin.getCapability()) {
+            for (MobileTerminalPluginCapability entityCapability : entity.getCapabilities()) {
+                if (entityCapability.getName().equalsIgnoreCase(capability.getName().name())
+                        || !entityCapability.getValue().equalsIgnoreCase(capability.getValue())) {
+                        equals = false;
+                }
+            }
+        }
+        return equals;
     }
 
     public static TerminalSystemConfiguration mapTerminalFieldConfiguration(MobileTerminalTypeEnum type) {
