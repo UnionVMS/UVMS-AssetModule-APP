@@ -112,13 +112,10 @@ public class PollServiceBean {
     }
 
     private void setPollRequestAttributes(PollRequestType pollRequest, SimpleCreatePoll createPoll){
-        switch (createPoll.getPollType()){
-            case PROGRAM_POLL:
-                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.FREQUENCY, "" + createPoll.getFrequency()));
-                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.START_DATE, "" + createPoll.getStartDate().toEpochMilli()));
-                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.END_DATE, "" + createPoll.getEndDate().toEpochMilli()));
-                break;
-            default:
+        if(createPoll.getPollType() == PollType.PROGRAM_POLL) {
+            pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.FREQUENCY, "" + createPoll.getFrequency()));
+            pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.START_DATE, "" + createPoll.getStartDate().toEpochMilli()));
+            pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.END_DATE, "" + createPoll.getEndDate().toEpochMilli()));
         }
     }
 
