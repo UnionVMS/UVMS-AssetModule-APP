@@ -174,7 +174,7 @@ public class PollServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error(FAILED_TO_SEND_AUDIT_LOG + e + "! Poll with guid {} was started", startedPoll.getId().toString());
+            LOG.error(FAILED_TO_SEND_AUDIT_LOG, e, "! Poll with guid {} was started", startedPoll.getId().toString());
         }
         return startedPoll;
     }
@@ -188,7 +188,7 @@ public class PollServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error(FAILED_TO_SEND_AUDIT_LOG + e + "! Poll with guid {} was stopped", stoppedPoll.getId().toString());
+            LOG.error(FAILED_TO_SEND_AUDIT_LOG, e, "! Poll with guid {} was stopped", stoppedPoll.getId().toString());
         }
         return stoppedPoll;
     }
@@ -202,7 +202,7 @@ public class PollServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error(FAILED_TO_SEND_AUDIT_LOG + e + "! Poll with guid {} was inactivated", inactivatedPoll.getId().toString());
+            LOG.error(FAILED_TO_SEND_AUDIT_LOG, e, "! Poll with guid {} was inactivated", inactivatedPoll.getId().toString());
         }
         return inactivatedPoll;
     }
@@ -432,7 +432,7 @@ public class PollServiceBean {
                 PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal);
                 pollResponseList.add(pollType);
             } catch (RuntimeException e) {
-                LOG.error("[ Poll " + poll.getId() + "  couldn't map type ]");
+                LOG.error("[ Poll {}  couldn't map type ]", poll.getId());
                 throw new RuntimeException(e);
             }
         }
@@ -536,7 +536,7 @@ public class PollServiceBean {
             if (stopIndex >= numberMatches) {
                 stopIndex = numberMatches;
             }
-            LOG.debug("stopIndex: " + stopIndex);
+            LOG.debug("stopIndex: {}", stopIndex);
             List<MobileTerminalType> newList = new ArrayList<>(mobileTerminalList.subList(startIndex, stopIndex));
             response.setMobileTerminalList(newList);
         }
@@ -545,7 +545,7 @@ public class PollServiceBean {
         response.setCurrentPage(query.getPagination().getPage());
 
         long out = System.currentTimeMillis();
-        LOG.debug("Get pollable channels " + (out - in) + " ms");
+        LOG.debug("Get pollable channels {} ms", (out - in));
         return response;
     }
 
