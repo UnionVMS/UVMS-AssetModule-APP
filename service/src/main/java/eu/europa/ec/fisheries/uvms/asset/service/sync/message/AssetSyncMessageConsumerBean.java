@@ -10,8 +10,10 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.service.sync.message;
 
+import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -36,6 +38,9 @@ public class AssetSyncMessageConsumerBean implements MessageListener {
     @Inject
     private AssetSyncService assetSyncService;
 
+    @Resource
+    ManagedExecutorService managedExecutorService;
+
     @Override
     public void onMessage(Message message) {
         TextMessage textMessage = null;
@@ -47,13 +52,13 @@ public class AssetSyncMessageConsumerBean implements MessageListener {
             log.info("FLEET SYNC: message received for page {} of page size {}.", pageNumber, pageSize);
             //assetSyncService.syncAssetPage(pageNumber, pageSize);
             if (pageNumber == 0) {
-                new Thread(() -> {
+                managedExecutorService.submit(() -> {
                     assetSyncService.syncFleet(pageSize);
-                }).start();
+                });
             } else {
-                new Thread(() -> {
-                    assetSyncService.syncFleet(pageNumber, pageSize);
-                }).start();
+                managedExecutorService.submit(() -> {
+                        assetSyncService.syncFleet(pageNumber, pageSize);
+                });
             }
         } catch (JMSException e) {
             log.error("error while handling asset sync data message", e);

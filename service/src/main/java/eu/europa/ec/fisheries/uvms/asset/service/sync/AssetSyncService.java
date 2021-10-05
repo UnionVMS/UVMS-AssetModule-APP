@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AssetSyncService {
 
     private static final int FIRST_PAGE = 0;
-    private static final int PAGE_SIZE = 1000;
+    private static final int PAGE_SIZE = 5000;
 
     @Inject
     private AssetSyncClient assetSyncClient;

@@ -7,15 +7,15 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +28,9 @@ public class AssetSyncCollectorService {
 
     @EJB
     private AssetRawHistoryDao assetRawHistoryDao;
+
+    @Resource
+    ManagedExecutorService managedExecutorService;
 
     private static final long WAITING_TIME = 300;
 
@@ -46,10 +49,10 @@ public class AssetSyncCollectorService {
         activityStarted = false;
         activityCompleted = false;
         activitySuccessfullyCompleted = true;
-        executorService = Executors.newWorkStealingPool();
+        //executorService = Executors.newWorkStealingPool();
     }
 
-    @PreDestroy
+    //@PreDestroy
     private void cleanUp() {
         if (executorService != null) {
             try {
@@ -80,11 +83,6 @@ public class AssetSyncCollectorService {
                                      Integer userPageSize, Integer defaultPageSize) {
         log.info("FLEET SYNC: Start collecting fleet data.");
 
-        activityStarted = true;
-        activityCompleted = false;
-        activitySuccessfullyCompleted = false;
-        executorService = Executors.newWorkStealingPool();
-
         prepareFleetStorage();
 
         results = new ArrayList<>();
@@ -95,7 +93,7 @@ public class AssetSyncCollectorService {
         } else {
             collectAndSaveMultipleFleetPages(startPageIndex, pageSize);
         }
-        collectSyncActivityResults();
+        //collectSyncActivityResults();
     }
 
     private void collectSyncActivityResults() {
@@ -143,7 +141,10 @@ public class AssetSyncCollectorService {
 
 
     private Integer getSinglePageFromFleet(Integer pageIndex, Integer pageSize) {
+        long startNanos = System.nanoTime();
         List<AssetRawHistory> currentAssetsPageAsList = getRawAssetsPageSafe(pageIndex, pageSize);
+        long duration  = System.nanoTime() - startNanos;
+        log.info( "FLEET SYNC: fetch raw record time :  {}", TimeUnit.NANOSECONDS.toSeconds(duration));
         Future<?> result = saveRawRecords(currentAssetsPageAsList);
         if (results != null) {
             results.add(result);
@@ -152,8 +153,11 @@ public class AssetSyncCollectorService {
     }
 
     private Future<?> saveRawRecords(List<AssetRawHistory> historyRecords) {
-        Future<?> result = executorService.submit(() -> {
+        Future<?> result = managedExecutorService.submit(() -> {
+            long startNanos = System.nanoTime();
             assetRawHistoryDao.createRawHistoryEntry(historyRecords);
+            long duration  = System.nanoTime() - startNanos;
+            log.info( "FLEET SYNC: save raw record time : {}", TimeUnit.NANOSECONDS.toSeconds(duration));
         });
         return result;
     }
@@ -161,10 +165,11 @@ public class AssetSyncCollectorService {
     private void collectAndSaveMultipleFleetPages(Integer startPage, Integer pageSize) {
         Integer startPageIndex = new Integer(startPage);
         boolean moreAssetsExist = true;
+        log.info("FLEET SYNC: Start collecting from page {} with batch size {}", startPage, pageSize);
         while (moreAssetsExist) {
             Integer retrievedRecordsCount = getSinglePageFromFleet(startPageIndex, pageSize);
             moreAssetsExist = pageSize.equals(retrievedRecordsCount);
-            log.info("FLEET SYNC: Collected page {}", startPageIndex);
+            log.info("FLEET SYNC: Collected page {} with {} records", startPageIndex, retrievedRecordsCount);
             startPageIndex++;
         }
     }

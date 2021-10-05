@@ -11,7 +11,10 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -20,7 +23,10 @@ import java.util.stream.IntStream;
 
 @Stateless
 @Slf4j
-public class AssetRawHistoryDaoBean extends Dao implements AssetRawHistoryDao {
+public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
+
+    @PersistenceContext(unitName = "asset-batch")
+    protected EntityManager em;
 
     @Override
     public AssetRawHistory createRawHistoryEntry(AssetRawHistory assetRawHistory) {
@@ -29,12 +35,15 @@ public class AssetRawHistoryDaoBean extends Dao implements AssetRawHistoryDao {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @TransactionAttribute
     public void createRawHistoryEntry(List<AssetRawHistory> assetHistoryRecords) {
         int recordsListSize = assetHistoryRecords.size();
         IntStream.range(0, recordsListSize).forEach( idx -> {
+                if (idx % 1000 == 0 && idx > 0) {
+                    em.flush();
+                    em.clear();
+                }
                 em.persist(assetHistoryRecords.get(idx));
-                /* if (idx % 1000 == 0) { em.flush(); } */
             });
     }
 

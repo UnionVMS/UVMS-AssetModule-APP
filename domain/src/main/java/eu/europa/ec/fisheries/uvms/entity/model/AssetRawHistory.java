@@ -35,7 +35,8 @@ public class AssetRawHistory {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "assetRawHistorySequence")
+    @SequenceGenerator(name = "assetRawHistorySequence", allocationSize = 1000, initialValue = 1, sequenceName = "seq_asset_raw_hist")
     @Column(name = "assetrawhist_id")
     @Getter @Setter private Long id;
 
