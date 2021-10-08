@@ -142,7 +142,6 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        System.out.println(createdAsset.getId());
         List<String> idList = Arrays.asList(createdAsset.getId().toString());
         List<AssetProjection> fetchedAssets = getWebTargetExternal()
                 .path("asset")
