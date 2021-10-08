@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetProjection;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -106,6 +107,89 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(fetchedAsset);
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        List<String> idList = Arrays.asList(createdAsset.getId().toString());
+        List<Asset> fetchedAssets = getWebTargetExternal()
+                .path("asset")
+                .path("assetList")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(idList), new GenericType<List<Asset>>() {});
+
+        assertNotNull(fetchedAssets);
+        assertThat(fetchedAssets.size(), is(1));
+        assertThat(fetchedAssets.get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListWithMTTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(createdAsset);
+        getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        System.out.println(createdAsset.getId());
+        List<String> idList = Arrays.asList(createdAsset.getId().toString());
+        List<AssetProjection> fetchedAssets = getWebTargetExternal()
+                .path("asset")
+                .path("assetList")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(idList), new GenericType<List<AssetProjection>>() {});
+
+        assertNotNull(fetchedAssets);
+        assertThat(fetchedAssets.size(), is(1));
+        assertThat(fetchedAssets.get(0).getMobileTerminalIds().size(), is(1));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListWithTwoMTsTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(createdAsset);
+        getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setActive(false);
+        mobileTerminal2.setAsset(createdAsset);
+        getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal2), MobileTerminal.class);
+
+        List<String> idList = Arrays.asList(createdAsset.getId().toString());
+        List<AssetProjection> fetchedAssets = getWebTargetExternal()
+                .path("asset")
+                .path("assetList")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(idList), new GenericType<List<AssetProjection>>() {});
+
+        assertNotNull(fetchedAssets);
+        assertThat(fetchedAssets.size(), is(1));
+        assertThat(fetchedAssets.get(0).getMobileTerminalIds().size(), is(2));
     }
 
     @Test

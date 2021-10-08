@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetProjection;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -483,11 +484,11 @@ public class AssetDao {
         return resultList;
     }
 
-    public List<Asset> getAssetListByAssetGuids(List<UUID> idList) {
+    public List<AssetProjection> getAssetListByAssetGuids(List<UUID> idList) {
         if (idList.isEmpty()) {
             return new ArrayList<>();
         }
-        TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
+        TypedQuery<AssetProjection> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, AssetProjection.class);
         query.setParameter("idList", idList);
         return query.getResultList();
     }
