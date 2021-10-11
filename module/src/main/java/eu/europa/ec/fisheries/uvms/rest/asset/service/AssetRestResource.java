@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetProjection;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -27,7 +28,6 @@ import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -42,6 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -99,10 +100,10 @@ public class AssetRestResource {
     @POST
     @Path("assetList")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetList(List<String> assetIdList) throws Exception{
+    public Response getAssetList(List<String> assetIdList) throws Exception {
         try {
-        List<Asset> assetList = assetService.getAssetList(assetIdList);
-        return Response.ok(assetList).build();
+            Collection<AssetProjection> assetList = assetService.getAssetList(assetIdList);
+            return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("Error in getAssetList with arg assetIdList: ", e);
             throw e;
@@ -112,7 +113,7 @@ public class AssetRestResource {
     @GET
     @Path("vesselTypes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getVesselTypes()  throws Exception  {
+    public Response getVesselTypes() throws Exception {
         try {
             List<String> vesselTypes = assetDao.getAllAvailableVesselTypes();
             String returnString = jsonb.toJson(vesselTypes);
@@ -135,7 +136,7 @@ public class AssetRestResource {
     @Path("listcount")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetListItemCount(@DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                          SearchBranch query)  throws Exception  {
+                                          SearchBranch query) throws Exception {
         try {
             Long assetListCount = assetService.getAssetListCount(query, includeInactivated);
             return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
@@ -156,7 +157,7 @@ public class AssetRestResource {
     @GET
     @Path(value = "/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetById(@PathParam("id") UUID id)  throws Exception {
+    public Response getAssetById(@PathParam("id") UUID id) throws Exception {
         try {
             Asset asset = assetService.getAssetById(id);
             String returnString = jsonb.toJson(asset);
@@ -186,7 +187,7 @@ public class AssetRestResource {
      */
     @POST
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createAsset(final Asset asset)   throws Exception  {
+    public Response createAsset(final Asset asset) throws Exception {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
@@ -209,7 +210,7 @@ public class AssetRestResource {
      */
     @PUT
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(final Asset asset)  throws Exception {
+    public Response updateAsset(final Asset asset) throws Exception {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset assetWithMT = assetService.populateMTListInAsset(asset);
@@ -245,7 +246,7 @@ public class AssetRestResource {
     @PUT
     @Path("/{assetId}/unarchive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response unarchiveAsset(@PathParam("assetId") final UUID assetId, @QueryParam("comment") String comment)  throws Exception {
+    public Response unarchiveAsset(@PathParam("assetId") final UUID assetId, @QueryParam("comment") String comment) throws Exception {
 
         if(comment == null || comment.isEmpty()){
             return Response.status(400).entity("Parameter comment is required").build();
@@ -292,7 +293,7 @@ public class AssetRestResource {
      */
     @GET
     @Path("/{id}/changeHistory")
-    public Response getAssetHistoryChangesListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
+    public Response getAssetHistoryChangesListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             List<ChangeHistoryRow> changeHistory = HistoryMapper.assetChangeHistory(assetRevisions);

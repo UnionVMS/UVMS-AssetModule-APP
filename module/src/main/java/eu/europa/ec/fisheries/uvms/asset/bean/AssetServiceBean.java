@@ -130,12 +130,16 @@ public class AssetServiceBean {
         return assetDao.getAssetCount(queryTree, includeInactivated);
     }
     
-    public List<Asset> getAssetList(List<String> assetIdList) {
+    public Collection<AssetProjection> getAssetList(List<String> assetIdList) {
         List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
         for (String s : assetIdList) {
             assetUuidList.add(UUID.fromString(s));
         }
-        return assetDao.getAssetListByAssetGuids(assetUuidList);
+        List<AssetProjection> assets = assetDao.getAssetListByAssetGuids(assetUuidList);
+        return assets.stream()
+                .collect(Collectors.toMap(AssetProjection::getId, Function.identity(),
+                        (a1, a2) -> {a1.getMobileTerminalIds().addAll(a2.getMobileTerminalIds()); return a1;}))
+                .values();
     }
 
     public Asset updateAsset(Asset asset, String username, String comment) {
@@ -753,14 +757,6 @@ public class AssetServiceBean {
             em.merge(assetFromDB);
             updatedAssetEvent.fire(assetFromDB);
         }
-    }
-
-    public List<Asset> getInitialDataForRealtime(List<String> assetIdList) {
-        List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
-        for (String s : assetIdList) {
-            assetUuidList.add(UUID.fromString(s));
-        }
-        return assetDao.getAssetListByAssetGuids(assetUuidList);
     }
 
     public Note getNoteById(UUID id) {

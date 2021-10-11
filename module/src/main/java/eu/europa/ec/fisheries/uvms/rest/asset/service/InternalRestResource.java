@@ -53,6 +53,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -133,8 +134,8 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetList(List<String> assetIdList) {
         try {
-        List<Asset> assetList = assetService.getAssetList(assetIdList);
-        return Response.ok(assetList).build();
+            Collection<AssetProjection> assetList = assetService.getAssetList(assetIdList);
+            return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("Error in getAssetList Internal with arg. assetIdList: ", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
@@ -236,7 +237,7 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response ping() {
         try {
-        return Response.ok("pong").build();
+            return Response.ok("pong").build();
         } catch (Exception e) {
             LOG.error("ping", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
