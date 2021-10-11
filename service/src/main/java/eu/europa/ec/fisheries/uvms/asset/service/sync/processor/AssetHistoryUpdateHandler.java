@@ -2,7 +2,9 @@ package eu.europa.ec.fisheries.uvms.asset.service.sync.processor;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
@@ -35,6 +37,8 @@ public class AssetHistoryUpdateHandler {
 
     @EJB
     private AssetRawHistoryDao assetRawHistoryDao;
+    @EJB
+    private AssetDao assetDao;
     @Inject
     private AssetHistoryRawRecordHandler rawRecordHandler;
 
@@ -43,10 +47,14 @@ public class AssetHistoryUpdateHandler {
     public void updateAssetsHistory(List<String> assetsCfrToUpdate) {
         for (String cfr : assetsCfrToUpdate) {
             updateAssetToFullHistory(cfr);
-            log.debug("Asset {} processed for update.", cfr);
+            log.debug("FLEET SYNC: Asset {} processed for update.", cfr);
         }
         log.info("FLEET SYNC: Updates of current batch completed. Size {} ", assetsCfrToUpdate.size());
     }
+
+    //////////////////////////////////
+    //  private methods
+    //////////////////////////////////
 
     /**
      * Updates and existing asset regarding its history of records
@@ -54,8 +62,10 @@ public class AssetHistoryUpdateHandler {
      * @return The same asset object updated
      */
     private AssetEntity updateAssetToFullHistory(String cfr) {
-        AssetEntity asset = getAssetByCfr(cfr);
-        if (asset == null) {
+        AssetEntity asset = null;
+        try {
+            asset = getAssetByCfr(cfr);
+        } catch (NoAssetEntityFoundException e) {
             return null;
         }
         List<AssetRawHistory> rawRecords = assetRawHistoryDao.getAssetRawHistoryByCfrSortedByEventDate(cfr);
@@ -77,7 +87,7 @@ public class AssetHistoryUpdateHandler {
                     mostRecentRecord.setActive(true);
                     updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
                 }
-                assetRawHistoryDao.saveAssetWithHistory(asset);
+                assetDao.saveAssetWithHistory(asset); //saved asset contains its history
                 log.debug("FLEET SYNC: Asset {}. All records {}. Processed {}",
                         cfr, rawRecords.size(), newRecords.size());
             }
@@ -85,12 +95,8 @@ public class AssetHistoryUpdateHandler {
         return asset;
     }
 
-    private AssetEntity getAssetByCfr(String assetCfr) {
-        try {
-            return assetRawHistoryDao.getAssetByCfrWithHistory(assetCfr);
-        } catch (AssetDaoException ex) {
-            return null;
-        }
+    private AssetEntity getAssetByCfr(String assetCfr) throws NoAssetEntityFoundException {
+        return assetDao.getAssetByCfrWithHistory(assetCfr);
     }
 
     private List<AssetRawHistory> removeFullyDuplicatedRecordsForAsset(List<AssetRawHistory> incomingRawRecords,

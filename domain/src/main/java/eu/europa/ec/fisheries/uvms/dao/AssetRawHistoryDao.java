@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 
@@ -17,10 +15,6 @@ public interface AssetRawHistoryDao {
 
     int cleanUpRawRecordsTable();
 
-    void deleteAsset(AssetEntity asset);
-
-    void deleteAssetByCfr(String assetByCfr);
-
     int deleteOldDuplicatedHistoryRecords(List<AssetHistory> duplicatedRecords);
 
     void flushCurrentChanges();
@@ -29,14 +23,6 @@ public interface AssetRawHistoryDao {
 
     List<String> getAllDistinctRawCfrs();
 
-    AssetEntity getAssetByCfr(String cfr);
-
-    AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException;
-
     List<AssetRawHistory> getAssetRawHistoryByCfrSortedByEventDate(String cfr);
-
-    void saveAssets(List<AssetEntity> assets);
-
-    void saveAssetWithHistory(AssetEntity assetEntity);
 
 }

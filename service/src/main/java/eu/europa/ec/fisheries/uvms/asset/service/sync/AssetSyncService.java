@@ -48,6 +48,10 @@ public class AssetSyncService {
     @Inject
     private AssetSyncProcessorService processorService;
 
+    //////////////////////////////////
+    //  public methods
+    //////////////////////////////////
+
     @Transactional
     public void syncAssetPage(Integer pageNumber, Integer pageSize) {
         List<AssetHistory> assetHistoryFromPage = getAssetsPageSafe(pageNumber, pageSize);
@@ -57,11 +61,78 @@ public class AssetSyncService {
         addMessageToQueueForNextPage(pageNumber, pageSize, assetHistoryFromPage.size());
     }
 
+
+    public void resetSync() {
+        collectorService.resetSyncCollectorState();
+        processorService.resetSyncProcessorState();
+    }
+
+    public void triggerSync() {
+        try {
+            assetSyncProducerBean.sendModuleMessage(
+                    AssetHistorySyncRetrievalMessage.encode(
+                            new AssetHistorySyncRetrievalMessage(FIRST_PAGE, PAGE_SIZE)), null);
+        } catch (MessageException e) {
+            log.error("FLEET SYNC: Error sending message to trigger start of asset history sync queue", e);
+        }
+    }
+
+    public void syncFleet(Integer pageSize) {
+        if (pageSize >= 0) {
+            if( canStartAssetSync()) {
+                collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
+            } else {
+                log.info("FLEET SYNC: Sync already started. Request to start skipped.");
+                return;
+            }
+            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+                processorService.syncRawRecordsWithExisting();
+            }
+        } else {
+            if (!processorService.isProcessingActivityStarted()) {
+                processorService.syncRawRecordsWithExisting();
+            }
+        }
+    }
+
+    public void syncFleet(Integer pageNumber, Integer pageSize) {
+        if (pageNumber > 0) {
+            if( canStartAssetSync() ) {
+                collectorService.collectDataFromFleet(pageNumber, true, pageSize, PAGE_SIZE);
+            } else {
+                log.info("FLEET SYNC: Collection step already started. Request to start skipped.");
+                return;
+            }
+            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
+                processorService.syncRawRecordsWithExisting();
+            } else {
+                log.warn("FLEET SYNC: Collection activity completed unsuccessfully. " +
+                        "Collected data will not be synced into app tables.");
+            }
+        } else {
+            if (pageNumber == -1000) {
+                if (!processorService.isProcessingActivityStarted()) {
+                    processorService.syncRawRecordsWithExisting();
+                }
+            } else if (pageNumber == -100) {
+                if (!collectorService.isCollectingActivityStarted()) {
+                    collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
+                }
+            } else {
+                log.info("FLEET SYNC: Use 0 as page number to retrieve all, or a positive # to retrieve just that.");
+            }
+        }
+    }
+
+    //////////////////////////////////
+    //  private methods
+    //////////////////////////////////
+
     private List<AssetHistory> getAssetsPageSafe(Integer pageNumber, Integer pageSize) {
         try {
             return assetSyncClient.getAssetsPage(pageNumber, pageSize);
         } catch (AssetSyncException ase) {
-            log.error("Error syncing assets page " + pageNumber + " with page size " + pageSize, ase);
+            log.error("FLEET SYNC: Error syncing assets page " + pageNumber + " with page size " + pageSize, ase);
             return Collections.emptyList();
         }
     }
@@ -73,46 +144,13 @@ public class AssetSyncService {
                         AssetHistorySyncRetrievalMessage.encode(
                                 new AssetHistorySyncRetrievalMessage(pageNumber + 1, pageSize)), null);
             } catch (MessageException e) {
-                log.error("Error sending message for next page to asset history sync queue", e);
+                log.error("FLEET SYNC: Error sending message for next page to asset history sync queue", e);
             }
         }
     }
 
-    public void triggerSync() {
-        try {
-            assetSyncProducerBean.sendModuleMessage(
-                    AssetHistorySyncRetrievalMessage.encode(
-                            new AssetHistorySyncRetrievalMessage(FIRST_PAGE, PAGE_SIZE)), null);
-        } catch (MessageException e) {
-            log.error("Error sending message to trigger start of asset history sync queue", e);
-        }
-    }
-
-    public void syncFleet(Integer pageSize) {
-        if (pageSize >= 0) {
-            collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
-            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
-                processorService.syncRawRecordsWithExisting();
-            }
-        } else {
-            processorService.syncRawRecordsWithExisting();
-        }
-    }
-
-    public void syncFleet(Integer pageNumber, Integer pageSize) {
-        if (pageNumber > 0) {
-            collectorService.collectDataFromFleet(pageNumber, true, pageSize, PAGE_SIZE);
-            if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
-                processorService.syncRawRecordsWithExisting();
-            }
-        } else {
-            if (pageNumber == -1000) {
-                processorService.syncRawRecordsWithExisting();
-            } else if (pageNumber == -100) {
-                collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
-            } else {
-                log.info("FLEET SYNC: Use 0 as page number to retrieve all, or a positive # to retrieve just that.");
-            }
-        }
+    private boolean canStartAssetSync() {
+        return !(collectorService.isCollectingActivityStarted() ||
+                processorService.isProcessingActivityStarted());
     }
 }

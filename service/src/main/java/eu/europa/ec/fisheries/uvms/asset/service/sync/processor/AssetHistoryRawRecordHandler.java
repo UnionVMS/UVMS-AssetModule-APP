@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -152,9 +153,9 @@ public class AssetHistoryRawRecordHandler {
         record.setPowerOfAuxEngine(rawRecord.getPowerOfAuxEngine());
 
         List<ContactInfo> contacts = new ArrayList<>();
-        record.setOwnerAddress(rawRecord.getOwnerAddress());
+        record.setOwnerAddress(StringUtils.substring(rawRecord.getOwnerAddress(),0,100));
         record.setOwnerName(rawRecord.getOwnerName());
-        record.setAssetAgentAddress(rawRecord.getAgentAddress());
+        record.setAssetAgentAddress(StringUtils.substring(rawRecord.getAgentAddress(),0,100));
         record.setImo(rawRecord.getImo());
         ContactInfo owner = new ContactInfo();
         owner.setOwner(true);

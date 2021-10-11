@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
@@ -214,4 +215,14 @@ public interface AssetDao {
     Optional<AssetEntity> getAssetByAssetIdList(List<AssetId> idList);
 
     List<AssetHistory> getAssetsByVesselIdientifiers(AssetListCriteria criteria);
+
+    List<String> getAllCfrsSorted();
+
+    void deleteAssetByCfr(String assetByCfr) throws AssetDaoException;
+
+    void saveAssetWithHistory(AssetEntity asset);
+
+    void saveAssets(List<AssetEntity> assets);
+
+    AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException;
 }

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync.processor;
 
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.CarrierSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
@@ -9,7 +10,6 @@ import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,13 +25,14 @@ public class AssetHistoryCreationHandler {
 
     @EJB
     private AssetRawHistoryDao assetRawHistoryDao;
+    @EJB
+    private AssetDao assetDao;
     @Inject
     private AssetHistoryRawRecordHandler rawRecordHandler;
 
-    @PostConstruct
-    public void init() {
-
-    }
+    //////////////////////////////////
+    //  public methods
+    //////////////////////////////////
 
     /**
      * Creates a new AssetEntity together with its asset history of records
@@ -59,10 +60,14 @@ public class AssetHistoryCreationHandler {
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void createAssets(List<AssetEntity> assetsToCreate) {
-        assetRawHistoryDao.saveAssets(assetsToCreate);
+        assetDao.saveAssets(assetsToCreate);
         //TODO to be fixed and re-enabled
         //sendUpdatesToReportingForMultipleAssets(assetsToCreate);
     }
+
+    //////////////////////////////////
+    //  private methods
+    //////////////////////////////////
 
     private List<AssetRawHistory> removeDuplicatedHashKeys(List<AssetRawHistory> rawRecordsFull) {
         HashSet<Object> existsCurrently = new HashSet<>();

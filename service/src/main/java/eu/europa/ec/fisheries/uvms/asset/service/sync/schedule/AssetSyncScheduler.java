@@ -47,6 +47,10 @@ public class AssetSyncScheduler {
     @Resource
     private TimerService timerService;
 
+    //////////////////////////////////
+    //  public methods
+    //////////////////////////////////
+
     @PostConstruct
     public void initTimer() {
         setTimer();
@@ -56,8 +60,21 @@ public class AssetSyncScheduler {
     public void timeout(Timer timer) {
         log.debug("Asset sync scheduler started");
         //assetSyncService.triggerSync();
+
+        assetSyncService.resetSync();
         assetSyncService.syncFleet(0);
     }
+
+
+    public void updateTimer(@Observes @ConfigSettingUpdatedEvent ConfigSettingEvent settingEvent) {
+        if (FLEET_SYNC_CRON_SETTING_KEY.equals(settingEvent.getKey())) {
+            setTimer();
+        }
+    }
+
+    //////////////////////////////////
+    //  private methods
+    //////////////////////////////////
 
     private void setTimer() {
         try {
@@ -66,12 +83,6 @@ public class AssetSyncScheduler {
             timerService.createCalendarTimer(expr, new TimerConfig(FLEET_SYNC, false));
         } catch (ConfigServiceException e) {
             log.error("Could not initialize fleet sync scheduler with parameter {}", FLEET_SYNC_CRON_SETTING_KEY, e);
-        }
-    }
-
-    public void updateTimer(@Observes @ConfigSettingUpdatedEvent ConfigSettingEvent settingEvent) {
-        if (FLEET_SYNC_CRON_SETTING_KEY.equals(settingEvent.getKey())) {
-            setTimer();
         }
     }
 

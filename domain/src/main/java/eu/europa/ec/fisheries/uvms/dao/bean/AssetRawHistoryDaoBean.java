@@ -1,22 +1,16 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
-import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -35,7 +29,6 @@ public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
     }
 
     @Override
-    @TransactionAttribute
     public void createRawHistoryEntry(List<AssetRawHistory> assetHistoryRecords) {
         int recordsListSize = assetHistoryRecords.size();
         IntStream.range(0, recordsListSize).forEach( idx -> {
@@ -45,30 +38,6 @@ public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
                 }
                 em.persist(assetHistoryRecords.get(idx));
             });
-    }
-
-    @Override
-    public void deleteAsset(AssetEntity asset) {
-        if (asset != null) {
-            em.remove(asset);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void deleteAssetByCfr(String assetByCfr) {
-        if (assetByCfr != null) {
-            AssetEntity asset = getAssetByCfr(assetByCfr);
-            if (asset != null) {
-                em.remove(asset);
-            }
-        }
-    }
-
-    @Override
-    public void saveAssetWithHistory(AssetEntity asset) {
-       log.debug("FLEET SYNC: Saving asset: {}", asset.getCFR());
-       em.persist(asset);
     }
 
     @Override
@@ -115,34 +84,6 @@ public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
        em.flush();
        return incomingPartiallyDuplicatedRecords.size();
     }
-
-    @Override
-    public void saveAssets(List<AssetEntity> assets) {
-        for(AssetEntity asset : assets) {
-            em.persist(asset);
-        }
-    }
-
-    @Override
-    public AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException {
-        try {
-            TypedQuery<AssetEntity> query =
-                    em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR_WITH_HISTORY, AssetEntity.class);
-            query.setParameter("cfr", cfr);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + cfr);
-        }
-    }
-
-    @Override
-    public AssetEntity getAssetByCfr(String cfr) {
-        TypedQuery<AssetEntity> query =
-                em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR, AssetEntity.class);
-        query.setParameter("cfr", cfr);
-        return query.getSingleResult();
-    }
-
 
     @Override
     public void flushCurrentChanges() {

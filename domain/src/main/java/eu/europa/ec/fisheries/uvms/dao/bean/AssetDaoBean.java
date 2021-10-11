@@ -627,5 +627,51 @@ public class AssetDaoBean extends Dao implements AssetDao {
         return q.getResultList();
     }
 
+    @Override
+    public List<String> getAllCfrsSorted() {
+        List<String> cfrs;
+        try {
+            TypedQuery<String> query =
+                    em.createNamedQuery("Asset.getAllCfrsSorted", String.class);
+            cfrs = query.getResultList();
+        } catch (NoResultException e) {
+            LOG.error("No asset found by CFR :(");
+            cfrs = new ArrayList<>();
+        }
+        return cfrs;
+    }
 
+    @Override
+    public void deleteAssetByCfr(String assetByCfr) throws AssetDaoException {
+        if (assetByCfr != null) {
+            AssetEntity asset = getAssetByCfr(assetByCfr);
+            if (asset != null) {
+                em.remove(asset);
+            }
+        }
+    }
+
+    @Override
+    public AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException {
+        try {
+            TypedQuery<AssetEntity> query =
+                    em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR_WITH_HISTORY, AssetEntity.class);
+            query.setParameter("cfr", cfr);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset found for " + cfr);
+        }
+    }
+
+    @Override
+    public void saveAssets(List<AssetEntity> assets) {
+        for(AssetEntity asset : assets) {
+            em.persist(asset);
+        }
+    }
+
+    @Override
+    public void saveAssetWithHistory(AssetEntity asset) {
+        em.persist(asset);
+    }
 }

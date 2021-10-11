@@ -8,19 +8,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
+import javax.ejb.*;
 import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@ApplicationScoped
+
+@Singleton
 @Slf4j
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class AssetSyncCollectorService {
 
     @Inject
@@ -32,13 +33,17 @@ public class AssetSyncCollectorService {
     @Resource
     ManagedExecutorService managedExecutorService;
 
-    private static final long WAITING_TIME = 300;
+    @Resource
+    TimerService timerService;
 
-    private static List<Future<?>> results = null;
-    private ExecutorService executorService = null;
-    private static boolean activityStarted;
-    private static boolean activityCompleted;
-    private static boolean activitySuccessfullyCompleted;
+    private static final long TIME_TO_CANCEL_COLLECTION = 2*60*60*1000;
+    private static final long TIME_TO_NEXT_CHECK = 1*60*1000;
+
+    private List<Future<?>> results;
+    private boolean activityStarted;
+    private boolean activityCompleted;
+    private boolean activitySuccessfullyCompleted;
+    private ReentrantReadWriteLock lock;
 
     //////////////////////////////////
     //  initialization and cleanup
@@ -49,24 +54,7 @@ public class AssetSyncCollectorService {
         activityStarted = false;
         activityCompleted = false;
         activitySuccessfullyCompleted = true;
-        //executorService = Executors.newWorkStealingPool();
-    }
-
-    //@PreDestroy
-    private void cleanUp() {
-        if (executorService != null) {
-            try {
-                executorService.shutdown();
-                executorService.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                log.info("FLEET SYNC: Process of creating raw history records interrupted.");
-            } finally {
-                if (!executorService.isTerminated()) {
-                    log.info("FLEET SYNC: Force shutdown during the raw history records saving.");
-                }
-                executorService.shutdownNow();
-            }
-        }
+        lock = new ReentrantReadWriteLock();
     }
 
     //////////////////////////////////
@@ -81,41 +69,45 @@ public class AssetSyncCollectorService {
      */
     public void collectDataFromFleet(Integer startPageIndex, Boolean getSinglePage,
                                      Integer userPageSize, Integer defaultPageSize) {
-        log.info("FLEET SYNC: Start collecting fleet data.");
+        checkStartDataCollection();
 
         prepareFleetStorage();
 
         results = new ArrayList<>();
-        Integer pageSize = userPageSize <=0 ? defaultPageSize : userPageSize;
+        Integer pageSize = userPageSize <= 0 ? defaultPageSize : userPageSize;
         log.info("FLEET SYNC: Asset synchronization collection started with page size {}.", pageSize);
         if (getSinglePage) {
             getSinglePageFromFleet(startPageIndex, pageSize);
         } else {
             collectAndSaveMultipleFleetPages(startPageIndex, pageSize);
         }
-        //collectSyncActivityResults();
+        collectSyncActivityResults();
     }
 
-    private void collectSyncActivityResults() {
-        if (executorService != null) {
-            executorService.shutdown();
-            try {
-                activitySuccessfullyCompleted =
-                        executorService.awaitTermination(WAITING_TIME, TimeUnit.MINUTES);
-            } catch (InterruptedException e) {
-                log.error("FLEET SYNC: Collecting records from FLEET interrupted.");
-                e.printStackTrace();
-            }
-            //redundancy
-            if (executorService.isTerminated()) {
-                log.info("FLEET SYNC: Collecting records from FLEET completed successfully.");
-                activitySuccessfullyCompleted = true;
-            }
+    public boolean checkStartDataCollection() {
+        log.info("FLEET SYNC: Checking asset sync state...");
+
+        if (activityStarted) {
+            log.info("FLEET SYNC: Asset sync already in progress. Skipping the request.");
+            return false;
         } else {
-            activitySuccessfullyCompleted = false;
+            lock.writeLock().lock();
+            try {
+                if (!activityStarted) {
+                    activityStarted = true;
+                    activityCompleted = false;
+                    activitySuccessfullyCompleted = false;
+                    log.info("FLEET SYNC: Start collecting fleet data.");
+                }
+            } finally {
+                lock.writeLock().unlock();
+            }
         }
-        activityStarted = false;
-        activityCompleted = true;
+
+        //create timer to cancel the results if exceeds 2 hours
+        timerService.createTimer(TIME_TO_CANCEL_COLLECTION, "FLEET SYNC: Cancel-sync-collector task timer.");
+
+        return true;
     }
 
     public boolean isCollectingActivityStarted() {
@@ -130,9 +122,50 @@ public class AssetSyncCollectorService {
         return activitySuccessfullyCompleted;
     }
 
+    public void resetSyncCollectorState() {
+        for (Future<?> result : results) {
+            result.cancel(true);
+        }
+        activityCompleted = false;
+        activitySuccessfullyCompleted = false;
+        activityStarted = false;
+    }
+
+
     //////////////////////////////////
     //  private methods
     //////////////////////////////////
+
+    @Timeout
+    private void cancelAssetCollector(Timer timer) {
+        resetSyncCollectorState();
+        activityCompleted = true;
+    }
+
+    private void collectSyncActivityResults() {
+
+        //blocking check for results
+        while(!areTasksDone(results)) {
+            try {
+                Thread.sleep(TIME_TO_NEXT_CHECK);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        }
+        activityCompleted = true;
+        activitySuccessfullyCompleted = true;
+        activityStarted = false;
+        log.info("FLEET SYNC: Sync collecting steps completed.");
+    }
+
+    private boolean areTasksDone(List<Future<?>> results) {
+        boolean allDone = true;
+        for (Future<?> result : results) {
+            allDone = result.isDone() && allDone;
+        }
+        return  allDone;
+    }
 
     private void prepareFleetStorage() {
         assetRawHistoryDao.cleanUpRawRecordsTable();
