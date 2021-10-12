@@ -25,4 +25,5 @@ public interface AssetRawHistoryDao {
 
     List<AssetRawHistory> getAssetRawHistoryByCfrSortedByEventDate(String cfr);
 
+    void truncateAddressForRawRecordsEntries();
 }

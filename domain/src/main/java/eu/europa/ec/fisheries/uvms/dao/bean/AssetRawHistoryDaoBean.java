@@ -7,10 +7,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -46,6 +43,16 @@ public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
                 em.createNamedQuery(UvmsConstants.FIND_ASSET_BY_CFR_ORDER_BY_EVENT_DESC, AssetRawHistory.class);
         query.setParameter("cfr", cfr);
         return query.getResultList();
+    }
+
+    @Override
+    public void truncateAddressForRawRecordsEntries() {
+         Query query = em.createNativeQuery("UPDATE asset.assetrawhistoryrecords " +
+                                 "SET assetrawhist_addressowner = LEFT(assetrawhist_addressowner, ?), " +
+                                 "assetrawhist_addressagent = LEFT(assetrawhist_addressagent, ?) ;");
+         query.setParameter(1, 100);
+         query.setParameter(2, 100);
+         query.executeUpdate();
     }
 
     @Override

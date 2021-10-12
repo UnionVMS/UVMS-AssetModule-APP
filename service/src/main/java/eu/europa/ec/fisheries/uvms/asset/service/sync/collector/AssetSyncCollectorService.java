@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
@@ -174,10 +173,7 @@ public class AssetSyncCollectorService {
 
 
     private Integer getSinglePageFromFleet(Integer pageIndex, Integer pageSize) {
-        long startNanos = System.nanoTime();
         List<AssetRawHistory> currentAssetsPageAsList = getRawAssetsPageSafe(pageIndex, pageSize);
-        long duration  = System.nanoTime() - startNanos;
-        log.info( "FLEET SYNC: fetch raw record time :  {}", TimeUnit.NANOSECONDS.toSeconds(duration));
         Future<?> result = saveRawRecords(currentAssetsPageAsList);
         if (results != null) {
             results.add(result);
@@ -187,10 +183,7 @@ public class AssetSyncCollectorService {
 
     private Future<?> saveRawRecords(List<AssetRawHistory> historyRecords) {
         Future<?> result = managedExecutorService.submit(() -> {
-            long startNanos = System.nanoTime();
             assetRawHistoryDao.createRawHistoryEntry(historyRecords);
-            long duration  = System.nanoTime() - startNanos;
-            log.info( "FLEET SYNC: save raw record time : {}", TimeUnit.NANOSECONDS.toSeconds(duration));
         });
         return result;
     }

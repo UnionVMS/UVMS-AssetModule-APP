@@ -73,6 +73,7 @@ public class AssetSyncProcessorService {
 
     public void syncRawRecordsWithExisting() {
         checkStartDataProcessing();
+        assetRawHistoryDao.truncateAddressForRawRecordsEntries();
 
         results = new ArrayList<>();
         processedAssetsCount = 0;

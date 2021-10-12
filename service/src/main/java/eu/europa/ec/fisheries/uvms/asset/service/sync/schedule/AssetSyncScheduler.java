@@ -58,7 +58,7 @@ public class AssetSyncScheduler {
 
     @Timeout
     public void timeout(Timer timer) {
-        log.debug("Asset sync scheduler started");
+        log.debug("FLEET SYNC: Asset sync scheduler started");
         //assetSyncService.triggerSync();
 
         assetSyncService.resetSync();
