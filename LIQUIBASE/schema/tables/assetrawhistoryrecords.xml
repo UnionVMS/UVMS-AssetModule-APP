@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <preConditions onFail="WARN">
+        <not>
+            <tableExists tableName="asset.assetrawhistoryrecords"/>
+        </not>
+        <not>
+            <indexExists indexName="asset.assetrawhistory_cfr_idx"/>
+        </not>
+        <not>
+            <indexExists indexName="asset.assetrawhistory_dateofevent_idx"/>
+        </not>
+        <not>
+            <sequenceExists sequenceName="asset.seq_asset_raw_hist"/>
+        </not>
+    </preConditions>
+
+    <changeSet author="grigomi" id="assetrawhist-01">
+        <comment>Create staging table for assets sync with Fleet</comment>
+        <createTable tableName="asset.assetrawhistoryrecords">
+            <column name="assetrawhist_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="assetrawhistrec_pk" />
+            </column>
+            <column name="assetrawhist_eventcodetype" type="VARCHAR(50)"/>
+            <column name="assetrawhist_dateofevent" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="assetrawhist_eventactive" type="BOOLEAN" />
+            <column name="assetrawhist_cfr" type="VARCHAR(12)"/>
+            <column name="assetrawhist_uvi" type="VARCHAR(50)"/>
+            <column name="assetrawhist_registrationnumber" type="VARCHAR(50)"/>
+            <column name="assetrawhist_externalmarking" type="VARCHAR(14)"/>
+            <column name="assetrawhist_ircs" type="VARCHAR(8)"/>
+            <column name="assetrawhist_mmsi" type="VARCHAR(9)"/>
+            <column name="hash_key" type="VARCHAR(255)"/>
+            <column name="assetrawhist_iccat" type="VARCHAR(50)"/>
+            <column name="assetrawhist_gfcm" type="VARCHAR(50)"/>
+            <column name="assetrawhist_nameofasset" type="VARCHAR(40)"/>
+            <column name="assetrawhist_vesseltype" type="VARCHAR(40)"/>
+            <column name="assetrawhist_countryregistration" type="VARCHAR(3)"/>
+            <column name="assetrawhist_placeofregistration" type="VARCHAR(30)"/>
+            <column name="assetrawhist_dateofconstruction" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="assetrawhist_powerofmainengine" type="numeric(8, 2)" />
+            <column name="assetrawhist_powerofauxengine" type="numeric(8, 2)" />
+            <column name="assetrawhist_loa" type="numeric(6, 2)" />
+            <column name="assetrawhist_lbp" type="numeric(6, 2)" />
+            <column name="assetrawhist_tonnagegtunit" type="VARCHAR(14)"/>
+            <column name="assetrawhist_tonnagegt" type="numeric(8, 2)" />
+            <column name="assetrawhist_othertonnage" type="numeric(8, 2)" />
+            <column name="assetrawhist_gts" type="numeric(7, 2)" />
+            <column name="assetrawhist_main_fishgear_characteristics" type="VARCHAR(40)"/>
+            <column name="assetrawhist_main_fishgear_role" type="VARCHAR(20)"/>
+            <column name="assetrawhist_main_fishgear_type" type="VARCHAR(40)"/>
+            <column name="assetrawhist_sub_fishgear_characteristics" type="VARCHAR(40)"/>
+            <column name="assetrawhist_sub_fishgear_role" type="VARCHAR(20)"/>
+            <column name="assetrawhist_sub_fishgear_type" type="VARCHAR(40)"/>
+            <column name="assetrawhist_licenceindicator" type="BOOLEAN" />
+            <column name="assetrawhist_segment" type="VARCHAR(40)"/>
+            <column name="assetrawhist_dateofserviceentry" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="assetrawhist_publicaid" type="VARCHAR(50)"/>
+            <column name="assetrawhist_ircsindicator" type="BOOLEAN" />
+            <column name="assetrawhist_vmsindicator" type="BOOLEAN" />
+            <column name="assetrawhist_ersindicator" type="BOOLEAN" />
+            <column name="assetrawhist_aisindicator" type="BOOLEAN" />
+            <column name="assetrawhist_hullmaterial" type="INT" />
+            <column name="assetrawhist_nameowner" type="VARCHAR(100)" />
+            <column name="assetrawhist_addressowner" type="VARCHAR(200)" />
+            <column name="assetrawhist_emailowner" type="VARCHAR(100)" />
+            <column name="assetrawhist_phoneowner" type="VARCHAR(40)" />
+            <column name="assetrawhist_imo" type="VARCHAR(7)" />
+            <column name="assetrawhist_indicatorowner" type="BOOLEAN" />
+            <column name="assetrawhist_nameagent" type="VARCHAR(100)" />
+            <column name="assetrawhist_addressagent" type="VARCHAR(200)" />
+            <column name="assetrawhist_emailagent" type="VARCHAR(100)" />
+            <column name="assetrawhist_phoneagent" type="VARCHAR(40)" />
+            <column name="assetrawhist_asset_placeofconstruction" type="VARCHAR(100)" />
+            <column name="assetrawhist_asset_addressofconstruction" type="VARCHAR(100)" />
+            <column name="assetrawhist_updattim" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="assetrawhist_countryofimpexp" type="VARCHAR(3)" />
+            <column name="assetrawhist_typeofexport" type="VARCHAR(20)" />
+            <column name="assetrawhist_upuser" type="VARCHAR(60)" />
+        </createTable>
+
+        <createIndex tableName="assetrawhistoryrecords" indexName="asset.assetrawhistory_cfr_idx">
+            <column name="assetrawhist_cfr"></column>
+        </createIndex>
+
+        <createIndex tableName="assetrawhistoryrecords" indexName="asset.assetrawhistory_dateofevent_idx">
+            <column name="assetrawhist_dateofevent"></column>
+        </createIndex>
+
+        <createSequence sequenceName="asset.seq_asset_raw_hist" minValue="1" incrementBy="1000" cycle="true"/>
+
+        <rollback>
+            <dropTable tableName="asset.assetrawhistoryrecords" cascadeConstraints="true"/>
+            <dropSequence sequenceName="assetseq_asset_raw_hist"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
