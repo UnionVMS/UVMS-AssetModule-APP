@@ -22,5 +22,6 @@
     <include file="changelog\v0.6\db-changelog-UNIONVMS-4813.xml" />
 
     <include file="changelog\v0.7\db-changelog-create-table_0.7.xml" />
+    <include file="changelog\v0.8\db-changelog-add-index_0.8.xml" />
 
 </databaseChangeLog>

@@ -83,11 +83,11 @@
             <column name="assetrawhist_upuser" type="VARCHAR(60)" />
         </createTable>
 
-        <createIndex tableName="assetrawhistoryrecords" indexName="asset.assetrawhistory_cfr_idx">
+        <createIndex tableName="assetrawhistoryrecords" indexName="assetrawhistory_cfr_idx">
             <column name="assetrawhist_cfr"></column>
         </createIndex>
 
-        <createIndex tableName="assetrawhistoryrecords" indexName="asset.assetrawhistory_dateofevent_idx">
+        <createIndex tableName="assetrawhistoryrecords" indexName="assetrawhistory_dateofevent_idx">
             <column name="assetrawhist_dateofevent"></column>
         </createIndex>
 
@@ -95,7 +95,7 @@
 
         <rollback>
             <dropTable tableName="asset.assetrawhistoryrecords" cascadeConstraints="true"/>
-            <dropSequence sequenceName="assetseq_asset_raw_hist"/>
+            <dropSequence sequenceName="asset.seq_asset_raw_hist"/>
         </rollback>
     </changeSet>
 
