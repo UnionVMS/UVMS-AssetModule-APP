@@ -117,7 +117,7 @@ public class AssetSyncProcessorService {
                             results.add(result);
                         }
                     }
-                    log.info("FLEET SYNC: Processed: {} assets. Update candidates {}. Create candidates {}",
+                    log.info("FLEET SYNC: Sent to processing: {} assets. Update candidates {}. Create candidates {}",
                             processedAssetsCount, toUpdateAssetsCount, toCreateAssetsCount);
                 });
         log.info("FLEET SYNC: All history records sent to processing. CFRs: {}. Collecting results...", processedAssetsCount);

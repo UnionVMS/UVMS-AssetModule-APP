@@ -193,6 +193,8 @@ public class AssetHistoryRawRecordHandler {
         record.setCommisionDate(rawRecord.getDateOfServiceEntry());
         record.setUpdateTime(rawRecord.getUpdateTime());
 
+        record.setCountryOfImportOrExport(rawRecord.getCountryOfImportOrExport());
+
         return record;
     }
 

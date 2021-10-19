@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync.processor;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
@@ -49,7 +48,9 @@ public class AssetHistoryUpdateHandler {
             updateAssetToFullHistory(cfr);
             log.debug("FLEET SYNC: Asset {} processed for update.", cfr);
         }
-        log.info("FLEET SYNC: Updates of current batch completed. Size {} ", assetsCfrToUpdate.size());
+        int size = assetsCfrToUpdate.size();
+        log.info("FLEET SYNC: Updates of current batch completed. Size {}. Last updated {} ",
+                size, assetsCfrToUpdate.get(size-1));
     }
 
     //////////////////////////////////
@@ -88,7 +89,7 @@ public class AssetHistoryUpdateHandler {
                     updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
                 }
                 assetDao.saveAssetWithHistory(asset); //saved asset contains its history
-                log.debug("FLEET SYNC: Asset {}. All records {}. Processed {}",
+                log.debug("FLEET SYNC: Update asset {}. History records # {}. Processed # {}",
                         cfr, rawRecords.size(), newRecords.size());
             }
         }
@@ -255,7 +256,7 @@ public class AssetHistoryUpdateHandler {
                 !(segment == null || segmentEnumVal == null || segment.equals(segmentEnumVal.name())) ||
                 !(eventCodeType == null || eventCodeEnumVal == null ||
                         eventCodeType.equals(eventCodeEnumVal.name())) ||
-                !(updateTime == null || updateTime.equals(duplicatedRecord.getUpdateTime())) ||
+//                !(updateTime == null || updateTime.equals(duplicatedRecord.getUpdateTime())) ||
                 !(safteyGrossTonnage == null ||
                         safteyGrossTonnage.equals(duplicatedRecord.getSafteyGrossTonnage())) ||
                 !(grossTonnageUnit == null || grossTonnageUnitEnumVal == null ||
