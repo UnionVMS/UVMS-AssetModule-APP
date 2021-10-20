@@ -54,6 +54,7 @@ public class AssetSyncCollectorService {
         activityCompleted = false;
         activitySuccessfullyCompleted = true;
         lock = new ReentrantReadWriteLock();
+        results = new ArrayList<>();
     }
 
     //////////////////////////////////
@@ -69,10 +70,9 @@ public class AssetSyncCollectorService {
     public void collectDataFromFleet(Integer startPageIndex, Boolean getSinglePage,
                                      Integer userPageSize, Integer defaultPageSize) {
         checkStartDataCollection();
-
         prepareFleetStorage();
+        results.clear();
 
-        results = new ArrayList<>();
         Integer pageSize = userPageSize <= 0 ? defaultPageSize : userPageSize;
         log.info("FLEET SYNC: Asset synchronization collection started with page size {}.", pageSize);
         if (getSinglePage) {
@@ -182,10 +182,9 @@ public class AssetSyncCollectorService {
     }
 
     private Future<?> saveRawRecords(List<AssetRawHistory> historyRecords) {
-        Future<?> result = managedExecutorService.submit(() -> {
+        return managedExecutorService.submit(() -> {
             assetRawHistoryDao.createRawHistoryEntry(historyRecords);
         });
-        return result;
     }
 
     private void collectAndSaveMultipleFleetPages(Integer startPage, Integer pageSize) {

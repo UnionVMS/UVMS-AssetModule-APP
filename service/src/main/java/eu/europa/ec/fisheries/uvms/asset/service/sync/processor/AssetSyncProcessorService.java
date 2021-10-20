@@ -65,6 +65,7 @@ public class AssetSyncProcessorService {
         activityCompleted = false;
         activitySuccessfullyCompleted = true;
         lock = new ReentrantReadWriteLock();
+        results = new ArrayList<>();
     }
 
     //////////////////////////////////
@@ -74,8 +75,8 @@ public class AssetSyncProcessorService {
     public void syncRawRecordsWithExisting() {
         checkStartDataProcessing();
         assetRawHistoryDao.truncateAddressForRawRecordsEntries();
+        results.clear();
 
-        results = new ArrayList<>();
         processedAssetsCount = 0;
         final List<String> existingCfrs = assetDao.getAllCfrsSorted();
         final List<String> incomingCfrs = assetRawHistoryDao.getAllDistinctRawCfrs();
