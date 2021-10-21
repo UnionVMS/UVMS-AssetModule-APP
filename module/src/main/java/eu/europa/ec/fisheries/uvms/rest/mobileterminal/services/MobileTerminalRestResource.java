@@ -54,7 +54,7 @@ import java.util.UUID;
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class MobileTerminalRestResource {
 
-    private static final String REQUSETID = "requestId";
+    private static final String REQUST_ID = "requestId";
 
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResource.class);
 
@@ -97,7 +97,7 @@ public class MobileTerminalRestResource {
 
             MobileTerminal mobileTerminal = mobileTerminalService.createMobileTerminal(terminal, request.getRemoteUser());
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -112,7 +112,7 @@ public class MobileTerminalRestResource {
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when fetching mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -127,7 +127,7 @@ public class MobileTerminalRestResource {
         try {
             List<MobileTerminal> mtList = mobileTerminalService.getMobileTerminalListNotConnectedToAsset();
             String returnString = jsonb.toJson(mtList);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when fetching mobile terminal list] {}", ex.getMessage(), ex);
             throw ex;
@@ -146,7 +146,7 @@ public class MobileTerminalRestResource {
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, terminal.getComment(), request.getRemoteUser());
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when updating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -168,7 +168,7 @@ public class MobileTerminalRestResource {
 
             String returnJson = jsonb.toJson(mobileTerminalList);
             LOG.debug(returnJson);
-            return Response.ok(returnJson).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnJson).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex.getMessage(), ex);
             throw ex;
@@ -187,7 +187,7 @@ public class MobileTerminalRestResource {
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
             String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ?
                     mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when checking if serial number already exists ] {}", ex.getMessage(), ex);
             throw ex;
@@ -208,7 +208,7 @@ public class MobileTerminalRestResource {
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
             String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ?
                     mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when if a member number dnid combo already exists ] {}", ex.getMessage(), ex);
             throw ex;
@@ -225,7 +225,7 @@ public class MobileTerminalRestResource {
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(assetId, mobileTerminalId, comment, request.getRemoteUser());
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when assigning mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -242,7 +242,7 @@ public class MobileTerminalRestResource {
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(assetId, mtId, comment, request.getRemoteUser());
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when unassigning mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -257,7 +257,7 @@ public class MobileTerminalRestResource {
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(mtId, comment, status, request.getRemoteUser());
             String returnString = jsonb.toJson(mobileTerminal);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when activating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
@@ -274,7 +274,7 @@ public class MobileTerminalRestResource {
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             String returnString = jsonb.toJson(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions));
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);
             throw ex;
@@ -290,7 +290,7 @@ public class MobileTerminalRestResource {
             Map<UUID, ChangeHistoryRow> mobileTerminalRevisionMap =
                     mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex.getMessage(), ex);
             throw ex;
@@ -305,7 +305,7 @@ public class MobileTerminalRestResource {
         try{
             List<AssetDto> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
             String returnString = jsonb.toJson(assetRevisions);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex.getMessage(), ex);
             throw ex;
@@ -323,7 +323,7 @@ public class MobileTerminalRestResource {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(mobileTerminalRevisions);
             String returnString = jsonb.toJson(changeHistory);
-            return Response.ok(returnString).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(returnString).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);
             throw ex;
@@ -336,7 +336,7 @@ public class MobileTerminalRestResource {
     public Response getLowestFreeMemberNumberForDnid(@PathParam("dnid") Integer dnid){
         try {
             Integer lowestFreeMemberNumberForDnid = channelDao.getLowestFreeMemberNumberForDnid(dnid);
-            return Response.ok(lowestFreeMemberNumberForDnid).header("MDC", MDC.get(REQUSETID)).build();
+            return Response.ok(lowestFreeMemberNumberForDnid).header("MDC", MDC.get(REQUST_ID)).build();
         } catch (Exception ex) {
             LOG.error("[ Error while searching for the lowest unused member number for a dnid ] {}", ex.getMessage(), ex);
             throw ex;
