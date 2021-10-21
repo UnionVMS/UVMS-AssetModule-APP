@@ -51,6 +51,7 @@ public class CustomCodesRestResource {
             CustomCode replacedCustomCode = customCodesSvc.replace(customCode);
             return Response.ok(replacedCustomCode).header("MDC", MDC.get(REQUESTID)).build();
         } catch (Exception e) {
+            LOG.error("Error replacing custom code");
             throw e;
         }
     }
