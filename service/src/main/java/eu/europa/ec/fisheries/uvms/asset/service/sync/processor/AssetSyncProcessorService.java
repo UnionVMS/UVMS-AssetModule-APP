@@ -46,8 +46,9 @@ public class AssetSyncProcessorService {
     private static int toCreateAssetsCount = 0;
     private static final int BATCH_PROC_SIZE = 100;
     private static final long WAITING_TIME = 240;
-    private static final long TIME_TO_CANCEL_COLLECTION = 4*60*60*1000;
+    private static final long TIME_TO_CANCEL_PROCESSING = 4*60*60*1000;
     private static final long TIME_TO_NEXT_CHECK = 2*60*1000;
+    private static final String FLEET_SYNC_PROCESSOR = "fleet-sync-processor";
 
     private List<Future<?>> results;
     private boolean activityStarted;
@@ -152,7 +153,8 @@ public class AssetSyncProcessorService {
         }
 
         //create timer to cancel the results if exceeds 4 hours
-        timerService.createTimer(TIME_TO_CANCEL_COLLECTION, "FLEET SYNC: Cancel-sync-processor task timer.");
+        TimerConfig timerConfig = new TimerConfig(FLEET_SYNC_PROCESSOR, false);
+        timerService.createSingleActionTimer(TIME_TO_CANCEL_PROCESSING, timerConfig);
 
         return true;
     }
@@ -217,6 +219,8 @@ public class AssetSyncProcessorService {
         activityCompleted = true;
         activitySuccessfullyCompleted = true;
         activityStarted = false;
+
+        cancelSyncProcessorTimer();
         log.info("FLEET SYNC: Sync processing steps completed.");
     }
 
@@ -226,5 +230,13 @@ public class AssetSyncProcessorService {
             allDone = result.isDone() && allDone;
         }
         return  allDone;
+    }
+
+    private void cancelSyncProcessorTimer() {
+        timerService.getAllTimers().forEach(t -> {
+            if (FLEET_SYNC_PROCESSOR.equals(t.getInfo())) {
+                t.cancel();
+            }
+        });
     }
 }

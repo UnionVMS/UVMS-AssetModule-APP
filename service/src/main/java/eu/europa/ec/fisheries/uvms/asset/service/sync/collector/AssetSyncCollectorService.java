@@ -35,8 +35,9 @@ public class AssetSyncCollectorService {
     @Resource
     TimerService timerService;
 
-    private static final long TIME_TO_CANCEL_COLLECTION = 2*60*60*1000;
+    private static final long TIME_TO_CANCEL_COLLECTING = 2*60*60*1000;
     private static final long TIME_TO_NEXT_CHECK = 1*60*1000;
+    private static final String FLEET_SYNC_COLLECTOR = "fleet-sync-collector";
 
     private List<Future<?>> results;
     private boolean activityStarted;
@@ -104,7 +105,8 @@ public class AssetSyncCollectorService {
         }
 
         //create timer to cancel the results if exceeds 2 hours
-        timerService.createTimer(TIME_TO_CANCEL_COLLECTION, "FLEET SYNC: Cancel-sync-collector task timer.");
+        TimerConfig timerConfig = new TimerConfig(FLEET_SYNC_COLLECTOR, false);
+        timerService.createSingleActionTimer(TIME_TO_CANCEL_COLLECTING, timerConfig);
 
         return true;
     }
@@ -152,9 +154,12 @@ public class AssetSyncCollectorService {
                 e.printStackTrace();
             }
         }
+
         activityCompleted = true;
         activitySuccessfullyCompleted = true;
         activityStarted = false;
+
+        cancelSyncCollectorTimer();
         log.info("FLEET SYNC: Sync collecting steps completed.");
     }
 
@@ -206,5 +211,13 @@ public class AssetSyncCollectorService {
             log.error("FLEET SYNC: Error syncing raw assets page " + pageNumber + " with page size " + pageSize, ase);
             return Collections.emptyList();
         }
+    }
+
+    private void cancelSyncCollectorTimer() {
+        timerService.getAllTimers().forEach(t -> {
+            if (FLEET_SYNC_COLLECTOR.equals(t.getInfo())) {
+                t.cancel();
+            }
+        });
     }
 }
