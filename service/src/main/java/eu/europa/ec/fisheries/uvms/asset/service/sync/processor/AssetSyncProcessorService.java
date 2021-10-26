@@ -233,6 +233,7 @@ public class AssetSyncProcessorService {
     }
 
     private void cancelSyncProcessorTimer() {
+        log.info("FLEET SYNC: History records processed in time. Attempting to cancel the {} timer.", FLEET_SYNC_PROCESSOR);
         timerService.getAllTimers().forEach(t -> {
             if (FLEET_SYNC_PROCESSOR.equals(t.getInfo())) {
                 t.cancel();

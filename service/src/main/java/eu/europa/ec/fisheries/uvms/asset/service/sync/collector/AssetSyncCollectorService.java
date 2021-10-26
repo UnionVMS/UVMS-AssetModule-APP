@@ -97,7 +97,7 @@ public class AssetSyncCollectorService {
                     activityStarted = true;
                     activityCompleted = false;
                     activitySuccessfullyCompleted = false;
-                    log.info("FLEET SYNC: Start collecting fleet data.");
+                    log.debug("FLEET SYNC: Status vars prepared for starting collecting fleet data.");
                 }
             } finally {
                 lock.writeLock().unlock();
@@ -199,7 +199,7 @@ public class AssetSyncCollectorService {
         while (moreAssetsExist) {
             Integer retrievedRecordsCount = getSinglePageFromFleet(startPageIndex, pageSize);
             moreAssetsExist = pageSize.equals(retrievedRecordsCount);
-            log.info("FLEET SYNC: Collected page {} with {} records", startPageIndex, retrievedRecordsCount);
+            log.debug("FLEET SYNC: Collected page {} with {} records", startPageIndex, retrievedRecordsCount);
             startPageIndex++;
         }
     }
@@ -214,6 +214,7 @@ public class AssetSyncCollectorService {
     }
 
     private void cancelSyncCollectorTimer() {
+        log.info("FLEET SYNC: History records collected in time. Attempting to cancel the {} timer.", FLEET_SYNC_COLLECTOR);
         timerService.getAllTimers().forEach(t -> {
             if (FLEET_SYNC_COLLECTOR.equals(t.getInfo())) {
                 t.cancel();
