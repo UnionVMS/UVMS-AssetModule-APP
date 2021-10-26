@@ -149,8 +149,7 @@ public class AssetHistoryUpdateHandler {
 
         asset.setIMO(mostRecentRecord.getImo());
         asset.setIrcsIndicator(mostRecentRecord.getIrcsIndicator());
-        //TODO is this correct?
-        asset.setConstructionPlace(mostRecentRecord.getPortOfRegistration());
+        asset.setConstructionPlace(mostRecentRecord.getPlaceOfConstruction());
         asset.setHullMaterial(mostRecentRecord.getHullMaterial());
         Optional.ofNullable(mostRecentRecord.getConstructionDate())
                 .ifPresent(date -> {

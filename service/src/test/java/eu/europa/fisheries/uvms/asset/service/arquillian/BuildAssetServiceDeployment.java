@@ -41,7 +41,7 @@ public abstract class BuildAssetServiceDeployment extends Assert {
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.exception");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service.bean");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.entity");
-        
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.config");
 
 
         testWar.addClass(TransactionalTests.class);

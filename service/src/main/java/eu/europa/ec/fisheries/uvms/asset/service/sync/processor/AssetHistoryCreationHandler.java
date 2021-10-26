@@ -90,7 +90,7 @@ public class AssetHistoryCreationHandler {
         Optional.ofNullable(record.getIrcsIndicator()).ifPresent(ircs -> {
             asset.setIrcsIndicator(ircs.substring(0,1));
         });
-        asset.setConstructionPlace(record.getPortOfRegistration());
+        asset.setConstructionPlace(record.getPlaceOfConstruction());
         asset.setHullMaterial(record.getHullMaterial());
         asset.setConstructionYear(
                 Optional.ofNullable(record.getConstructionDate())
