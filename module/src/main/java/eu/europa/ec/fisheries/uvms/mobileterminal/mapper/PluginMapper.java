@@ -83,7 +83,7 @@ public class PluginMapper {
             return false;
         }
         if (plugin.getCapability() != null && entity.getCapabilities() != null) {
-            return equalsNotNull(entity, plugin);
+            return checkCapabilityEquality(entity, plugin);
         } else if (plugin.getCapability() == null && entity.getCapabilities() != null) {
             return false;
         } else if (entity.getCapabilities() == null && plugin.getCapability() != null) {
@@ -92,7 +92,7 @@ public class PluginMapper {
         return true;
     }
 
-    private static boolean equalsNotNull(MobileTerminalPlugin entity, PluginService plugin) {
+    private static boolean checkCapabilityEquality(MobileTerminalPlugin entity, PluginService plugin) {
         boolean equals = true;
         if (plugin.getCapability().size() != entity.getCapabilities().size()) {
             equals = false;
