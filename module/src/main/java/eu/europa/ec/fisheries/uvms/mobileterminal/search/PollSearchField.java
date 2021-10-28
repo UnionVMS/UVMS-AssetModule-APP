@@ -30,7 +30,7 @@ public enum PollSearchField {
 	private final SearchTable table;
     private final String sqlColumnName;
     private final String sqlReplaceToken;
-    private final Class<String> clazz;
+    private final Class clazz;
     
     PollSearchField(SearchTable table, String sqlColumnName, String sqlReplaceToken) {
     	this.table = table;
@@ -58,7 +58,7 @@ public enum PollSearchField {
         return sqlReplaceToken;
     }
     
-    public Class<String> getClazz() {
+    public Class getClazz() {
     	return clazz;
     }
 }
