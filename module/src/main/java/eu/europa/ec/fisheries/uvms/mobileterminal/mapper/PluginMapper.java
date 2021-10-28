@@ -100,7 +100,7 @@ public class PluginMapper {
         for (PluginCapability capability : plugin.getCapability()) {
             for (MobileTerminalPluginCapability entityCapability : entity.getCapabilities()) {
                 if (entityCapability.getName().equalsIgnoreCase(capability.getName().name())
-                        || !entityCapability.getValue().equalsIgnoreCase(capability.getValue())) {
+                        && !entityCapability.getValue().equalsIgnoreCase(capability.getValue())) {
                         equals = false;
                 }
             }
