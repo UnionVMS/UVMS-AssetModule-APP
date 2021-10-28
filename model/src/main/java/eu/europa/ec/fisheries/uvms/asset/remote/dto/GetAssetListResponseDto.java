@@ -18,16 +18,16 @@ import java.util.List;
 
 public class GetAssetListResponseDto implements Serializable{
 
-    private List<Asset> assets;
+    List<Asset> assetList;
     Integer totalNumberOfPages;
     Integer currentPage;
 
-    public List<Asset> getAssets() {
-        return assets;
+    public List<Asset> getAssetList() {
+        return assetList;
     }
 
-    public void setAssets(List<Asset> assets) {
-        this.assets = assets;
+    public void setAssetList(List<Asset> assetList) {
+        this.assetList = assetList;
     }
 
     public Integer getTotalNumberOfPages() {
