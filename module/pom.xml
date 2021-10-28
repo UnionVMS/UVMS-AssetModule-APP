@@ -26,8 +26,12 @@
                 <version>3.0.0</version>
                 <configuration>
                     <applicationName>asset-module</applicationName>
-                    <outputFileNameMapping>@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@
-                    </outputFileNameMapping>
+                    <outputFileNameMapping>@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
+                    <archive>
+                        <manifestEntries>
+                            <Logging-Profile>asset-logging-profile</Logging-Profile>
+                        </manifestEntries>
+                    </archive>
                     <modules>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
