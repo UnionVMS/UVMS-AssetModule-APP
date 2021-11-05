@@ -39,6 +39,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.*;
 
 import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
@@ -229,7 +231,8 @@ public class AssetDomainModelBean {
         }
 
         List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields);
-        for (AssetHistory entity : assetEntityList) {
+        Set<AssetHistory> historySet = new LinkedHashSet<>(assetEntityList);
+        for (AssetHistory entity : historySet) {
             arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
         }
 
