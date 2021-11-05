@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.GEAR_TYPE;
+
 /**
  **/
 public class SearchFieldMapper {
@@ -109,7 +111,7 @@ public class SearchFieldMapper {
 
     private static void enrichWithSelectAndFromSqlClause(StringBuilder stringBuilder, List<SearchKeyValue> searchFields, boolean isDynamic, Date dateOfEvent){
         stringBuilder
-                .append("SELECT DISTINCT {asset_history_alias}")
+                .append("SELECT {asset_history_alias}")
                 .append(createSearchSql(searchFields, isDynamic, true, dateOfEvent));
 
     }
