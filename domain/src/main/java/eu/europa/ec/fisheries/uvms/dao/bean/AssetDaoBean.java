@@ -570,8 +570,13 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     public List<AssetHistory> getAssetsByVesselIdientifiers(AssetListCriteria criteria){
         String jpqlHistory = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v " +
-                "WHERE vh.active = '1' AND vh.countryOfRegistration = :" + ConfigSearchField.FLAG_STATE + " AND vh.dateOfEvent <= :" + ConfigSearchField.DATE +
-                " AND ( ";
+                "WHERE vh.active = '1' AND vh.countryOfRegistration = :" + ConfigSearchField.FLAG_STATE + " AND vh.dateOfEvent <= :" + ConfigSearchField.DATE;
+
+        List<AssetListCriteriaPair> filteredCollection = criteria.getCriterias().stream().filter(crt -> !ConfigSearchField.FLAG_STATE.equals(crt.getKey()) && !ConfigSearchField.DATE.equals(crt.getKey())).collect(Collectors.toList());
+
+        if(!filteredCollection.isEmpty()) {
+            jpqlHistory += " AND ( ";
+        }
         final Map< ConfigSearchField, Object> jpqlParams = new HashMap<>();
         String jpqlBody = criteria.getCriterias().stream().filter(crt -> crt.getValue() != null).map(pair -> {
             switch (pair.getKey()) {
@@ -617,7 +622,11 @@ public class AssetDaoBean extends Dao implements AssetDao {
                     return  "";
                 }
             }
-        }).filter(StringUtils::isNotEmpty).collect(Collectors.joining(" OR ")) + " )";
+        }).filter(StringUtils::isNotEmpty).collect(Collectors.joining(" OR "));
+
+        if(!filteredCollection.isEmpty()) {
+            jpqlHistory += " )";
+        }
 
         TypedQuery<AssetHistory> q = em.createQuery(jpqlHistory + jpqlBody, AssetHistory.class);
         for (Map.Entry entry : jpqlParams.entrySet()) {
