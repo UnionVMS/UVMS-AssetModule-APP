@@ -625,7 +625,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         }).filter(StringUtils::isNotEmpty).collect(Collectors.joining(" OR "));
 
         if(!filteredCollection.isEmpty()) {
-            jpqlHistory += " )";
+            jpqlBody += " )";
         }
 
         TypedQuery<AssetHistory> q = em.createQuery(jpqlHistory + jpqlBody, AssetHistory.class);
