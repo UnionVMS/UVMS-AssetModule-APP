@@ -60,8 +60,8 @@ public class AssetClient {
     @PostConstruct
     private void setUpClient() {
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
-        clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
-        clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        clientBuilder.connectTimeout(60, TimeUnit.SECONDS);
+        clientBuilder.readTimeout(60, TimeUnit.SECONDS);
         Client client = clientBuilder.build();
         client.register(JsonBConfigurator.class);
         webTarget = client.target(assetEndpoint + "/internal");
