@@ -138,7 +138,7 @@ public class AssetSyncCollectorService {
     //////////////////////////////////
 
     @Timeout
-    private void cancelAssetCollector(Timer timer) {
+    public void cancelAssetCollector(Timer timer) {
         resetSyncCollectorState();
         activityCompleted = true;
     }

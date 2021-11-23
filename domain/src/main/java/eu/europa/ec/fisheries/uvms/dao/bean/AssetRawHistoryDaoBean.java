@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @Stateless
@@ -46,13 +47,37 @@ public class AssetRawHistoryDaoBean implements AssetRawHistoryDao {
     }
 
     @Override
-    public void truncateAddressForRawRecordsEntries() {
+    public void truncateLongFieldsInRawRecordsEntries() {
+        Long nano = System.nanoTime();
          Query query = em.createNativeQuery("UPDATE asset.assetrawhistoryrecords " +
-                                 "SET assetrawhist_addressowner = LEFT(assetrawhist_addressowner, ?), " +
-                                 "assetrawhist_addressagent = LEFT(assetrawhist_addressagent, ?) ;");
+                                 "SET assetrawhist_addressowner = LEFT(assetrawhist_addressowner, ?) " +
+                                 "WHERE LENGTH(assetrawhist_addressowner) > ?") ;
          query.setParameter(1, 100);
          query.setParameter(2, 100);
          query.executeUpdate();
+
+         query = em.createNativeQuery("UPDATE asset.assetrawhistoryrecords " +
+                                 "SET assetrawhist_addressagent = LEFT(assetrawhist_addressagent, ?) " +
+                                 "WHERE LENGTH(assetrawhist_addressagent) > ?") ;
+        query.setParameter(1, 100);
+        query.setParameter(2, 100);
+        query.executeUpdate();
+
+        query = em.createNativeQuery("UPDATE asset.assetrawhistoryrecords " +
+                "SET assetrawhist_emailowner = LEFT(assetrawhist_emailowner, ?) " +
+                "WHERE LENGTH(assetrawhist_emailowner) > ?") ;
+        query.setParameter(1, 40);
+        query.setParameter(2, 40);
+        query.executeUpdate();
+
+        query = em.createNativeQuery("UPDATE asset.assetrawhistoryrecords " +
+                "SET assetrawhist_emailagent = LEFT(assetrawhist_emailagent, ?) " +
+                "WHERE LENGTH(assetrawhist_emailagent) > ?") ;
+        query.setParameter(1, 40);
+        query.setParameter(2, 40);
+        query.executeUpdate();
+        Long timeA = System.nanoTime();
+        log.info("FLEET SYNC: Truncate columns took {} ms", TimeUnit.NANOSECONDS.toMillis(timeA-nano));
     }
 
     @Override

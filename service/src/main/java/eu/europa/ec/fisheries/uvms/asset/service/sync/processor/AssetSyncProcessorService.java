@@ -75,7 +75,7 @@ public class AssetSyncProcessorService {
 
     public void syncRawRecordsWithExisting() {
         checkStartDataProcessing();
-        assetRawHistoryDao.truncateAddressForRawRecordsEntries();
+        assetRawHistoryDao.truncateLongFieldsInRawRecordsEntries();
         results.clear();
 
         processedAssetsCount = 0;
@@ -119,7 +119,7 @@ public class AssetSyncProcessorService {
                             results.add(result);
                         }
                     }
-                    log.info("FLEET SYNC: Sent to processing: {} assets. Update candidates {}. Create candidates {}",
+                    log.debug("FLEET SYNC: Sent to processing: {} assets. Update candidates {}. Create candidates {}",
                             processedAssetsCount, toUpdateAssetsCount, toCreateAssetsCount);
                 });
         log.info("FLEET SYNC: All history records sent to processing. CFRs: {}. Collecting results...", processedAssetsCount);
@@ -200,7 +200,7 @@ public class AssetSyncProcessorService {
     }
 
     @Timeout
-    private void cancelAssetProcessor(Timer timer) {
+    public void cancelAssetProcessor(Timer timer) {
         resetSyncProcessorState();
         activityCompleted = true;
     }
