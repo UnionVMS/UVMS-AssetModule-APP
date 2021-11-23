@@ -11,6 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
@@ -20,28 +29,15 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemConfiguration;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
+import eu.europa.ec.fisheries.uvms.exchange.client.ExchangeRestClient;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConfigType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 
 @Stateless
 public class ConfigServiceBeanMT {
@@ -54,8 +50,8 @@ public class ConfigServiceBeanMT {
     @EJB
     private ChannelDaoBean channelDao;
 
-    @Resource(name = "java:global/exchange_endpoint")
-    private String exchangeEndpoint;
+    @Inject
+    private ExchangeRestClient exchangeClient;
 
     public List<TerminalSystemType> getTerminalSystems() {
         return getAllTerminalSystems();
@@ -71,15 +67,8 @@ public class ConfigServiceBeanMT {
             GetServiceListRequest request = new GetServiceListRequest();
             request.getType().addAll(pluginTypes);
 
-            ClientBuilder clientBuilder = ClientBuilder.newBuilder();
-            clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
-            clientBuilder.readTimeout(30, TimeUnit.SECONDS);
-            Client client = clientBuilder.build();
-            GetServiceListResponse response = client.target(exchangeEndpoint + "/unsecured/api/serviceList")
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.json(request), GetServiceListResponse.class);
+            GetServiceListResponse response = exchangeClient.getServiceList(request);
 
-            client.close();
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
