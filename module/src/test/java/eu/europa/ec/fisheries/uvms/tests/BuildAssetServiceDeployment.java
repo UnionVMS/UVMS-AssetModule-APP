@@ -42,7 +42,7 @@ public abstract class BuildAssetServiceDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
         File[] files = Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model",
+                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-client",
                         "eu.europa.ec.fisheries.uvms:usm4uvms",
                         "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message")
                 .withTransitivity().asFile();
