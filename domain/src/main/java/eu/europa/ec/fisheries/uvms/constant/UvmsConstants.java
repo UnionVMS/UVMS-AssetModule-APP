@@ -79,4 +79,6 @@ public class UvmsConstants {
 
     public static final String FIND_ALL_DISTINCT_RAW_CFRS = "AssetRawHistory.findAllDistinctCfrs";
     public static final String FIND_ASSET_BY_CFR_ORDER_BY_EVENT_DESC = "AssetRawHistory.findAssetByCfrOrderByEventDesc";
+
+    public static final String ASSETHISTORY_FIND_BY_CFR = "AssetHistory.findHistoryForAssetByCfr";
 }

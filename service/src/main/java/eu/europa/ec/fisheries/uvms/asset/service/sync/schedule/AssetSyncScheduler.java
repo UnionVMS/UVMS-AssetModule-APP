@@ -13,13 +13,8 @@ package eu.europa.ec.fisheries.uvms.asset.service.sync.schedule;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.ScheduleExpression;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
-import javax.ejb.TimerService;
+import javax.ejb.*;
+import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -47,6 +42,9 @@ public class AssetSyncScheduler {
     @Resource
     private TimerService timerService;
 
+    @Resource
+    private ManagedExecutorService executorService;
+
     //////////////////////////////////
     //  public methods
     //////////////////////////////////
@@ -61,8 +59,9 @@ public class AssetSyncScheduler {
         log.info("FLEET SYNC: Asset sync scheduler started");
         //assetSyncService.triggerSync();
 
-        assetSyncService.resetSync();
-        assetSyncService.syncFleet(0);
+        executorService.submit(() -> {
+            assetSyncService.syncFleet(0);
+        });
     }
 
 

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync.processor;
 
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetRawHistoryDao;
@@ -45,7 +46,8 @@ public class AssetHistoryUpdateHandler {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void updateAssetsHistory(List<String> assetsCfrToUpdate) {
         for (String cfr : assetsCfrToUpdate) {
-            updateAssetToFullHistory(cfr);
+            //updateAssetToFullHistory(cfr);
+             updateHistoryOfAsset(cfr);
             log.debug("FLEET SYNC: Asset {} processed for update.", cfr);
         }
         int size = assetsCfrToUpdate.size();
@@ -96,6 +98,55 @@ public class AssetHistoryUpdateHandler {
         return asset;
     }
 
+
+    /**
+     * Updates history records for an existing asset
+     * @param cfr Asset's CFR
+     * @return The same asset object updated
+     */
+    private AssetEntity updateHistoryOfAsset(String cfr) {
+        //Step 1.1 Get the new history for this vessel identifier
+        List<AssetRawHistory> rawRecords = assetRawHistoryDao.getAssetRawHistoryByCfrSortedByEventDate(cfr);
+        //Step 1.2 Get the existing history for this vessel identifier
+        List<AssetHistory> existingHistory = null;
+        AssetEntity asset  = null;
+        try {
+            existingHistory = assetDao.getAssetHistoryByCfr(cfr);
+            if (rawRecords.size() > 0) {
+                //Step 2.1 Check there are indeed new history records for this particular vessel
+                List<AssetRawHistory> newRawRecords = removeFullyDuplicatedRecordsForAsset(rawRecords, existingHistory);
+                asset  = assetDao.getAssetByCfr(cfr);
+                if (newRawRecords.size() > 0) {
+                    List<AssetHistory> newRecords = rawRecordHandler.mapRawHistoryToHistory(newRawRecords);
+                    //Step 2.2 Save the new history records
+                    for(AssetHistory record : newRecords) {
+                        record.setAsset(asset);
+                        //TODO to be fixed when there is time/need and re-enabled
+                        //sendAssetHistoryUpdateToReporting(mapFromAssetHistoryEntity(record, asset.getGuid()));
+                    }
+                    AssetHistory mostRecentRecord = getMostRecentHistoryRecordToUpdateAsset(existingHistory, newRecords);
+                    existingHistory.addAll(newRecords);
+                    if (mostRecentRecord != null) {
+                        for(AssetHistory record : existingHistory) {
+                            record.setActive(false);
+                        }
+                        mostRecentRecord.setActive(true);
+                        updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
+                    }
+                    assetDao.saveHistoryRecords(newRecords);
+                    //Step 2.3 Update the asset itself if required
+                    assetDao.saveAssetWithHistory(asset);
+                    log.info("FLEET SYNC: Update asset {}. History records # {}. Processed # {}",
+                            cfr, rawRecords.size(), newRecords.size());
+                }
+            }
+        } catch (AssetDaoException e) {
+            e.printStackTrace();
+        }
+
+        return asset;
+    }
+
     private AssetEntity getAssetByCfr(String assetCfr) throws NoAssetEntityFoundException {
         return assetDao.getAssetByCfrWithHistory(assetCfr);
     }
@@ -117,12 +168,47 @@ public class AssetHistoryUpdateHandler {
         return newRawRecords;
     }
 
+    private List<AssetRawHistory> removeFullyDuplicatedRecordsForAsset(List<AssetRawHistory> incomingRawRecords,
+                                                                       List<AssetHistory> currentRecords) {
+        List<AssetRawHistory> newRawRecords = new ArrayList<>();
+        List<AssetHistory> duplicatesToBeDeleted = new ArrayList<>();
+        for (AssetRawHistory rawRecord : incomingRawRecords) {
+            RawRecordStatus rawRecordStatus = getCurrentRawRecordStatus(currentRecords, rawRecord);
+            if (rawRecordStatus.isNew) {
+                newRawRecords.add(rawRecord);
+            } else if (rawRecordStatus.isUpdate) {
+                newRawRecords.add(rawRecord);
+                duplicatesToBeDeleted.add(rawRecordStatus.recordToBeUpdated);
+            }
+        }
+        assetDao.deleteHistoryRecords(duplicatesToBeDeleted);
+        return newRawRecords;
+    }
+
     private AssetHistory getMostRecentHistoryRecordToUpdateAsset(AssetEntity asset,
                                                                  List<AssetHistory> incomingRecords) {
         AssetHistory mostRecentIncomingRecord = incomingRecords.get(0);
         Instant mostRecentIncomingEventDate = mostRecentIncomingRecord.getDateOfEvent().toInstant();
 
         List<AssetHistory> currentRecords = asset.getHistories();
+        boolean recentIncomingIsMostRecent = true;
+        for (AssetHistory record : currentRecords) {
+            if (mostRecentIncomingEventDate.isBefore(record.getDateOfEvent().toInstant())) {
+                recentIncomingIsMostRecent = false;
+                break;
+            }
+        }
+        if (recentIncomingIsMostRecent && mostRecentIncomingRecord.getActive()) {
+            return mostRecentIncomingRecord;
+        }
+        return null;
+    }
+
+    private AssetHistory getMostRecentHistoryRecordToUpdateAsset(List<AssetHistory> currentRecords,
+                                                                 List<AssetHistory> incomingRecords) {
+        AssetHistory mostRecentIncomingRecord = incomingRecords.get(0);
+        Instant mostRecentIncomingEventDate = mostRecentIncomingRecord.getDateOfEvent().toInstant();
+
         boolean recentIncomingIsMostRecent = true;
         for (AssetHistory record : currentRecords) {
             if (mostRecentIncomingEventDate.isBefore(record.getDateOfEvent().toInstant())) {

@@ -225,4 +225,10 @@ public interface AssetDao {
     void saveAssets(List<AssetEntity> assets);
 
     AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException;
+
+    void deleteHistoryRecords(List<AssetHistory> records);
+
+    void saveHistoryRecords(List<AssetHistory> records);
+
+    List<AssetHistory> getAssetHistoryByCfr(String cfr) throws AssetDaoException;
 }

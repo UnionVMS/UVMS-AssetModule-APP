@@ -661,6 +661,17 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
+    public void deleteHistoryRecords(List<AssetHistory> records) {
+        if (records == null || records.size() == 0) {
+            return;
+        }
+        for (AssetHistory record : records) {
+            em.remove(record);
+        }
+        em.flush();
+    }
+
+    @Override
     public AssetEntity getAssetByCfrWithHistory(String cfr) throws NoAssetEntityFoundException {
         try {
             TypedQuery<AssetEntity> query =
@@ -673,9 +684,27 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
+    public List<AssetHistory> getAssetHistoryByCfr(String cfr) throws AssetDaoException {
+        try {
+            TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CFR, AssetHistory.class);
+            query.setParameter("cfr", cfr);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset history found for " + cfr);
+        }
+    }
+
+    @Override
     public void saveAssets(List<AssetEntity> assets) {
         for(AssetEntity asset : assets) {
             em.persist(asset);
+        }
+    }
+
+    @Override
+    public void saveHistoryRecords(List<AssetHistory> records) {
+        for(AssetHistory ah : records) {
+            em.persist(ah);
         }
     }
 

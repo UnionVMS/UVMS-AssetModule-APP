@@ -81,7 +81,9 @@ import org.hibernate.annotations.FetchMode;
         "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
         "ORDER BY dateOfEvent"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE,
-            query = "SELECT result FROM AssetHistory result WHERE result.asset.guid =: assetGuid AND result.dateOfEvent <= :occurrenceDate ORDER BY result.dateOfEvent DESC")
+            query = "SELECT result FROM AssetHistory result WHERE result.asset.guid =: assetGuid AND result.dateOfEvent <= :occurrenceDate ORDER BY result.dateOfEvent DESC"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CFR,
+            query = "SELECT v FROM AssetHistory v WHERE v.cfr = :cfr")
 })
 public class AssetHistory implements Serializable {
 
@@ -763,5 +765,21 @@ public class AssetHistory implements Serializable {
 
     public void setHashKey(String hashKey) {
         this.hashKey = hashKey;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AssetHistory )) {
+            return false;
+        }
+        return id != null && id.equals(((AssetHistory) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

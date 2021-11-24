@@ -78,6 +78,7 @@ public class AssetSyncService {
     }
 
     public void syncFleet(Integer pageSize) {
+        resetSync();
         if (pageSize >= 0) {
             if( canStartAssetSync()) {
                 collectorService.collectDataFromFleet(0, false, pageSize, PAGE_SIZE);
@@ -106,7 +107,7 @@ public class AssetSyncService {
             if (collectorService.isCollectingActivitySuccessfullyCompleted()) {
                 processorService.syncRawRecordsWithExisting();
             } else {
-                log.warn("FLEET SYNC: Collection activity completed unsuccessfully. " +
+                log.info("FLEET SYNC: Collection activity completed unsuccessfully. " +
                         "Collected data will not be synced into app tables.");
             }
         } else {
