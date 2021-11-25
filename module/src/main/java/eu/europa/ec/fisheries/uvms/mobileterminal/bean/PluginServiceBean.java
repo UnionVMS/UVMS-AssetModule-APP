@@ -11,6 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.time.Instant;
+import java.util.Date;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandTypeType;
@@ -19,24 +28,7 @@ import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import eu.europa.ec.fisheries.uvms.exchange.client.ExchangeRestClient;
 
 @Stateless
 @LocalBean
@@ -44,16 +36,11 @@ public class PluginServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(PluginServiceBean.class);
 
-    private static final String EXCHANGE_MODULE_NAME = "exchange";
-    private static final String DELIMETER = ".";
-    private static final String INTERNAL_DELIMETER = ",";
-    private static final String SETTING_KEY_DNID_LIST = "DNIDS";
-
     @Inject
     private PollToCommandRequestMapper pollToCommandRequestMapper;
 
-    @Resource(name = "java:global/exchange_endpoint")
-    private String exchangeEndpoint;
+    @Inject
+    private ExchangeRestClient exchangeClient;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public AcknowledgeTypeType sendPoll(PollResponseType poll) {
@@ -64,25 +51,11 @@ public class PluginServiceBean {
             SetCommandRequest request = createSetCommandRequest(pluginServiceName, CommandTypeType.POLL, username, null);
             request.getCommand().setPoll(pollType);
 
-            Client client = ClientBuilder.newBuilder()
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .newClient();
-            Response response = client.target(exchangeEndpoint + "/unsecured/api/pluginCommand")
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.json(request), Response.class);
+            exchangeClient.sendCommandToPlugin(request);
 
-            if(response == null || response.getStatus() != 200) {
-                if(response != null) {
-                    LOG.info("Send poll failed with status {} due to: {}", response.getStatus(), response.readEntity(String.class));
-                }else{
-                    LOG.info("Send poll failed due to null response");
-                }
-                return AcknowledgeTypeType.NOK;
-            }
-            LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + AcknowledgeTypeType.OK);
+            LOG.debug("Poll: {} sent to exchange. Response: {}", poll.getPollId().getGuid(), AcknowledgeTypeType.OK);
             return AcknowledgeTypeType.OK;
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             LOG.error("Failed to send poll command! Poll with guid {} was created but not sent. Error: {}", poll.getPollId().getGuid(), e);
             return AcknowledgeTypeType.NOK;
         }
