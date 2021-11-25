@@ -13,7 +13,8 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
+import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,6 +33,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.*;
 	@NamedQuery(name=ASSETFILTER_GUID_LIST, query="SELECT a FROM AssetFilter a WHERE a.id IN :guidList"),
 	@NamedQuery(name=ASSETFILTER_BY_ASSET_GUID, query="SELECT af FROM AssetFilter af JOIN af.queries afq JOIN afq.values afv WHERE afq.type = 'GUID' AND afv.valueString = :assetId"),
 })
+@JsonbTypeAdapter(AssetFilterRestResponseAdapter.class)
 public class AssetFilter implements Serializable {
 
 	private static final long serialVersionUID = -1218306334950687248L;
@@ -62,7 +64,7 @@ public class AssetFilter implements Serializable {
     @Column(name = "owner")
     private String owner;
     
-    @OneToMany(mappedBy="assetFilter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="assetFilter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @Column(name="queries")
     private Set<AssetFilterQuery> queries;
