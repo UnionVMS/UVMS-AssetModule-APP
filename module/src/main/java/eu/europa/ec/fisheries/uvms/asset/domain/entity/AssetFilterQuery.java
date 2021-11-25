@@ -50,7 +50,7 @@ public class AssetFilterQuery  implements Serializable{
     @Column(name = "value_type")
     private AssetFilterValueType valueType;
     
-    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private Set<AssetFilterValue> values;
     
