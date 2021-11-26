@@ -67,7 +67,6 @@ public class FishingGear implements Serializable {
 	@ManyToOne(cascade = javax.persistence.CascadeType.ALL )
 	private FishingGearType fishingGearType;
 
-	@NotNull
 	@Column(name="fishg_fishtyp_ext_id")
 	private Long externalId;
 

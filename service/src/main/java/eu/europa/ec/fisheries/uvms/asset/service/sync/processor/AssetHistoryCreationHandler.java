@@ -108,6 +108,7 @@ public class AssetHistoryCreationHandler {
                 Optional.ofNullable(
                         record.getCommissionDate()).map(v -> String.valueOf(v.getYear() + 1900))
                         .orElse(null));
+        asset.setUpdateTime(record.getUpdateTime());
 
         Carrier carrier = new Carrier();
         carrier.setUpdatedBy(rawRecordHandler.FLEETSYNC);

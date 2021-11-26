@@ -11,6 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Stateless;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
@@ -684,6 +686,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
+    @Lock(LockType.READ)
     public List<AssetHistory> getAssetHistoryByCfr(String cfr) throws AssetDaoException {
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CFR, AssetHistory.class);

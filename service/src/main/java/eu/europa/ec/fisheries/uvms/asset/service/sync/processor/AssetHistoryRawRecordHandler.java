@@ -195,6 +195,8 @@ public class AssetHistoryRawRecordHandler {
 
         record.setCountryOfImportOrExport(rawRecord.getCountryOfImportOrExport());
 
+        record.setAssetAgentIsAlsoOwner(rawRecord.getAssetAgentIsAlsoOwner());
+
         return record;
     }
 
