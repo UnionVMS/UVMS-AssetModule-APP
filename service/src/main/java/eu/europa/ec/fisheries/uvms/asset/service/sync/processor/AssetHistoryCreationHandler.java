@@ -122,10 +122,6 @@ public class AssetHistoryCreationHandler {
             record.getContactInfo().forEach(c -> c.setAsset(record));
         }
 
-        //rawRecordHandler.updateMainFishingGear(record);
-        //rawRecordHandler.updateSubFishingGear(record);
-        //record.setType(GearFishingTypeEnum.UNKNOWN);
-
         return asset;
     }
 }
