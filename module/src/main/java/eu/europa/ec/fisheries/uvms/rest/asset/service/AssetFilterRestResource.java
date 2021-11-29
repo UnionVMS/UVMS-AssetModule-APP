@@ -258,7 +258,7 @@ public class AssetFilterRestResource {
         	String user = servletRequest.getRemoteUser();
         	List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
         	AssetFilterList assetFilterListresp = new AssetFilterList();
-            Map<UUID, AssetFilter> filterMap = assetFilterList.stream().collect(Collectors.toMap(AssetFilter::getId, Function.identity()));
+            Map<String, AssetFilter> filterMap = assetFilterList.stream().collect(Collectors.toMap(filter -> filter.getId().toString(), Function.identity()));
             assetFilterListresp.setSavedFilters(filterMap);
             
             return Response.ok(assetFilterListresp).header("MDC", MDC.get("requestId")).build();
