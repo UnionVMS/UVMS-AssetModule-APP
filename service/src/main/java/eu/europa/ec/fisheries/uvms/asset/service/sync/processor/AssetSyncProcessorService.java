@@ -46,7 +46,7 @@ public class AssetSyncProcessorService {
     private static int toCreateAssetsCount = 0;
     private static final int BATCH_PROC_SIZE = 100;
     private static final long WAITING_TIME = 240;
-    private static final long TIME_TO_CANCEL_PROCESSING = 4*60*60*1000;
+    private static final long TIME_TO_CANCEL_PROCESSING = 6*60*60*1000;
     private static final long TIME_TO_NEXT_CHECK = 2*60*1000;
     private static final String FLEET_SYNC_PROCESSOR = "fleet-sync-processor";
 

@@ -35,7 +35,7 @@ public class AssetSyncCollectorService {
     @Resource
     TimerService timerService;
 
-    private static final long TIME_TO_CANCEL_COLLECTING = 2*60*60*1000;
+    private static final long TIME_TO_CANCEL_COLLECTING = 4*60*60*1000;
     private static final long TIME_TO_NEXT_CHECK = 1*60*1000;
     private static final String FLEET_SYNC_COLLECTOR = "fleet-sync-collector";
 

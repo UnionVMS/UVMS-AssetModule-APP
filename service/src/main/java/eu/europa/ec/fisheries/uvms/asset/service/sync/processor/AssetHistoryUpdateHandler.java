@@ -98,7 +98,8 @@ public class AssetHistoryUpdateHandler {
      * @param cfr Asset's CFR
      * @return The same asset object updated
      */
-    private AssetEntity updateHistoryOfAsset(String cfr) {
+    @Transactional(Transactional.TxType.REQUIRED)
+    public AssetEntity updateHistoryOfAsset(String cfr) {
         //Step 1.1 Get the new history for this vessel identifier
         List<AssetRawHistory> rawRecords = assetRawHistoryDao.getAssetRawHistoryByCfrSortedByEventDate(cfr);
         //Step 1.2 Get the existing history for this vessel identifier
@@ -183,7 +184,8 @@ public class AssetHistoryUpdateHandler {
      * @param asset whose history records will be processed
      * @return the remaining incoming records that are not updates, but new
      */
-    private List<AssetRawHistory> processUpdatesForAsset(List<AssetRawHistory> incomingRawRecords,
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<AssetRawHistory> processUpdatesForAsset(List<AssetRawHistory> incomingRawRecords,
                                                          List<AssetHistory> currentRecords,
                                                          AssetEntity asset) {
         List<AssetRawHistory> newRawRecords = new ArrayList<>();
@@ -197,8 +199,10 @@ public class AssetHistoryUpdateHandler {
             }
         }
         List<AssetHistory> updatableRecords = prepareUpdatesForAssetHistoryAndAssset(duplicatesToBeUpdated, asset);
-        assetDao.saveHistoryRecords(updatableRecords);
-        assetDao.saveAssetWithHistory(asset);
+        if (updatableRecords.size() > 0) {
+            assetDao.saveHistoryRecords(updatableRecords);
+            assetDao.saveAssetWithHistory(asset);
+        }
         return newRawRecords;
     }
 
@@ -234,7 +238,7 @@ public class AssetHistoryUpdateHandler {
             String imo = rawRecord.getImo();
             String typeOfExport = rawRecord.getTypeOfExport();
             String gfcm = rawRecord.getGfcm();
-            String segment = rawRecord.getSegment();
+            //String segment = rawRecord.getSegment();
             String eventCodeType = rawRecord.getEventCodeType();
             Date updateTime = rawRecord.getUpdateTime();
             BigDecimal safteyGrossTonnage = rawRecord.getSafteyGrossTonnage();
@@ -251,7 +255,7 @@ public class AssetHistoryUpdateHandler {
 
             PublicAidEnum publicAidEnumValCurrent = existingRecord.getPublicAid();
             TypeOfExportEnum typeOfExportEnumValCurrent = existingRecord.getTypeOfExport();
-            SegmentFUP segmentEnumValCurrent = existingRecord.getSegment();
+            //SegmentFUP segmentEnumValCurrent = existingRecord.getSegment();
             EventCodeEnum eventCodeEnumValCurrent = existingRecord.getEventCode();
             UnitTonnage grossTonnageUnitEnumValCurrent = existingRecord.getGrossTonnageUnit();
             FishingGear mainFishingGearCurrent = existingRecord.getMainFishingGear();
@@ -376,7 +380,7 @@ public class AssetHistoryUpdateHandler {
                     asset.setGfcm(gfcm);
                 }
             }
-            if ((segment != null && segmentEnumValCurrent == null) ||
+            /*if ((segment != null && segmentEnumValCurrent == null) ||
                     (segment != null && segmentEnumValCurrent != null &&
                             !segment.equals(segmentEnumValCurrent.name()))) {
                 try {
@@ -386,7 +390,7 @@ public class AssetHistoryUpdateHandler {
                             segment, existingRecord.getCfr());
                     log.error(e.getMessage());
                 }
-            }
+            }*/
             if ((eventCodeType != null && eventCodeEnumValCurrent == null) ||
                     (eventCodeType != null && eventCodeEnumValCurrent != null &&
                             !eventCodeType.equals(eventCodeEnumValCurrent.name()))) {
@@ -444,7 +448,7 @@ public class AssetHistoryUpdateHandler {
                     ZonedDateTime dateTime = ZonedDateTime.ofInstant(dateOfCommission.toInstant(), ZoneOffset.systemDefault());
                     asset.setCommissionDay(StringUtils.leftPad(Integer.toString(dateTime.getDayOfMonth()),2, '0'));
                     asset.setCommissionMonth(StringUtils.leftPad(Integer.toString(dateTime.getMonthValue()), 2,'0'));
-                    asset.setCommissionYear(Integer.toString(dateTime.getYear()));
+                    asset.setCommissionYear(StringUtils.leftPad(Integer.toString(dateTime.getYear()), 4, '0'));
                 }
             }
             if ((hullMaterial != null && hullMaterialEnumCurrent == null) ||
@@ -533,7 +537,7 @@ public class AssetHistoryUpdateHandler {
             ZonedDateTime dateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneOffset.systemDefault());
             asset.setCommissionDay(StringUtils.leftPad(Integer.toString(dateTime.getDayOfMonth()),2, '0'));
             asset.setCommissionMonth(StringUtils.leftPad(Integer.toString(dateTime.getMonthValue()), 2,'0'));
-            asset.setCommissionYear(Integer.toString(dateTime.getYear()));
+            asset.setCommissionYear(StringUtils.leftPad(Integer.toString(dateTime.getYear()),4,'0'));
         });
         return asset;
     }
@@ -581,7 +585,8 @@ public class AssetHistoryUpdateHandler {
         String typeOfExport = rawRecord.getTypeOfExport();
         TypeOfExportEnum typeOfExportEnumVal = duplicatedRecord.getTypeOfExport();
         String gfcm = rawRecord.getGfcm();
-        String segment = rawRecord.getSegment();
+        // disabled due to lots of missing values in enum; pending business decision
+        //String segment = rawRecord.getSegment();
         SegmentFUP segmentEnumVal = duplicatedRecord.getSegment();
         String eventCodeType = rawRecord.getEventCodeType();
         EventCodeEnum eventCodeEnumVal = duplicatedRecord.getEventCode();
@@ -625,10 +630,10 @@ public class AssetHistoryUpdateHandler {
                 !(typeOfExport == null || typeOfExportEnumVal == null ||
                         typeOfExport.equals(typeOfExportEnumVal.name())) ||
                 !(gfcm == null || gfcm.equals(duplicatedRecord.getGfcm())) ||
-                !(segment == null || segmentEnumVal == null || segment.equals(segmentEnumVal.name())) ||
+//              !(segment == null || segmentEnumVal == null || segment.equals(segmentEnumVal.name())) ||
                 !(eventCodeType == null || eventCodeEnumVal == null ||
                         eventCodeType.equals(eventCodeEnumVal.name())) ||
-//                !(updateTime == null || updateTime.equals(duplicatedRecord.getUpdateTime())) ||
+//              !(updateTime == null || updateTime.equals(duplicatedRecord.getUpdateTime())) ||
                 !(safteyGrossTonnage == null ||
                         safteyGrossTonnage.equals(duplicatedRecord.getSafteyGrossTonnage())) ||
                 !(grossTonnageUnit == null || grossTonnageUnitEnumVal == null ||

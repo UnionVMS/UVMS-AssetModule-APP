@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.FishingGearMobilityEnum;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -29,6 +30,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Immutable
 @NamedQueries({
 	@NamedQuery(name= UvmsConstants.FISHING_GEAR_FIND_ALL, query="SELECT f FROM FishingGear f"),
 	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGear f where id = :id"),
