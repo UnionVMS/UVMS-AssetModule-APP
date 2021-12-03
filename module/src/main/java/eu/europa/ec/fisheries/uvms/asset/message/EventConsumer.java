@@ -58,7 +58,7 @@ public class EventConsumer implements MessageListener {
             String eventType = message.getStringProperty("event");
             if (eventType != null && eventType.startsWith("Service")) {
                 ServiceResponseType service = jsonb.fromJson(textMessage.getText(), ServiceResponseType.class);
-                LOG.info("Received event: {} for plugin {}", eventType, service.getServiceClassName());
+                LOG.info("Received event '{}' for plugin {}", eventType, service.getServiceClassName());
                 if (service.getPluginType().equals(PluginType.SATELLITE_RECEIVER)) {
                     PluginService plugin = ServiceToPluginMapper.mapToPlugin(service);
                     if (eventType.equals("Service Registered")) {
