@@ -122,13 +122,17 @@ public class AssetHistoryUpdateHandler {
                         //sendAssetHistoryUpdateToReporting(mapFromAssetHistoryEntity(record, asset.getGuid()));
                     }
                     AssetHistory mostRecentRecord = getMostRecentHistoryRecordToUpdateAsset(existingHistory, newRecords);
-                    existingHistory.addAll(newRecords);
                     if (mostRecentRecord != null) {
+                        existingHistory.addAll(newRecords);
                         for(AssetHistory record : existingHistory) {
                             record.setActive(false);
                         }
                         mostRecentRecord.setActive(true);
                         updateAssetFromMostRecentHistoryRecord(asset, mostRecentRecord);
+                    } else {
+                        for(AssetHistory record : newRecords) {
+                            record.setActive(false);
+                        }
                     }
                     assetDao.saveHistoryRecords(newRecords);
                     //Step 2.3 Update the asset itself if required
@@ -467,7 +471,7 @@ public class AssetHistoryUpdateHandler {
                 String ircsIndicator = Boolean.TRUE.equals(hasIrcs) ? "T" : "F";
                 asset.setIrcsIndicator(ircsIndicator);
             }
-            if (hasVms != null && isCurrentRecordActive) {
+            if (hasVms != null && !hasVms.equals(existingRecord.getHasVms())) {
                 existingRecord.setHasVms(hasVms);
             }
 

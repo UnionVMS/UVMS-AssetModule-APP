@@ -4,12 +4,9 @@ import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetRawHistory;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +45,13 @@ public class AssetRawHistoryRecordHelper {
         AssetRawHistory plusOneRecord = createDefaultHistoryRecord();
         plusOneRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB70");
         plusOneRecord.setPublicAid("P_AID");
+        plusOneRecord.setDateOfEvent(DateUtils.stringToDate("2018-07-21 22:22:22 Z"));
         rawHistoryRecords.add(plusOneRecord);
 
         AssetRawHistory plusTwoRecord = createDefaultHistoryRecord();
         plusTwoRecord.setDateOfEvent(DateUtils.stringToDate("2020-04-20 01:00:00 Z"));
         plusTwoRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB71");
+        plusTwoRecord.setEventActive(false);
         plusTwoRecord.setUvi("8740826");
         plusTwoRecord.setMmsi("MMSIMMSII");
         plusTwoRecord.setGfcm("GFCMGFCM");
@@ -61,11 +60,12 @@ public class AssetRawHistoryRecordHelper {
         plusTwoRecord.setConstructionAddress("CONSTRUCTION, ADDRESS #1");
         plusTwoRecord.setCountryOfImportOrExport("BEL");
         plusTwoRecord.setTypeOfExport(TypeOfExportEnum.EX.name());
-        plusTwoRecord.setEventActive(false);
         rawHistoryRecords.add(plusTwoRecord);
 
         AssetRawHistory plusThreeRecord = createDefaultHistoryRecord();
         plusThreeRecord.setDateOfEvent(DateUtils.stringToDate("2020-05-20 02:00:00 Z"));
+        plusThreeRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB72");
+        plusThreeRecord.setEventActive(true);
         plusThreeRecord.setOwnerName("OwnerNameA");
         plusThreeRecord.setOwnerAddress("Owner Address A");
         plusThreeRecord.setAgentAddress("Agent address A");
@@ -101,8 +101,6 @@ public class AssetRawHistoryRecordHelper {
         plusThreeRecord.setDateOfConstruction(Date.valueOf("1998-07-07"));
         plusThreeRecord.setConstructionPlace("AMSTERDAM");
         plusThreeRecord.setDateOfServiceEntry(Date.valueOf("1998-12-12"));
-        plusThreeRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB72");
-        plusThreeRecord.setEventActive(true);
         plusThreeRecord.setAssetAgentIsAlsoOwner(false);
         plusThreeRecord.setHasVms(false);
 
@@ -178,6 +176,79 @@ public class AssetRawHistoryRecordHelper {
         return rawHistoryRecords;
     }
 
+
+    public List<AssetRawHistory> createThreeUpdateRecordsAllInThePast() {
+        List<AssetRawHistory> rawHistoryRecords = new ArrayList<>();
+
+        AssetRawHistory plusOneRecord = createDefaultHistoryRecord();
+        plusOneRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB71");
+        plusOneRecord.setDateOfEvent(DateUtils.stringToDate("2020-04-20 11:11:11 Z"));
+        plusOneRecord.setEventActive(false);
+        plusOneRecord.setUvi("8000826");
+        plusOneRecord.setMmsi("MMSIAASII");
+        plusOneRecord.setGfcm("GFCAAFCM");
+        plusOneRecord.setImo("IMAAMOI");
+        //plusOneRecord.setConstructionPlace("CONSTRUCTION_SPOT"); - transient field
+        plusOneRecord.setConstructionAddress("CONSTRUCTION, AAARESS #11");
+        plusOneRecord.setCountryOfImportOrExport("ROM");
+        plusOneRecord.setTypeOfExport(TypeOfExportEnum.SM.name());
+        rawHistoryRecords.add(plusOneRecord);
+
+
+        AssetRawHistory plusTwoRecord = createDefaultHistoryRecord();
+        plusTwoRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB29");
+        plusTwoRecord.setDateOfEvent(DateUtils.stringToDate("2000-04-20 11:11:11 Z"));
+        plusTwoRecord.setEventActive(true);
+        plusTwoRecord.setOwnerName("OwnerNameB");
+        plusTwoRecord.setOwnerAddress("Owner Address B");
+        plusTwoRecord.setAgentAddress("Agent address B");
+        plusTwoRecord.setName("Vessel Name B");
+        plusTwoRecord.setUvi("8740101");
+        plusTwoRecord.setIrcs("SCRR");
+        plusTwoRecord.setExternalMarking("ExtMarktB");
+        //plusTwoRecord.setCfr("TST090002022");
+        plusTwoRecord.setIccat("ICCATiccFF");
+        plusTwoRecord.setLengthOverAll(BigDecimal.valueOf(2055L, 2));
+        plusTwoRecord.setLengthBetweenPerpendiculars(BigDecimal.valueOf(2088L, 2));
+        plusTwoRecord.setPowerOfMainEngine(new BigDecimal(659.00));
+        plusTwoRecord.setPowerOfAuxEngine(new BigDecimal(212.00));
+        plusTwoRecord.setGrossTonnage(new BigDecimal(97.00));
+        plusTwoRecord.setOtherTonnage(BigDecimal.valueOf(1182L, 2));
+        plusTwoRecord.setHasLicence(true);
+        plusTwoRecord.setCountryOfRegistration("NOR");
+        plusTwoRecord.setPlaceOfRegistration("PLACEOFREGBB");
+        plusTwoRecord.setCountryOfImportOrExport("POL");
+        plusTwoRecord.setRegistrationNumber("REGNUMBER44");
+        plusTwoRecord.setPublicAid(PublicAidEnum.PA.name());
+        plusTwoRecord.setMmsi("MMSIMMSEE");
+        plusTwoRecord.setImo("IMOIMDD");
+        plusTwoRecord.setTypeOfExport(TypeOfExportEnum.EX.name());
+        plusTwoRecord.setGfcm("GFCMGFGG");
+        plusTwoRecord.setSegment(SegmentFUP.MFL.name());
+        plusTwoRecord.setEventCodeType(EventCodeEnum.CST.name());
+        plusTwoRecord.setUpdateTime(DateUtils.stringToDate("2020-05-20 01:17:17 Z"));
+        plusTwoRecord.setSafteyGrossTonnage(BigDecimal.valueOf(9989, 2));
+        plusTwoRecord.setGrossTonnageUnit(UnitTonnage.OSLO.name());
+        //Main FG
+        //Sub FG
+        plusTwoRecord.setDateOfConstruction(Date.valueOf("1998-08-07"));
+        plusTwoRecord.setConstructionPlace("AMSTERDAMA");
+        plusTwoRecord.setDateOfServiceEntry(Date.valueOf("1999-12-15"));
+        plusTwoRecord.setHullMaterial(HullMaterialEnum.WOOD.getId());
+        plusTwoRecord.setAssetAgentIsAlsoOwner(false);
+        plusTwoRecord.setHasIrcs(false);
+        plusTwoRecord.setHasVms(true);
+        rawHistoryRecords.add(plusTwoRecord);
+
+
+        AssetRawHistory plusThreeRecord = createDefaultHistoryRecord();
+        plusThreeRecord.setHashKey("6FB734930B9CAB5DB275F9A8AA38BB70");
+        plusThreeRecord.setPublicAid(PublicAidEnum.EI.name()); //changed
+        plusThreeRecord.setDateOfEvent(DateUtils.stringToDate("2018-07-21 22:22:22 Z"));
+        rawHistoryRecords.add(plusThreeRecord);
+
+        return rawHistoryRecords;
+    }
 
     public List<AssetRawHistory> createRawRecordsForNewAssetAndDistinctNewRecords() {
         List<AssetRawHistory> rawHistoryRecords = new ArrayList<>();
@@ -305,7 +376,7 @@ public class AssetRawHistoryRecordHelper {
 
     private void mapEventInfo(AssetRawHistory assetRawHistory) {
         assetRawHistory.setEventCodeType("MOD");
-        assetRawHistory.setDateOfEvent(Date.valueOf("1989-01-01"));
+        assetRawHistory.setDateOfEvent(DateUtils.stringToDate("1989-01-01 00:00:00 Z"));
         assetRawHistory.setEventActive(false);
     }
 

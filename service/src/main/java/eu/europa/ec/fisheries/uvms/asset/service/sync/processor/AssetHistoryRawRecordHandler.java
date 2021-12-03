@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.service.sync.processor;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.ReportingProducerBean;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
@@ -127,7 +128,12 @@ public class AssetHistoryRawRecordHandler {
         record.setLengthOverAll(rawRecord.getLengthOverAll());
         record.setLengthBetweenPerpendiculars(rawRecord.getLengthBetweenPerpendiculars());
         if (rawRecord.getGrossTonnageUnit() != null) {
-            record.setGrossTonnageUnit(UnitTonnage.LONDON);
+            try {
+                record.setGrossTonnageUnit(UnitTonnage.getType(rawRecord.getGrossTonnageUnit()));
+            } catch (AssetModelValidationException e) {
+                e.printStackTrace();
+                record.setGrossTonnageUnit(UnitTonnage.LONDON);
+            }
             record.setGrossTonnage(rawRecord.getGrossTonnage());
         }
         record.setOtherTonnage(rawRecord.getOtherTonnage());
