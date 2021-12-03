@@ -13,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto.PollTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,7 +37,7 @@ public class PollRestResourceQueryTest extends AbstractAssetRestTest {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(asset);
 
-        MobileTerminal createdMT = PollTestHelper.createMobileTerminalWithPluginAndCapabilities(mt, getWebTargetExternal(), getTokenExternal());
+        MobileTerminal createdMT = PollTestHelper.createMobileTerminal(mt, getWebTargetExternal(), getTokenExternal());
 
         PollTestHelper.constructPollMobileTerminalAndAddToRequest(pollRequest, createdMT);
 

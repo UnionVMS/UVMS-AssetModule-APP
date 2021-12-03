@@ -1,10 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -20,9 +17,10 @@ import java.util.List;
 
 @Path("/plugin")
 @Stateless
-@Consumes(value = { MediaType.APPLICATION_JSON })
-@Produces(value = { MediaType.APPLICATION_JSON })
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class PluginRestResource {
+
     private static final Logger LOG = LoggerFactory.getLogger(PluginRestResource.class);
 
     @Inject
@@ -30,19 +28,6 @@ public class PluginRestResource {
 
     @Context
     private HttpServletRequest request;
-
-    @POST
-    @Path("/")
-    @RequiresFeature(UnionVMSFeature.mobileTerminalPlugins)
-    public Response upsertPlugins(List<PluginService> pluginServiceList) throws Exception {
-        try {
-            List<MobileTerminalPlugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, request.getRemoteUser());
-            return Response.ok(pluginList).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception ex) {
-            LOG.error("[ Error while upserting plugins ] {}", ex);
-            throw ex;
-        }
-    }
 
     @GET
     @Path("/plugins")

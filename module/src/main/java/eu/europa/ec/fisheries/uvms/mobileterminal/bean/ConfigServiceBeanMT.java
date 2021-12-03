@@ -17,21 +17,14 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
-import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.CapabilityConfiguration;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemConfiguration;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.exchange.client.ExchangeRestClient;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConfigType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
@@ -47,32 +40,8 @@ public class ConfigServiceBeanMT {
     @EJB
     private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
 
-    @EJB
-    private ChannelDaoBean channelDao;
-
-    @Inject
-    private ExchangeRestClient exchangeClient;
-
     public List<TerminalSystemType> getTerminalSystems() {
         return getAllTerminalSystems();
-    }
-
-    public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> plugins, String username) {
-        return upsertPlugins(plugins);
-    }
-
-    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() {
-            List<PluginType> pluginTypes = new ArrayList<>();
-            pluginTypes.add(PluginType.SATELLITE_RECEIVER);
-            GetServiceListRequest request = new GetServiceListRequest();
-            request.getType().addAll(pluginTypes);
-
-            GetServiceListResponse response = exchangeClient.getServiceList(request);
-
-            if(response == null){
-                throw new NullPointerException("No response from exchange");
-            }
-            return response.getService();
     }
 
     public List<TerminalSystemType> getAllTerminalSystems() {
@@ -155,34 +124,6 @@ public class ConfigServiceBeanMT {
         return list;
     }
 
-    public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> pluginList) {
-        if (pluginList == null) {
-            throw new IllegalArgumentException("No pluginList to upsert");
-        }
-        Map<String, PluginService> map = new HashMap<>();
-        List<MobileTerminalPlugin> responseList = new ArrayList<>();
-        for (PluginService plugin : pluginList) {
-            if (plugin.getLabelName() == null || plugin.getLabelName().isEmpty()) {
-                throw new IllegalArgumentException("No plugin name for plugin: " + plugin);
-            }
-            if (plugin.getServiceName() == null || plugin.getServiceName().isEmpty()) {
-                throw new IllegalArgumentException("No service name for plugin: " + plugin.getLabelName());
-            }
-            if (plugin.getSatelliteType() == null || plugin.getSatelliteType().isEmpty()) {
-                throw new IllegalArgumentException("No satellite type for plugin: " + plugin.getServiceName());
-            }
-            MobileTerminalPlugin entity = updatePlugin(plugin);
-            if (entity == null) {
-                entity = PluginMapper.mapModelToEntity(plugin);
-                entity = mobileTerminalPluginDao.createMobileTerminalPlugin(entity);
-            }
-            map.put(plugin.getServiceName(), plugin);
-            responseList.add(entity);
-        }
-        responseList.addAll(inactivatePlugins(map));
-        return responseList;
-    }
-
     public List<MobileTerminalPlugin> inactivatePlugins(Map<String, PluginService> map) {
         List<MobileTerminalPlugin> responseList = new ArrayList<>();
         List<MobileTerminalPlugin> availablePlugins = mobileTerminalPluginDao.getPluginList();
@@ -217,5 +158,33 @@ public class ConfigServiceBeanMT {
 
     public List<MobileTerminalPlugin> getMobileTerminalPlugins() {
         return mobileTerminalPluginDao.getPluginList();
+    }
+
+    public MobileTerminalPlugin upsertPlugin(PluginService plugin) {
+        validatePluginService(plugin);
+        MobileTerminalPlugin entity = updatePlugin(plugin);
+        if (entity == null) {
+            entity = PluginMapper.mapModelToEntity(plugin);
+            mobileTerminalPluginDao.createMobileTerminalPlugin(entity);
+        }
+        return entity;
+    }
+
+    public MobileTerminalPlugin inactivatePlugin(PluginService plugin) {
+        MobileTerminalPlugin pluginEntity = mobileTerminalPluginDao.getPluginByServiceName(plugin.getServiceName());
+        pluginEntity.setPluginInactive(true);
+        return pluginEntity;
+    }
+
+    private void validatePluginService(PluginService plugin) {
+        if (plugin.getLabelName() == null || plugin.getLabelName().isEmpty()) {
+            throw new IllegalArgumentException("No plugin name for plugin: " + plugin);
+        }
+        if (plugin.getServiceName() == null || plugin.getServiceName().isEmpty()) {
+            throw new IllegalArgumentException("No service name for plugin: " + plugin.getLabelName());
+        }
+        if (plugin.getSatelliteType() == null || plugin.getSatelliteType().isEmpty()) {
+            throw new IllegalArgumentException("No satellite type for plugin: " + plugin.getServiceName());
+        }
     }
 }

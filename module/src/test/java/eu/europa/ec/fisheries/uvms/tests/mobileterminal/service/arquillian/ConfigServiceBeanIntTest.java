@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
@@ -14,15 +12,12 @@ import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -30,7 +25,6 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class ConfigServiceBeanIntTest extends TransactionalTests {
 
-    private static final String MESSAGE_PRODUCER_METHODS_FAIL = "MESSAGE_PRODUCER_METHODS_FAIL";
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     @EJB
@@ -50,63 +44,38 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
-    public void testGetRegisteredMobileTerminalPlugins_fail() {
-
-        // TODO: getRegisteredMobileTerminalPlugins() method has TransactionAttributeType.NEVER defined.
-        // Which makes this tests to fail because that method throws exception when client code has a transaction.
-        thrown.expect(/*MobileTerminalModel*/Exception.class);
-
-        System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
-        configService.getRegisteredMobileTerminalPlugins();
+    public void testAddPlugin() {
+        MobileTerminalPlugin plugin = configService.upsertPlugin(createPluginService());
+        assertNotNull(plugin);
+        assertEquals("TEST_SERVICE", plugin.getPluginServiceName());
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetRegisteredMobileTerminalPlugins() {
+    public void testInactivatePlugin() {
+        PluginService pluginService = createPluginService();
+        MobileTerminalPlugin plugin = configService.upsertPlugin(pluginService);
+        assertNotNull(plugin);
+        assertEquals("TEST_SERVICE", plugin.getPluginServiceName());
 
-        List<ServiceResponseType> output = configService.getRegisteredMobileTerminalPlugins();
-
-        assertEquals(1, output.size());
-        ServiceResponseType serviceResponseType = output.get(0);
-
-        //values from exchange module mock, the one in service
-        assertEquals("eu.europa.ec.fisheries.uvms.plugins.inmarsat", serviceResponseType.getServiceClassName());
-        assertEquals("Thrane&Thrane", serviceResponseType.getName());
-        assertEquals("INMARSAT_C", serviceResponseType.getSatelliteType());
-        assertEquals(1, serviceResponseType.getCapabilityList().getCapability().size());
-        assertEquals(CapabilityTypeType.POLLABLE, serviceResponseType.getCapabilityList().getCapability().get(0).getType());
-
+        MobileTerminalPlugin inactivatedPlugin = configService.inactivatePlugin(pluginService);
+        assertEquals(true, inactivatedPlugin.getPluginInactive());
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void testUpsertPlugins() {
-        List<PluginService> pluginList = Collections.singletonList(createPluginService());
-        List<MobileTerminalPlugin> plugins = configService.upsertPlugins(pluginList, "TEST");
-        assertNotNull(plugins);
-        assertTrue(pluginsContains(pluginList, "TEST_SERVICE"));
-    }
+    public void testAddPluginUpdate()  {
+        PluginService pluginService = createPluginService();
+        MobileTerminalPlugin plugin = configService.upsertPlugin(pluginService);
+        assertNotNull(plugin);
+        assertEquals("TEST_SERVICE", plugin.getPluginServiceName());
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void testUpsertPluginsUpdate()  {
-        List<PluginService> pluginList = Collections.singletonList(createPluginService());
-        List<MobileTerminalPlugin> plugins = configService.upsertPlugins(pluginList, "TEST");
-        assertNotNull(plugins);
-        assertTrue(pluginsContains(pluginList, "TEST_SERVICE"));
-        assertEquals(1, pluginList.size());
-        //assertEquals(4, plugins.size());
+        String newLabelName = "NEW_IRIDIUM_TEST_SERVICE";
+        pluginService.setLabelName(newLabelName);
 
-        for (PluginService ps : pluginList) {
-            ps.setLabelName("NEW_IRIDIUM_TEST_SERVICE");
-        }
-
-        assertEquals(1, pluginList.size());
-
-        List<MobileTerminalPlugin> updatedPlugins = configService.upsertPlugins(pluginList, "TEST");
+        MobileTerminalPlugin updatedPlugins = configService.upsertPlugin(pluginService);
         assertNotNull(updatedPlugins);
-        assertEquals(1, updatedPlugins.size());
+        assertEquals(newLabelName, plugin.getName());
     }
 
     @Test
@@ -114,11 +83,9 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     public void testUpsertPluginsBadServiceName() {
 
         try {
-            List<PluginService> pluginList = new ArrayList<>();
             PluginService pluginService = createPluginService();
             pluginService.setServiceName("");
-            pluginList.add(pluginService);
-            configService.upsertPlugins(pluginList, "TEST");
+            configService.upsertPlugin(pluginService);
             Assert.fail();  // error if we come here
         }
         catch(Throwable t){
@@ -130,12 +97,10 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testUpsertPluginsBadLabelName() {
         try {
-        List<PluginService> pluginList = new ArrayList<>();
         PluginService pluginService = createPluginService();
         pluginService.setLabelName("");
-        pluginList.add(pluginService);
 
-        configService.upsertPlugins(pluginList, "TEST");
+        configService.upsertPlugin(pluginService);
             Assert.fail();
         } catch (Throwable t) {
             Assert.assertTrue(true);
@@ -146,11 +111,9 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testUpsertPluginsBadSatelliteType() {
         try {
-            List<PluginService> pluginList = new ArrayList<>();
             PluginService pluginService = createPluginService();
             pluginService.setSatelliteType("");
-            pluginList.add(pluginService);
-            configService.upsertPlugins(pluginList, "TEST");
+            configService.upsertPlugin(pluginService);
             // if we end up here we are wrong
             Assert.fail();
         } catch (Throwable t) {
@@ -196,15 +159,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     private boolean configListContains(List<ConfigList> configLists, String value) {
         for (ConfigList item : configLists) {
             if (value.equals(item.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean pluginsContains(List<PluginService> pluginList, String name) {
-        for (PluginService item : pluginList) {
-            if (item.getServiceName().equals(name)) {
                 return true;
             }
         }

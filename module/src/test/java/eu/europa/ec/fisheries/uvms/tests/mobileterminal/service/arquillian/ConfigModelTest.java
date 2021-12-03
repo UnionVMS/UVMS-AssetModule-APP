@@ -113,31 +113,6 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testUpsertPluginsEmptyInput()  {
-		List<PluginService> pluginList = new ArrayList<>();
-		List<MobileTerminalPlugin> plugins = testModelBean.upsertPlugins(pluginList);
-		assertEquals(pluginList.size(), plugins.size());
-	}
-
-	@Test
-	public void testUpsertPluginsNull() {
-		try {
-			testModelBean.upsertPlugins(null);
-			Assert.fail();
-		}
-		catch(IllegalArgumentException e){
-			Assert.assertTrue(true);
-		}
-	}
-
-	@Test(expected=IllegalArgumentException.class)
-	public void testUpsertPluginsNonValidInput()  {
-		List<PluginService> pluginList = new ArrayList<>();
-		pluginList.add(pluginType);
-		testModelBean.upsertPlugins(pluginList);
-	}
-
-	@Test
 	public void testUpdatePluginEquals()  {
 		String serviceName = "serviceName";
 		when(pluginType.getServiceName()).thenReturn(serviceName);
