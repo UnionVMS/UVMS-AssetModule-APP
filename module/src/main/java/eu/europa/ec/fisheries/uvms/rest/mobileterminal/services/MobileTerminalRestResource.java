@@ -286,7 +286,7 @@ public class MobileTerminalRestResource {
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
         try {
-            Map<UUID, ChangeHistoryRow> mobileTerminalRevisionMap =
+            Map<String, ChangeHistoryRow> mobileTerminalRevisionMap =
                     mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
@@ -320,7 +320,7 @@ public class MobileTerminalRestResource {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
-            Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(mobileTerminalRevisions);
+            Map<String, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(mobileTerminalRevisions);
             String returnString = jsonb.toJson(changeHistory);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {

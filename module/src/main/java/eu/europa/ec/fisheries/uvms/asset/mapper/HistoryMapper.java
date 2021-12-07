@@ -83,10 +83,10 @@ public class HistoryMapper {
 
 
 
-    public static Map<UUID, ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminal> histories) {
+    public static Map<String, ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminal> histories) {
         try {
             List<Field> fields = listMembers(MobileTerminalDto.class);
-            Map<UUID, ChangeHistoryRow> returnMap = new HashMap<>();
+            Map<String, ChangeHistoryRow> returnMap = new HashMap<>();
 
             MobileTerminalDto previousMt = null;
             for (MobileTerminal mtFull : histories) {
@@ -105,7 +105,7 @@ public class HistoryMapper {
                             row.addNewItem(MOBILE_TERMINAL_ASSET_ID, null, mt.getAssetId());
                         }
                         row.addNewItem(MOBILE_TERMINAL_COMMENT, null, mt.getComment());
-                        returnMap.put(mt.getHistoryId(), row);
+                        returnMap.put(mt.getHistoryId().toString(), row);
                     }
                     previousMt = mt;
                     continue;
@@ -129,7 +129,7 @@ public class HistoryMapper {
                     }
                     if (!Objects.equals(oldValue, newValue)) {
                         if(field.getName().equals(MOBILE_TERMINAL_CHANNEL_FIELD)){
-                            Map<UUID, ChannelChangeHistory> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
+                            Map<String, ChannelChangeHistory> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
                             row.setChannelChanges(channelChangeHistoryRows);
                         }else {
                             row.addNewItem(field.getName(), oldValue, newValue);
@@ -139,7 +139,7 @@ public class HistoryMapper {
                 row.setChangeType(ChangeType.UPDATED);
                 row.setSnapshot(mt);
                 row.setAssetName(assetName);
-                returnMap.put(mt.getHistoryId(), row);
+                returnMap.put(mt.getHistoryId().toString(), row);
                 previousMt = mt;
             }
 
@@ -149,8 +149,8 @@ public class HistoryMapper {
         }
     }
 
-    private static Map<UUID, ChannelChangeHistory> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
-        Map<UUID, ChannelChangeHistory> returnMap = new HashMap<>();
+    private static Map<String, ChannelChangeHistory> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
+        Map<String, ChannelChangeHistory> returnMap = new HashMap<>();
         Set<ChannelDto> workingNewSet = new HashSet<>(newInputSet);
 
         for (ChannelDto channelDto : oldInputSet) { //for every channel in the old group, check if it exists in the new group
@@ -175,7 +175,7 @@ public class HistoryMapper {
 
             }
             if (channelChangeHistory.getChanges() != null && !channelChangeHistory.getChanges().isEmpty()) {
-                returnMap.put(channelDto.getId(), channelChangeHistory);
+                returnMap.put(channelDto.getId().toString(), channelChangeHistory);
             }
 
         }
@@ -184,7 +184,7 @@ public class HistoryMapper {
             newChannelAddition.setChanges(channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto)).get(0).getChanges());
             newChannelAddition.setChangeType(ChangeType.CREATED);
 
-            returnMap.put(channelDto.getId(), newChannelAddition);
+            returnMap.put(channelDto.getId().toString(), newChannelAddition);
         }
         return returnMap;
     }

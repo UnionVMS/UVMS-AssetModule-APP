@@ -12,7 +12,7 @@ public class ChangeHistoryRow {
     private ChangeType changeType;
     private String assetName;
 
-    private Map<UUID, ChannelChangeHistory> channelChanges = new HashMap<>();
+    private Map<String, ChannelChangeHistory> channelChanges = new HashMap<>();
 
     private List<ChangeHistoryItem> changes = new ArrayList<>();
 
@@ -55,11 +55,11 @@ public class ChangeHistoryRow {
         this.changes = changes;
     }
 
-    public Map<UUID, ChannelChangeHistory> getChannelChanges() {
+    public Map<String, ChannelChangeHistory> getChannelChanges() {
         return channelChanges;
     }
 
-    public void setChannelChanges(Map<UUID, ChannelChangeHistory> channelChanges) {
+    public void setChannelChanges(Map<String, ChannelChangeHistory> channelChanges) {
         this.channelChanges = channelChanges;
     }
 
