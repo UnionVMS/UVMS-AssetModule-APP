@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.timer;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
@@ -20,6 +21,7 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 
 @Startup
@@ -35,9 +37,18 @@ public class AssetExecutorServiceBean {
 
     @Inject
     private AssetRemapTask assetRemapTask;
-    
+
+    @Inject
+    private ConfigServiceBeanMT configService;
+
     @Resource
     private ManagedExecutorService executorService;
+
+    @PostConstruct
+    public void initPlugins() {
+        LOG.info("Synchronizing plugins at startup");
+        configService.syncInitialPlugins();
+    }
 
     @Schedule(minute = "*/5", hour = "*", persistent = false)
     public void initPollTimer() {

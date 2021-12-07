@@ -11,23 +11,37 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
-import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.*;
+import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
 
 @Path("exchange/rest/unsecured/api")
 @Stateless
 public class ExchangeModuleRestMock {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleRestMock.class);
+
+    @POST
+    @Path("serviceList")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public GetServiceListResponse getServiceList(GetServiceListRequest request) {
+        try {
+            return new GetServiceListResponse();
+        } catch (Exception e) {
+            LOG.error("Mock error", e);
+            return null;
+        }
+    }
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
