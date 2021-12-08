@@ -485,8 +485,8 @@ public class MobileTerminalServiceBean {
         asset.getMobileTerminals().clear();
     }
 
-    public Map<UUID, ChangeHistoryRow> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
-        Map<UUID, ChangeHistoryRow> revisionsMap = new HashMap<>();
+    public Map<String, ChangeHistoryRow> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+        Map<String, ChangeHistoryRow> revisionsMap = new HashMap<>();
         List<UUID> mtList = terminalDao.getAllMobileTerminalIdsWithARelationToAsset(assetId);
 
         mtList.forEach(terminalID -> {

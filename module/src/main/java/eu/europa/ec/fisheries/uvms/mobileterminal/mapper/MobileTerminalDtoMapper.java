@@ -13,7 +13,7 @@ import java.util.*;
 public class MobileTerminalDtoMapper {
 
 
-    public static Map<UUID, ChangeHistoryRow> mapToMobileTerminalRevisionsMap(List<MobileTerminal> mts) {
+    public static Map<String, ChangeHistoryRow> mapToMobileTerminalRevisionsMap(List<MobileTerminal> mts) {
         return HistoryMapper.mobileTerminalChangeHistory(mts);
     }
 
