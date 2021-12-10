@@ -570,7 +570,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     public List<AssetHistory> getAssetsByVesselIdientifiers(AssetListCriteria criteria){
         String jpqlHistory = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v " +
-                "WHERE vh.active = '1' AND vh.countryOfRegistration = :" + ConfigSearchField.FLAG_STATE + " AND vh.dateOfEvent <= :" + ConfigSearchField.DATE;
+                "WHERE vh.countryOfRegistration = :" + ConfigSearchField.FLAG_STATE + " AND vh.dateOfEvent <= :" + ConfigSearchField.DATE;
 
         List<AssetListCriteriaPair> filteredCollection = criteria.getCriterias().stream().filter(crt -> !ConfigSearchField.FLAG_STATE.equals(crt.getKey()) && !ConfigSearchField.DATE.equals(crt.getKey())).collect(Collectors.toList());
 
