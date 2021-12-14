@@ -472,7 +472,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
 
-        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<String, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
     }
 
@@ -488,7 +488,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Note note2 = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note2, "test");
 
-        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<String, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
     }
 
@@ -501,7 +501,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
 
-        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<String, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
 
         Note toBeDeleted = notes.values().iterator().next();
@@ -519,7 +519,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
 
-        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<String, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
 
         Note toBeDeleted = notes.values().iterator().next();
@@ -539,7 +539,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
 
-        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<String, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
 
         Note toBeUpdated = notes.values().iterator().next();
