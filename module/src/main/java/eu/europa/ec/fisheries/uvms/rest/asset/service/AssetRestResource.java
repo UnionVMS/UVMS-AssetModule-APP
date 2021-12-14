@@ -360,7 +360,7 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getNotesForAsset(@PathParam("id") UUID assetId) {
         try {
-            Map<UUID, Note> notes = assetService.getNotesForAsset(assetId);
+            Map<String, Note> notes = assetService.getNotesForAsset(assetId);
             return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting notes for asset {}. {}] ", assetId, e);
