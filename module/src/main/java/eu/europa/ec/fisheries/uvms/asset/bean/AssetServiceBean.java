@@ -323,10 +323,9 @@ public class AssetServiceBean {
         return revisions;
     }
 
-    public Map<UUID, Note> getNotesForAsset(UUID assetId) {
+    public Map<String, Note> getNotesForAsset(UUID assetId) {
         List<Note> notesByAsset = noteDao.getNotesByAsset(assetId);
-        Map<UUID, Note> noteMap = notesByAsset.stream().collect(Collectors.toMap(Note::getId, Function.identity()));
-        return noteMap;
+        return notesByAsset.stream().collect(Collectors.toMap(note -> note.getId().toString(), Function.identity()));
     }
 
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
