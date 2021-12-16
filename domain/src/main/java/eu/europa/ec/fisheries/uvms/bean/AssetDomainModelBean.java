@@ -26,6 +26,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.mapper.*;
+import eu.europa.ec.fisheries.uvms.util.DateUtil;
 import eu.europa.ec.fisheries.uvms.util.VesselIdentifiersUtil;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -549,50 +550,49 @@ public class AssetDomainModelBean {
 
         //Retrieve the assets from database
         List<AssetHistory> assetHistories = assetDao.getAssetsByVesselIdientifiers(assetListCriteria);
-        final List<Asset> assets = assetHistories.stream()
-                .map(EntityToModelMapper::toAssetFromAssetHistory).collect(toList());
-        if (CollectionUtils.isEmpty(assetHistories)) {
-            return null;
-        }
-
-
+        Optional<Date> date = assetListCriteria.getCriterias().stream().filter(t -> t.getKey().equals(ConfigSearchField.DATE)).map(l -> DateUtil.parseToUTCDate(l.getValue())).findFirst();
         //Sort the criteria
         List<AssetListCriteriaPair> sortedPairs =
-        assetListCriteria.getCriterias().stream()
-                .filter(p-> (VesselIdentifierPrecedenceEnum.getByField(p.getKey())) != null)
-                .collect(toMap(pair-> VesselIdentifierPrecedenceEnum.getByField(pair.getKey()), Function.identity()))
-                .entrySet()
-                .stream()
-                .sorted(Comparator.comparing(e->e.getKey().getPrecedence()))
-                .collect(mapping(entry->entry.getValue(), toList()));
+                assetListCriteria.getCriterias().stream()
+                        .filter(p-> (VesselIdentifierPrecedenceEnum.getByField(p.getKey())) != null)
+                        .collect(toMap(pair-> VesselIdentifierPrecedenceEnum.getByField(pair.getKey()), Function.identity()))
+                        .entrySet()
+                        .stream()
+                        .sorted(Comparator.comparing(e->e.getKey().getPrecedence()))
+                        .collect(mapping(entry->entry.getValue(), toList()));
 
-        //Loop the sorted criteria and return the first asset that matches
-        Asset entity = null;
-        for (AssetListCriteriaPair pair : sortedPairs) {
-            if ((entity = this.getAssetEntityByConfigField(assets, pair)) != null) {
-                return entity;
+        List<AssetHistory> entity;
+        try {
+            for (AssetListCriteriaPair pair : sortedPairs) {
+                entity = this.getAssetEntityByConfigField(assetHistories, pair);
+                if(entity !=null && !entity.isEmpty()) {
+                    return EntityToModelMapper.toAssetFromAssetHistory(findHighestFromLowestDate(date.get(),entity));
+                }
             }
+        } catch (AssetException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 
-    private Asset getAssetEntityByConfigField(List<Asset> assets, AssetListCriteriaPair pair)  {
+    private List<AssetHistory> getAssetEntityByConfigField(List<AssetHistory> assetHistories, AssetListCriteriaPair pair)  {
         if (pair == null)   return  null;
         switch (pair.getKey()) {
             case CFR:
-                return assets.stream().filter(a->a.getCfr().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getCfr().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case UVI:
-                return assets.stream().filter(a->a.getUvi().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getUvi().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case IRCS:
-                return assets.stream().filter(a->a.getIrcs().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getIrcs().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case EXTERNAL_MARKING:
-                return assets.stream().filter(a->a.getExternalMarking().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getExternalMarking().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case ICCAT:
-                return assets.stream().filter(a->a.getIccat().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getIccat().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case GFCM:
-                return assets.stream().filter(a->a.getGfcm().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getGfcm().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             case MMSI:
-                return assets.stream().filter(a->a.getMmsiNo().equalsIgnoreCase(pair.getValue())).findAny().orElse(null);
+                return assetHistories.stream().filter(a->a.getAsset().getMMSI().equalsIgnoreCase(pair.getValue())).collect(Collectors.toList());
             default:
                 return null;
         }
