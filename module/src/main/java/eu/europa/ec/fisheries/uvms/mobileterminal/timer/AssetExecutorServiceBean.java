@@ -46,8 +46,14 @@ public class AssetExecutorServiceBean {
 
     @PostConstruct
     public void initPlugins() {
-        LOG.info("Synchronizing plugins at startup");
-        configService.syncInitialPlugins();
+        try {
+            executorService.submit(() -> {
+                LOG.info("Synchronizing plugins at startup");
+                configService.syncInitialPlugins();
+            });
+        } catch (Exception e) {
+            LOG.error("Error when synchronizing plugins at startup", e);
+        }
     }
 
     @Schedule(minute = "*/5", hour = "*", persistent = false)
