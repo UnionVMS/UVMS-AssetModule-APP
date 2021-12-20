@@ -136,38 +136,12 @@ public class PollTestHelper {
         request.getMobileTerminals().add(pmt);
     }
 
-    public static MobileTerminal createMobileTerminalWithPluginAndCapabilities(MobileTerminal mt, WebTarget webTarget, String token) {
-        MobileTerminal createdMT = webTarget
-                .path("mobileterminal")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .post(Entity.json(mt), MobileTerminal.class);
-
-        PluginCapability configurable = new PluginCapability();
-        configurable.setName(PluginCapabilityType.CONFIGURABLE);
-        configurable.setValue("TRUE");
-
-        PluginCapability pollable = new PluginCapability();
-        pollable.setName(PluginCapabilityType.POLLABLE);
-        pollable.setValue("TRUE");
-
-        PluginService pluginService = new PluginService();
-        pluginService.setLabelName("Thrane&Thrane");
-        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        pluginService.setInactive(false);
-        pluginService.setSatelliteType("INMARSAT_C");
-        pluginService.getCapability().add(configurable);
-        pluginService.getCapability().add(pollable);
-
-        List<MobileTerminalPlugin> pluginList = webTarget
-                .path("plugin")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .post(Entity.json(Collections.singletonList(pluginService)),
-                        new GenericType<List<MobileTerminalPlugin>>() {});
-
-        assertNotNull(pluginList);
-        return createdMT;
+    public static MobileTerminal createMobileTerminal(MobileTerminal mt, WebTarget webTarget, String token) {
+        return webTarget
+            .path("mobileterminal")
+            .request(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .post(Entity.json(mt), MobileTerminal.class);
     }
 
     public static void createPollAttributesForRequest(PollRequestType pollRequest) {

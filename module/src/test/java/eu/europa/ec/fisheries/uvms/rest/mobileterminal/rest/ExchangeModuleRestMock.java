@@ -11,29 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
-import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
-import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.*;
+import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
 
 @Path("exchange/rest/unsecured/api")
 @Stateless
 public class ExchangeModuleRestMock {
+
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleRestMock.class);
 
     @POST
@@ -42,27 +36,7 @@ public class ExchangeModuleRestMock {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public GetServiceListResponse getServiceList(GetServiceListRequest request) {
         try {
-            LOG.debug("READING MESSAGE IN EXCHANGE MOCK IN ASSET REST: " + request.toString());
-
-            List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();
-            ServiceResponseType serviceResponseType = new ServiceResponseType();
-            serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-            serviceResponseType.setName("Thrane&Thrane");
-            serviceResponseType.setSatelliteType("INMARSAT_C");
-            serviceResponseType.setActive(true);
-            CapabilityListType capabilityList = new CapabilityListType();
-            CapabilityType capabilityType = new CapabilityType();
-            capabilityType.setType(CapabilityTypeType.POLLABLE);
-            capabilityType.setValue("TRUE");
-            capabilityList.getCapability().add(capabilityType);
-
-            serviceResponseType.setCapabilityList(capabilityList);
-
-            serviceResponse.add(serviceResponseType);
-            GetServiceListResponse response = new GetServiceListResponse();
-            response.getService().addAll(serviceResponse);
-
-            return response;
+            return new GetServiceListResponse();
         } catch (Exception e) {
             LOG.error("Mock error", e);
             return null;

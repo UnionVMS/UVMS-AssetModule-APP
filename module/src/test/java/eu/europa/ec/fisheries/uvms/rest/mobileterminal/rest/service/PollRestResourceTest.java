@@ -173,7 +173,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(asset);
 
-        MobileTerminal createdMT = PollTestHelper.createMobileTerminalWithPluginAndCapabilities(mt, getWebTargetExternal(), getTokenExternal());
+        MobileTerminal createdMT = PollTestHelper.createMobileTerminal(mt, getWebTargetExternal(), getTokenExternal());
 
         PollTestHelper.constructPollMobileTerminalAndAddToRequest(pollRequest, createdMT);
 

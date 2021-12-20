@@ -22,20 +22,18 @@ import java.util.List;
 
 public class ServiceToPluginMapper {
 
-	public static List<PluginService> mapToPluginList(List<ServiceResponseType> serviceList) {
-		List<PluginService> pluginList = new ArrayList<>();
-		for(ServiceResponseType service : serviceList) {
-			PluginService plugin = new PluginService();
-			plugin.setInactive(!service.isActive()); 
-			plugin.setLabelName(service.getName());
-			plugin.setServiceName(service.getServiceClassName());
-			plugin.setSatelliteType(service.getSatelliteType());
-			if(service.getCapabilityList() != null) {
-				plugin.getCapability().addAll(mapToPluginCapabilityList(service.getCapabilityList().getCapability()));
-			}
-			pluginList.add(plugin);
+    private ServiceToPluginMapper() {}
+
+	public static PluginService mapToPlugin(ServiceResponseType service) {
+		PluginService plugin = new PluginService();
+		plugin.setInactive(!service.isActive());
+		plugin.setLabelName(service.getName());
+		plugin.setServiceName(service.getServiceClassName());
+		plugin.setSatelliteType(service.getSatelliteType());
+		if(service.getCapabilityList() != null) {
+			plugin.getCapability().addAll(mapToPluginCapabilityList(service.getCapabilityList().getCapability()));
 		}
-		return pluginList;
+		return plugin;
 	}
 	
 	private static List<PluginCapability> mapToPluginCapabilityList(List<CapabilityType> capabilities) {
